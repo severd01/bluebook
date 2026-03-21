@@ -202,6 +202,23 @@ h1 {
   font-size: 0.82rem;
 }
 
+.runner-overlay {
+  pointer-events: none;
+}
+
+.runner-marker {
+  fill: #c53929;
+}
+
+.runner-label {
+  fill: #fff;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
 button {
   border: 0;
   border-radius: 999px;
