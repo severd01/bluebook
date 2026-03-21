@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Umpire Position Trainer</title>
+    <link rel="stylesheet" href="./styles.css?v=5" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <h1>2-Man Positioning</h1>
+      </section>
+
+      <section class="game-layout">
+        <aside class="panel scenario-panel">
+          <div class="panel-header">
+            <p class="panel-label">Situation</p>
+            <p class="score-line">
+              Score <span id="score">0</span>/<span id="attempts">0</span>
+            </p>
+          </div>
+
+          <h2 id="scenario-title">Loading scenario...</h2>
+          <p id="scenario-system" class="system-pill"></p>
+          <p id="scenario-description" class="scenario-description"></p>
+
+          <div class="details">
+            <div>
+              <p class="detail-label">Runners</p>
+              <p id="scenario-runners"></p>
+            </div>
+            <div>
+              <p class="detail-label">Outs</p>
+              <p id="scenario-outs"></p>
+            </div>
+            <div>
+              <p class="detail-label">Situation</p>
+              <p id="scenario-ball"></p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="check-btn" class="primary-btn" disabled>Check Movements</button>
+            <button id="finish-path-btn" class="ghost-btn" disabled>Finish Current Path</button>
+            <button id="clear-btn" class="ghost-btn">Clear Drawings</button>
+            <button id="toggle-grid-btn" class="ghost-btn">Hide Grid</button>
+            <button id="next-btn" class="ghost-btn" disabled>Next Play</button>
+          </div>
+
+          <div id="movement-tracker" class="movement-tracker"></div>
+
+          <p id="cursor-readout" class="cursor-readout">Cursor: x -, y -</p>
+
+          <div class="feedback">
+            <p id="feedback-title" class="feedback-title">
+              Draw the umpire movements on the field.
+            </p>
+            <div id="feedback-body" class="feedback-body"></div>
+          </div>
+
+          <div class="legend">
+            <div><span class="dot player-dot"></span>Your pick</div>
+            <div><span class="dot answer-dot"></span>Expected spot</div>
+          </div>
+        </aside>
+
+        <section class="panel field-panel">
+          <div class="field-wrap">
+            <svg
+              id="field"
+              viewBox="0 0 886 886"
+              role="img"
+              aria-label="Baseball field diagram"
+            >
+              <image
+                href="./field2.jpeg"
+                x="0"
+                y="0"
+                width="886"
+                height="886"
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              <path id="ball-flight" class="ball-flight hidden" />
+            </svg>
+
+            <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
+              <section id="answer-card-shared" class="answer-card answer-card-top"></section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js?v=5"></script>
+  </body>
+</html>
