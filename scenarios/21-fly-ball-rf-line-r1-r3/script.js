@@ -15,17 +15,20 @@ const scenarios = [
       {
         heading: "Plate",
         bullets: [
-          "Plate stays home.",
-          "Observes action to help rule on illegal slides, pulled foot, swipe tags.",
-          "Responsible for all overthrows.",
+          "Move a short distance up the baseline.",
+          "Straddle the line and come to a complete stop.",
+          "Rule fair/foul and then catch/no catch.",
+          "Tell your partner, \"That's a catch.\"",
+          "Glance at R3's tag at 3rd.",
+          "Retreat to home.",
         ],
       },
       {
         heading: "U1",
         bullets: [
-          "Move into a position to make a call at any base in the infield being careful to stay out of the line of the throw.",
-          "Responsible for all calls at all bases.",
-          "Watch for runner interference.",
+          "Move into position to observe R1's tag at 1st.",
+          "Be in position to make all calls in the infield.",
+          "Let the throw take you to the play.",
         ],
       },
     ],
