@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umpire Position Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=10" />
   </head>
   <body>
     <main class="app-shell">
@@ -82,6 +82,16 @@
                 preserveAspectRatio="xMidYMid meet"
               />
 
+              <g class="runner-overlay" aria-hidden="true">
+                <circle cx="536" cy="517" r="11" class="runner-marker" />
+                <text x="536" y="517" class="runner-label">R1</text>
+              </g>
+
+              <g class="runner-overlay" aria-hidden="true">
+                <circle cx="397" cy="449" r="11" class="runner-marker" />
+                <text x="397" y="449" class="runner-label">R2</text>
+              </g>
+
               <path id="ball-flight" class="ball-flight hidden" />
             </svg>
 
@@ -93,6 +103,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=5"></script>
+    <script src="./script.js?v=10"></script>
   </body>
 </html>

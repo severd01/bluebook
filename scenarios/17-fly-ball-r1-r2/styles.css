@@ -418,7 +418,7 @@ button:disabled {
 
 .path-line {
   stroke: #38d199;
-  stroke-width: 8;
+  stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
@@ -431,7 +431,7 @@ button:disabled {
 
 .answer-path {
   stroke: #ffcf5c;
-  stroke-width: 8;
+  stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
