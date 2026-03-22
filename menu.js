@@ -106,6 +106,8 @@ function renderSessionSummary() {
     const nextScenario =
       scenarios.find((scenario) => scenario.slug === nextSlug) || scenarios[0];
     const sessionLabel = activeSession.label || "Play-all";
+    const totalScenarios = Number((activeSession.order || []).length || 0);
+    const maxPoints = totalScenarios * 2;
 
     resumeBtn.classList.remove("hidden");
     resumeBtn.textContent = `Resume ${sessionLabel}`;
@@ -116,7 +118,7 @@ function renderSessionSummary() {
 
     sessionSummary.classList.remove("hidden");
     sessionSummary.innerHTML = `
-      <p><strong>${sessionLabel} in progress.</strong> Score ${activeSession.score}/${activeSession.attempts}. Next up: ${nextScenario.title}.</p>
+      <p><strong>${sessionLabel} in progress.</strong> Score ${activeSession.score}/${maxPoints}. Next up: ${nextScenario.title}.</p>
     `;
     return;
   }
@@ -125,9 +127,11 @@ function renderSessionSummary() {
   resumeBtn.textContent = "Resume Play All";
 
   if (completedSession) {
+    const totalScenarios = Number(completedSession.totalScenarios || (completedSession.order || []).length || 0);
+    const maxPoints = Math.max(totalScenarios * 2, Number(completedSession.attempts || 0));
     sessionSummary.classList.remove("hidden");
     sessionSummary.innerHTML = `
-      <p><strong>Last result:</strong> ${completedSession.label || "Session"} finished at ${completedSession.score}/${completedSession.attempts}</p>
+      <p><strong>Last result:</strong> ${completedSession.label || "Session"} finished at ${completedSession.score}/${maxPoints}</p>
     `;
     return;
   }

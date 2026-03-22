@@ -59,7 +59,7 @@ function renderResults() {
   const result = getStoredJson(PLAY_ALL_COMPLETE_KEY);
 
   if (!result) {
-    finalScoreEl.textContent = "--/54";
+    finalScoreEl.textContent = "--/--";
     resultsDetailEl.textContent = "No completed session was found yet.";
     return;
   }
@@ -69,9 +69,10 @@ function renderResults() {
   const percent = attempts > 0 ? Math.round((score / attempts) * 100) : 0;
   const sessionLabel = result.label || "Session";
   const totalScenarios = Number(result.totalScenarios || 27);
+  const maxPoints = Math.max(totalScenarios * 2, attempts);
 
-  finalScoreEl.textContent = `${score}/${attempts}`;
-  resultsDetailEl.textContent = `You completed ${sessionLabel.toLowerCase()} with ${percent}% accuracy across ${totalScenarios} scenario${totalScenarios === 1 ? "" : "s"}.`;
+  finalScoreEl.textContent = `${score}/${maxPoints}`;
+  resultsDetailEl.textContent = `You completed ${sessionLabel.toLowerCase()} with ${percent}% accuracy across ${totalScenarios} scenario${totalScenarios === 1 ? "" : "s"} for a score of ${score}/${maxPoints}.`;
   replayBtn.textContent =
     result.mode === "random-5" ? "Play Another Random 5" : "Replay All Scenarios";
 }

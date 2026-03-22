@@ -600,6 +600,8 @@ function updatePrompt() {
 function updateFinishPathButtonStyle() {
   const scenario = scenarios[scenarioIndex];
   const activeRole = scenario.paths[activeRoleIndex]?.role;
+  const selectedPath = selectedPaths[activeRoleIndex];
+  const roleLabel = activeRole === "P" ? "Plate" : activeRole;
 
   finishPathBtn.classList.remove("role-btn-p", "role-btn-u1");
 
@@ -608,6 +610,15 @@ function updateFinishPathButtonStyle() {
   } else if (activeRole === "U1") {
     finishPathBtn.classList.add("role-btn-u1");
   }
+
+  if (!roleLabel) {
+    finishPathBtn.textContent = "Draw Plate Path";
+    return;
+  }
+
+  finishPathBtn.textContent = selectedPath?.start
+    ? `Finish ${roleLabel} Path`
+    : `Draw ${roleLabel} Path`;
 }
 
 function updateCheckButtonState() {
@@ -681,8 +692,7 @@ function loadScenario() {
   feedbackBodyEl.textContent = "";
   updateFinishPathButtonStyle();
 
-  scoreEl.textContent = String(score);
-  attemptsEl.textContent = String(attempts);
+  renderScoreLine();
 }
 
 field.addEventListener("click", (event) => {
@@ -825,8 +835,7 @@ checkBtn.addEventListener("click", () => {
   score += result.points;
   roundFinished = true;
 
-  scoreEl.textContent = String(score);
-  attemptsEl.textContent = String(attempts);
+  renderScoreLine();
   nextBtn.disabled = false;
   persistPlayAllTotals();
   updateNextButtonLabel();
