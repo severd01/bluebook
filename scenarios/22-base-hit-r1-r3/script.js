@@ -869,6 +869,17 @@ nextBtn.addEventListener("click", () => {
     return;
   }
 
+  const currentIndex = DEFAULT_SCENARIO_ORDER.indexOf(currentScenarioSlug);
+  const nextSlug =
+    currentIndex === -1
+      ? null
+      : DEFAULT_SCENARIO_ORDER[(currentIndex + 1) % DEFAULT_SCENARIO_ORDER.length];
+
+  if (nextSlug) {
+    window.location.href = `../${nextSlug}/`;
+    return;
+  }
+
   scenarioIndex = (scenarioIndex + 1) % scenarios.length;
   loadScenario();
 });
