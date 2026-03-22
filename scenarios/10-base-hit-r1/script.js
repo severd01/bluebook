@@ -66,11 +66,13 @@ const outsEl = document.getElementById("scenario-outs");
 const ballEl = document.getElementById("scenario-ball");
 const feedbackTitleEl = document.getElementById("feedback-title");
 const feedbackBodyEl = document.getElementById("feedback-body");
+const feedbackEl = document.querySelector(".feedback");
 const checkBtn = document.getElementById("check-btn");
 const finishPathBtn = document.getElementById("finish-path-btn");
 const clearBtn = document.getElementById("clear-btn");
 const toggleGridBtn = document.getElementById("toggle-grid-btn");
 const nextBtn = document.getElementById("next-btn");
+const scoreLineEl = document.querySelector(".score-line");
 const movementTrackerEl = document.getElementById("movement-tracker");
 const cursorReadoutEl = document.getElementById("cursor-readout");
 const field = document.getElementById("field");
@@ -84,6 +86,152 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const FIELD_SIZE = 886;
 const GRID_STEP = 100;
 
+const PLAY_ALL_KEY = "bluebook-play-all-session";
+const PLAY_ALL_COMPLETE_KEY = "bluebook-play-all-complete";
+const DEFAULT_SCENARIO_ORDER = [
+  "01-routine-fly-ball-to-right-field",
+  "02-routine-fly-ball-to-left-field",
+  "03-fly-ball-to-right-u1-goes-out",
+  "04-pop-up-on-the-infield",
+  "05-foul-pop-up",
+  "06-base-hit-possible-triple",
+  "07-ground-ball",
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+];
+const currentScenarioSlug = window.location.pathname.replace(/\/$/, "").split("/").pop();
+
+function getStoredJson(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch (error) {
+    return null;
+  }
+}
+
+function setStoredJson(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getPlayAllSession() {
+  const session = getStoredJson(PLAY_ALL_KEY);
+  if (!session || !session.active) {
+    return null;
+  }
+
+  return session;
+}
+
+function getSessionOrder(session) {
+  return Array.isArray(session?.order) && session.order.length
+    ? session.order
+    : DEFAULT_SCENARIO_ORDER;
+}
+
+function syncPlayAllSessionOnLoad() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+
+  if (currentIndex === -1) {
+    return;
+  }
+
+  session.currentIndex = currentIndex;
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+
+  score = Number(session.score || 0);
+  attempts = Number(session.attempts || 0);
+}
+
+function persistPlayAllTotals() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  session.score = score;
+  session.attempts = attempts;
+  session.currentIndex = order.indexOf(currentScenarioSlug);
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+}
+
+function updateNextButtonLabel() {
+  const session = getPlayAllSession();
+  if (!session) {
+    nextBtn.textContent = "Next Play";
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  nextBtn.textContent = currentIndex >= order.length - 1
+    ? "Finish Session"
+    : "Next Scenario";
+}
+
+function goToNextPlayAllScenario() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return false;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  if (currentIndex === -1) {
+    return false;
+  }
+
+  const nextSlug = order[currentIndex + 1];
+
+  if (nextSlug) {
+    session.currentIndex = currentIndex + 1;
+    session.lastScenario = nextSlug;
+    setStoredJson(PLAY_ALL_KEY, session);
+    window.location.href = `../${nextSlug}/`;
+    return true;
+  }
+
+  setStoredJson(PLAY_ALL_COMPLETE_KEY, {
+    score,
+    attempts,
+    completedAt: new Date().toISOString(),
+    mode: session.mode || "all",
+    label: session.label || "Play All Scenarios",
+    order,
+    totalScenarios: order.length,
+  });
+  localStorage.removeItem(PLAY_ALL_KEY);
+  window.location.href = "../../results.html";
+  return true;
+}
+
+
 let scenarioIndex = 0;
 let score = 0;
 let attempts = 0;
@@ -91,7 +239,7 @@ let roundFinished = false;
 let activeRoleIndex = 0;
 let selectedPaths = [];
 let roleArtifacts = [];
-let gridVisible = true;
+let gridVisible = false;
 let gridLayer;
 
 function createSvgElement(tagName, attributes, className) {
@@ -270,11 +418,62 @@ function pathIntersectsPointTarget(points, target, radius) {
   return points.some((point) => pointInCircle(point, target, radius));
 }
 
-function describeGrade(hit, d) {
-  if (hit) return { label: "Correct positions.", points: 1 };
-  if (d <= 35) return { label: "Very close.", points: 0 };
-  if (d <= 75) return { label: "Close, but outside the target zone.", points: 0 };
-  return { label: "Too far from the target zone.", points: 0 };
+function describeGrade(pointsEarned, maxPoints, averageDistance) {
+  if (pointsEarned === maxPoints) {
+    return {
+      label: `Excellent. ${pointsEarned}/${maxPoints} movements correct.`,
+      points: pointsEarned,
+      tone: "perfect",
+    };
+  }
+
+  if (pointsEarned > 0) {
+    return {
+      label: `Nice work. ${pointsEarned}/${maxPoints} movements correct.`,
+      points: pointsEarned,
+      tone: "partial",
+    };
+  }
+
+  if (averageDistance <= 35) {
+    return {
+      label: `0/${maxPoints} correct, but very close.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  if (averageDistance <= 75) {
+    return {
+      label: `0/${maxPoints} correct. Close, but outside the target zone.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  return {
+    label: `0/${maxPoints} movements correct.`,
+    points: 0,
+    tone: "miss",
+  };
+}
+
+function resetRoundFeedbackState() {
+  feedbackEl?.classList.remove("is-perfect", "is-partial");
+  nextBtn.classList.remove("perfect-next");
+}
+
+function celebrateScore(pointsEarned) {
+  if (!scoreLineEl || pointsEarned <= 0) {
+    return;
+  }
+
+  scoreLineEl.classList.remove("is-celebrating");
+  void scoreLineEl.offsetWidth;
+  scoreLineEl.classList.add("is-celebrating");
+  window.setTimeout(() => {
+    scoreLineEl.classList.remove("is-celebrating");
+  }, 1200);
 }
 
 function roleDisplayName(role) {
@@ -442,6 +641,7 @@ function resetSelectedPaths() {
 
 function loadScenario() {
   const scenario = scenarios[scenarioIndex];
+  syncPlayAllSessionOnLoad();
   titleEl.textContent = scenario.title;
   systemEl.textContent = scenario.system;
   systemEl.style.display = scenario.system ? "inline-flex" : "none";
@@ -463,6 +663,7 @@ function loadScenario() {
   checkBtn.disabled = true;
   finishPathBtn.disabled = true;
   nextBtn.disabled = true;
+  updateNextButtonLabel();
 
   if (scenario.ballFlightPath) {
     ballFlight.setAttribute("d", scenario.ballFlightPath);
@@ -470,6 +671,7 @@ function loadScenario() {
   }
 
   hideAnswerOverlay();
+  resetRoundFeedbackState();
   renderMovementTracker();
   updatePrompt();
   feedbackBodyEl.textContent = "";
@@ -564,8 +766,8 @@ checkBtn.addEventListener("click", () => {
   }
 
   const scenario = scenarios[scenarioIndex];
-  let combinedHit = true;
   let totalDistance = 0;
+  let pointsEarned = 0;
 
   scenario.paths.forEach((path, index) => {
     const selected = selectedPaths[index];
@@ -582,8 +784,12 @@ checkBtn.addEventListener("click", () => {
     const waypointHits = (path.waypoints || []).every((waypoint) =>
       pathIntersectsPointTarget(selected.points, waypoint, SCORING_POINT_RADIUS)
     );
+    const roleHit = startHit && waypointHits && endHit;
 
-    combinedHit = combinedHit && startHit && waypointHits && endHit;
+    if (roleHit) {
+      pointsEarned += 1;
+    }
+
     totalDistance += distance(selected.start, path.startAnswer);
     totalDistance += distance(selected.end, path.endAnswer);
     (path.waypoints || []).forEach((waypoint) => {
@@ -602,21 +808,32 @@ checkBtn.addEventListener("click", () => {
     );
   });
 
+  const maxPoints = scenario.paths.length;
   const averageDistance =
     totalDistance /
     scenario.paths.reduce(
       (sum, path) => sum + 2 + (path.waypoints ? path.waypoints.length : 0),
       0
     );
-  const result = describeGrade(combinedHit, averageDistance);
+  const result = describeGrade(pointsEarned, maxPoints, averageDistance);
 
-  attempts += 1;
+  attempts += maxPoints;
   score += result.points;
   roundFinished = true;
 
   scoreEl.textContent = String(score);
   attemptsEl.textContent = String(attempts);
   nextBtn.disabled = false;
+  persistPlayAllTotals();
+  updateNextButtonLabel();
+  celebrateScore(result.points);
+
+  if (result.tone === "perfect") {
+    feedbackEl?.classList.add("is-perfect");
+    nextBtn.classList.add("perfect-next");
+  } else if (result.tone === "partial") {
+    feedbackEl?.classList.add("is-partial");
+  }
 
   feedbackTitleEl.textContent = result.label;
   renderFeedbackBody(scenario);
@@ -625,6 +842,10 @@ checkBtn.addEventListener("click", () => {
 });
 
 nextBtn.addEventListener("click", () => {
+  if (goToNextPlayAllScenario()) {
+    return;
+  }
+
   scenarioIndex = (scenarioIndex + 1) % scenarios.length;
   loadScenario();
 });

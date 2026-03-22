@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blue Book Trainer</title>
+    <link rel="stylesheet" href="./menu.css?v=2" />
+  </head>
+  <body>
+    <main class="menu-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Blue Book</p>
+        <h1>2-Man Position Trainer</h1>
+        <p class="hero-copy">
+          Train one play at a time or run the full scenario set and keep a running score.
+        </p>
+
+        <div class="hero-actions">
+          <button id="play-all-btn" class="primary-btn">Play All Scenarios</button>
+          <button id="random-five-btn" class="ghost-btn">Play 5 Random Scenarios</button>
+          <button id="resume-btn" class="ghost-btn hidden">Resume Play All</button>
+        </div>
+
+        <section id="session-summary" class="session-summary hidden" aria-live="polite"></section>
+      </section>
+
+      <section class="library-card">
+        <div class="library-header">
+          <div>
+            <p class="eyebrow">Scenario Library</p>
+            <h2>Select A Specific Scenario</h2>
+          </div>
+          <p class="library-count"><span id="scenario-count">0</span> plays</p>
+        </div>
+
+        <div id="scenario-grid" class="scenario-grid"></div>
+      </section>
+    </main>
+
+    <script src="./menu.js?v=2"></script>
+  </body>
+</html>

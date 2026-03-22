@@ -96,11 +96,13 @@ const outsEl = document.getElementById("scenario-outs");
 const ballEl = document.getElementById("scenario-ball");
 const feedbackTitleEl = document.getElementById("feedback-title");
 const feedbackBodyEl = document.getElementById("feedback-body");
+const feedbackEl = document.querySelector(".feedback");
 const checkBtn = document.getElementById("check-btn");
 const finishPathBtn = document.getElementById("finish-path-btn");
 const clearBtn = document.getElementById("clear-btn");
 const toggleGridBtn = document.getElementById("toggle-grid-btn");
 const nextBtn = document.getElementById("next-btn");
+const scoreLineEl = document.querySelector(".score-line");
 const movementTrackerEl = document.getElementById("movement-tracker");
 const cursorReadoutEl = document.getElementById("cursor-readout");
 const field = document.getElementById("field");
@@ -121,7 +123,7 @@ let roundFinished = false;
 let activeRoleIndex = 0;
 let selectedPaths = [];
 let roleArtifacts = [];
-let gridVisible = true;
+let gridVisible = false;
 let gridLayer;
 
 function createSvgElement(tagName, attributes, className) {
@@ -300,11 +302,62 @@ function pathIntersectsPointTarget(points, target, radius) {
   return points.some((point) => pointInCircle(point, target, radius));
 }
 
-function describeGrade(hit, d) {
-  if (hit) return { label: "Correct positions.", points: 1 };
-  if (d <= 35) return { label: "Very close.", points: 0 };
-  if (d <= 75) return { label: "Close, but outside the target zone.", points: 0 };
-  return { label: "Too far from the target zone.", points: 0 };
+function describeGrade(pointsEarned, maxPoints, averageDistance) {
+  if (pointsEarned === maxPoints) {
+    return {
+      label: `Excellent. ${pointsEarned}/${maxPoints} movements correct.`,
+      points: pointsEarned,
+      tone: "perfect",
+    };
+  }
+
+  if (pointsEarned > 0) {
+    return {
+      label: `Nice work. ${pointsEarned}/${maxPoints} movements correct.`,
+      points: pointsEarned,
+      tone: "partial",
+    };
+  }
+
+  if (averageDistance <= 35) {
+    return {
+      label: `0/${maxPoints} correct, but very close.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  if (averageDistance <= 75) {
+    return {
+      label: `0/${maxPoints} correct. Close, but outside the target zone.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  return {
+    label: `0/${maxPoints} movements correct.`,
+    points: 0,
+    tone: "miss",
+  };
+}
+
+function resetRoundFeedbackState() {
+  feedbackEl?.classList.remove("is-perfect", "is-partial");
+  nextBtn.classList.remove("perfect-next");
+}
+
+function celebrateScore(pointsEarned) {
+  if (!scoreLineEl || pointsEarned <= 0) {
+    return;
+  }
+
+  scoreLineEl.classList.remove("is-celebrating");
+  void scoreLineEl.offsetWidth;
+  scoreLineEl.classList.add("is-celebrating");
+  window.setTimeout(() => {
+    scoreLineEl.classList.remove("is-celebrating");
+  }, 1200);
 }
 
 function roleDisplayName(role) {
@@ -500,6 +553,7 @@ function loadScenario() {
   }
 
   hideAnswerOverlay();
+  resetRoundFeedbackState();
   renderMovementTracker();
   updatePrompt();
   feedbackBodyEl.textContent = "";
@@ -594,8 +648,8 @@ checkBtn.addEventListener("click", () => {
   }
 
   const scenario = scenarios[scenarioIndex];
-  let combinedHit = true;
   let totalDistance = 0;
+  let pointsEarned = 0;
 
   scenario.paths.forEach((path, index) => {
     const selected = selectedPaths[index];
@@ -612,8 +666,12 @@ checkBtn.addEventListener("click", () => {
     const waypointHits = (path.waypoints || []).every((waypoint) =>
       pathIntersectsPointTarget(selected.points, waypoint, SCORING_POINT_RADIUS)
     );
+    const roleHit = startHit && waypointHits && endHit;
 
-    combinedHit = combinedHit && startHit && waypointHits && endHit;
+    if (roleHit) {
+      pointsEarned += 1;
+    }
+
     totalDistance += distance(selected.start, path.startAnswer);
     totalDistance += distance(selected.end, path.endAnswer);
     (path.waypoints || []).forEach((waypoint) => {
@@ -632,15 +690,16 @@ checkBtn.addEventListener("click", () => {
     );
   });
 
+  const maxPoints = scenario.paths.length;
   const averageDistance =
     totalDistance /
     scenario.paths.reduce(
       (sum, path) => sum + 2 + (path.waypoints ? path.waypoints.length : 0),
       0
     );
-  const result = describeGrade(combinedHit, averageDistance);
+  const result = describeGrade(pointsEarned, maxPoints, averageDistance);
 
-  attempts += 1;
+  attempts += maxPoints;
   score += result.points;
   roundFinished = true;
 
