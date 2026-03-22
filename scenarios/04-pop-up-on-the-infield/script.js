@@ -470,6 +470,20 @@ function resetRoundFeedbackState() {
   nextBtn.classList.remove("perfect-next");
 }
 
+function getDisplayedMaxPoints() {
+  const session = getActiveSession();
+  if (session?.active && Array.isArray(session.order) && session.order.length) {
+    return session.order.length * 2;
+  }
+
+  return attempts;
+}
+
+function renderScoreLine() {
+  scoreEl.textContent = String(score);
+  attemptsEl.textContent = String(getDisplayedMaxPoints());
+}
+
 function celebrateScore(pointsEarned) {
   if (!scoreLineEl || pointsEarned <= 0) {
     return;
