@@ -520,3 +520,123 @@ button:disabled {
     text-shadow: 0 0 0 rgba(31, 122, 95, 0);
   }
 }
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 10px 10px 20px;
+  }
+
+  .hero {
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 7vw, 2.35rem);
+    line-height: 1;
+  }
+
+  .panel {
+    border-radius: 20px;
+  }
+
+  .scenario-panel,
+  .field-panel {
+    padding: 12px;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  #scenario-title {
+    font-size: 1.16rem;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .actions button {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    font-size: 0.92rem;
+  }
+
+  .movement-card {
+    padding: 10px 12px;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-panel {
+    padding-bottom: 8px;
+  }
+
+  .field-wrap {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .answer-card {
+    padding: 7px 9px;
+    font-size: 0.76rem;
+    line-height: 1.26;
+  }
+
+  .answer-card-title {
+    font-size: 0.88rem;
+  }
+
+  .answer-card-top {
+    left: 4%;
+    top: 4%;
+    width: 92%;
+    height: 38%;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-shell {
+    padding: 8px 8px 18px;
+  }
+
+  .game-layout {
+    gap: 10px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .movement-role {
+    min-width: 38px;
+  }
+
+  .feedback {
+    min-height: 90px;
+  }
+
+  .answer-card-top {
+    left: 3%;
+    top: 3%;
+    width: 94%;
+    height: 42%;
+  }
+
+  .ball-flight {
+    stroke-width: 5;
+  }
+}

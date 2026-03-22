@@ -286,3 +286,37 @@ button:hover {
     grid-template-columns: 1fr;
   }
 }
+
+
+@media (max-width: 720px) {
+  .hero-actions > * {
+    width: 100%;
+    justify-content: center;
+  }
+
+  button,
+  .ghost-link {
+    min-height: 48px;
+    width: 100%;
+  }
+
+  .results-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .menu-shell {
+    width: min(100% - 14px, 1160px);
+  }
+
+  .hero-card,
+  .library-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .scenario-link {
+    padding: 14px;
+  }
+}
