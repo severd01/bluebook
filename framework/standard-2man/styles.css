@@ -506,7 +506,7 @@ button:disabled {
 
 @media (max-width: 720px) {
   .app-shell {
-    padding: 10px 10px 20px;
+    padding: 10px 10px calc(110px + env(safe-area-inset-bottom, 0px));
   }
 
   .hero {
@@ -537,20 +537,40 @@ button:disabled {
     font-size: 1.16rem;
   }
 
+  .scenario-description,
+  .feedback-body {
+    font-size: 0.9rem;
+  }
+
   .details {
     grid-template-columns: 1fr;
     gap: 10px;
+    padding: 10px;
+  }
+
+  .detail-label {
+    margin-bottom: 4px;
   }
 
   .actions {
+    position: sticky;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+    padding: 10px;
+    margin: 16px -2px 14px;
+    border-radius: 18px;
+    background: rgba(255, 251, 243, 0.96);
+    border: 1px solid rgba(29, 38, 30, 0.12);
+    box-shadow: 0 14px 28px rgba(41, 27, 15, 0.16);
+    backdrop-filter: blur(12px);
+    z-index: 20;
   }
 
   .actions button {
     width: 100%;
-    min-height: 46px;
+    min-height: 48px;
     padding: 10px 12px;
     font-size: 0.92rem;
   }
@@ -559,9 +579,18 @@ button:disabled {
     padding: 10px 12px;
   }
 
+  .movement-name {
+    font-size: 0.92rem;
+  }
+
   .legend {
     flex-direction: column;
     gap: 6px;
+  }
+
+  .feedback {
+    min-height: 84px;
+    padding: 10px;
   }
 
   .field-panel {
@@ -593,7 +622,7 @@ button:disabled {
 
 @media (max-width: 520px) {
   .app-shell {
-    padding: 8px 8px 18px;
+    padding: 8px 8px calc(124px + env(safe-area-inset-bottom, 0px));
   }
 
   .game-layout {
@@ -602,6 +631,7 @@ button:disabled {
 
   .actions {
     grid-template-columns: 1fr;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
   }
 
   .movement-role {
