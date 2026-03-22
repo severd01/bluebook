@@ -464,7 +464,7 @@ function resetRoundFeedbackState() {
 }
 
 function getDisplayedMaxPoints() {
-  const session = getActiveSession();
+  const session = getPlayAllSession();
   if (session?.active && Array.isArray(session.order) && session.order.length) {
     return session.order.length * 2;
   }
