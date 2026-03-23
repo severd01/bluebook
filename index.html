@@ -3,37 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blue Book Trainer</title>
-    <link rel="stylesheet" href="./menu.css?v=3" />
+    <title>UmpIQ</title>
+    <link rel="stylesheet" href="./menu.css?v=8" />
   </head>
   <body>
-    <main class="menu-shell">
-      <section class="hero-card">
-        <p class="eyebrow">Blue Book</p>
-        <h1>2-Man Position Trainer</h1>
-        <p class="hero-copy">
-          Train one play at a time or run the full scenario set and keep a running score.
-        </p>
-
-        <div class="hero-actions">
-          <button id="play-all-btn" class="primary-btn">Play All Scenarios</button>
-          <button id="random-five-btn" class="ghost-btn">Play 5 Random Scenarios</button>
-          <button id="resume-btn" class="ghost-btn hidden">Resume Play All</button>
+    <main class="home-shell">
+      <aside class="side-rail">
+        <div class="brand-lockup">
+          <span class="brand-word">UmpIQ</span>
+          <p class="brand-note">Training tools for sharper crews.</p>
         </div>
 
-        <section id="session-summary" class="session-summary hidden" aria-live="polite"></section>
-      </section>
+        <nav class="rail-nav" aria-label="Primary">
+          <p class="rail-label">Available Training</p>
+          <a class="rail-link rail-link-active" href="./situations.html">2 Umpire Mechanics</a>
 
-      <section class="library-card">
-        <div class="library-header">
-          <div>
-            <p class="eyebrow">Scenario Library</p>
-            <h2>Select A Specific Scenario</h2>
+          <p class="rail-label">Coming Soon</p>
+          <span class="rail-link rail-link-static">Managing a scorecard.</span>
+          <span class="rail-link rail-link-static">And more...</span>
+        </nav>
+      </aside>
+
+      <section class="main-panel">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <span class="topbar-mark">UmpIQ</span>
           </div>
-          <p class="library-count"><span id="scenario-count">0</span> plays</p>
-        </div>
+        </header>
 
-        <div id="scenario-grid" class="scenario-grid"></div>
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Positioning</p>
+            <h1>Sharper positioning. Better reads. More confident crews.</h1>
+            <p class="hero-text">
+              Train one play at a time, run a full scored session, or jump into a
+              five-play challenge. UmpIQ helps build cleaner plate and base umpire
+              instincts through repeatable game situations.
+            </p>
+
+            <div class="hero-actions">
+              <a class="primary-link" href="./situations.html">Start</a>
+            </div>
+          </div>
+
+          <a class="hero-visual hero-visual-link" href="./situations.html" aria-label="Go to 2 Umpire Mechanics">
+            <div class="visual-frame">
+              <img
+                class="field-image"
+                src="./framework/standard-2man/Screenshot 2026-03-22 at 11.24.21 PM.png"
+                alt="2 Umpire Mechanics training preview"
+              />
+            </div>
+          </a>
+        </section>
+
+        <section class="module-strip">
+          <article class="module-card module-card-featured">
+            <p class="module-kicker">Featured Module</p>
+            <h2>2 Umpire Mechanics</h2>
+            <p class="module-copy">27 scenarios, scored paths for Plate and U1, and quick repeatable reps.</p>
+          </article>
+
+          <article class="module-card">
+            <p class="module-kicker">Coming Soon</p>
+            <h2>Managing a scorecard</h2>
+            <p class="module-copy">Practical scorecard training for cleaner tracking and game administration.</p>
+          </article>
+
+          <article class="module-card">
+            <p class="module-kicker">Coming Soon</p>
+            <h2>And More...</h2>
+            <p class="module-copy">More training modules, tools, and progress features are on the way.</p>
+          </article>
+        </section>
       </section>
     </main>
 

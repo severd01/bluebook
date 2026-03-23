@@ -34,9 +34,9 @@ const scenarios = [
 const playAllBtn = document.getElementById("play-all-btn");
 const randomFiveBtn = document.getElementById("random-five-btn");
 const resumeBtn = document.getElementById("resume-btn");
+const sessionSummary = document.getElementById("session-summary");
 const scenarioGrid = document.getElementById("scenario-grid");
 const scenarioCount = document.getElementById("scenario-count");
-const sessionSummary = document.getElementById("session-summary");
 
 function getStoredJson(key) {
   try {
@@ -79,6 +79,10 @@ function startSession(order, mode, label) {
 }
 
 function renderScenarioGrid() {
+  if (!scenarioGrid || !scenarioCount) {
+    return;
+  }
+
   scenarioCount.textContent = String(scenarios.length);
   scenarioGrid.innerHTML = scenarios
     .map(
@@ -109,58 +113,73 @@ function renderSessionSummary() {
     const totalScenarios = Number((activeSession.order || []).length || 0);
     const maxPoints = totalScenarios * 2;
 
-    resumeBtn.classList.remove("hidden");
-    resumeBtn.textContent = `Resume ${sessionLabel}`;
-    resumeBtn.onclick = () => {
-      const slug = nextScenario?.slug || scenarios[0].slug;
-      window.location.href = `./scenarios/${slug}/`;
-    };
+    if (resumeBtn) {
+      resumeBtn.classList.remove("hidden");
+      resumeBtn.textContent = `Resume ${sessionLabel}`;
+      resumeBtn.onclick = () => {
+        const slug = nextScenario?.slug || scenarios[0].slug;
+        window.location.href = `./scenarios/${slug}/`;
+      };
+    }
 
-    sessionSummary.classList.remove("hidden");
-    sessionSummary.innerHTML = `
-      <p><strong>${sessionLabel} in progress.</strong> Score ${activeSession.score}/${maxPoints}. Next up: ${nextScenario.title}.</p>
-    `;
+    if (sessionSummary) {
+      sessionSummary.classList.remove("hidden");
+      sessionSummary.innerHTML = `
+        <p><strong>${sessionLabel} in progress.</strong> Score ${activeSession.score}/${maxPoints}. Next up: ${nextScenario.title}.</p>
+      `;
+    }
     return;
   }
 
-  resumeBtn.classList.add("hidden");
-  resumeBtn.textContent = "Resume Play All";
+  if (resumeBtn) {
+    resumeBtn.classList.add("hidden");
+    resumeBtn.textContent = "Resume Play All";
+  }
 
   if (completedSession) {
     const totalScenarios = Number(completedSession.totalScenarios || (completedSession.order || []).length || 0);
     const maxPoints = Math.max(totalScenarios * 2, Number(completedSession.attempts || 0));
-    sessionSummary.classList.remove("hidden");
-    sessionSummary.innerHTML = `
-      <p><strong>Last result:</strong> ${completedSession.label || "Session"} finished at ${completedSession.score}/${maxPoints}</p>
-    `;
+    if (sessionSummary) {
+      sessionSummary.classList.remove("hidden");
+      sessionSummary.innerHTML = `
+        <p><strong>Last result:</strong> ${completedSession.label || "Session"} finished at ${completedSession.score}/${maxPoints}</p>
+      `;
+    }
     return;
   }
 
-  sessionSummary.classList.add("hidden");
+  if (sessionSummary) {
+    sessionSummary.classList.add("hidden");
+  }
 }
 
-playAllBtn.addEventListener("click", () => {
-  startSession(
-    scenarios.map((scenario) => scenario.slug),
-    "all",
-    "Play All Scenarios"
-  );
-});
+if (playAllBtn) {
+  playAllBtn.addEventListener("click", () => {
+    startSession(
+      scenarios.map((scenario) => scenario.slug),
+      "all",
+      "Play All Scenarios"
+    );
+  });
+}
 
-randomFiveBtn.addEventListener("click", () => {
-  const randomOrder = shuffle(scenarios.map((scenario) => scenario.slug)).slice(0, 5);
-  startSession(randomOrder, "random-5", "5 Random Scenarios");
-});
+if (randomFiveBtn) {
+  randomFiveBtn.addEventListener("click", () => {
+    const randomOrder = shuffle(scenarios.map((scenario) => scenario.slug)).slice(0, 5);
+    startSession(randomOrder, "random-5", "5 Random Scenarios");
+  });
+}
 
 renderScenarioGrid();
 renderSessionSummary();
 
+if (scenarioGrid) {
+  scenarioGrid.addEventListener("click", (event) => {
+    const link = event.target.closest("a.scenario-link");
+    if (!link) {
+      return;
+    }
 
-scenarioGrid.addEventListener("click", (event) => {
-  const link = event.target.closest("a.scenario-link");
-  if (!link) {
-    return;
-  }
-
-  localStorage.removeItem(PLAY_ALL_KEY);
-});
+    localStorage.removeItem(PLAY_ALL_KEY);
+  });
+}
