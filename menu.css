@@ -523,6 +523,104 @@ button:hover {
     bottom: 18px;
     font-size: 0.8rem;
   }
+
+  .home-page .side-rail {
+    gap: 12px;
+    padding: 18px 14px 8px;
+    border-bottom: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .home-page .brand-lockup {
+    padding: 0;
+    border-bottom: 0;
+    text-align: center;
+  }
+
+  .home-page .rail-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .home-page .rail-label {
+    display: none;
+  }
+
+  .home-page .rail-link,
+  .home-page .rail-link-static {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(67, 55, 33, 0.08);
+    box-shadow: 0 10px 22px rgba(84, 67, 34, 0.06);
+  }
+
+  .home-page .rail-link-active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    border-color: transparent;
+  }
+
+  .home-page .topbar {
+    display: none;
+  }
+
+  .home-page .main-panel {
+    padding-top: 4px;
+  }
+
+  .home-page .hero-panel {
+    margin-top: 6px;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .home-page .hero-visual {
+    order: 0;
+  }
+
+  .home-page .hero-copy {
+    text-align: center;
+    padding: 2px 4px 4px;
+  }
+
+  .home-page .eyebrow {
+    margin-top: 0;
+  }
+
+  .home-page h1 {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 9ch;
+  }
+
+  .home-page .hero-text {
+    max-width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-page .hero-actions {
+    justify-content: center;
+    margin-top: 18px;
+  }
+
+  .home-page .primary-link {
+    width: min(100%, 320px);
+  }
+
+  .home-page .visual-frame {
+    padding: 10px;
+    border-radius: 20px;
+  }
+
+  .home-page .module-strip {
+    margin-top: 14px;
+    gap: 12px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -595,5 +693,60 @@ button:hover {
     right: 14px;
     bottom: 14px;
     text-align: center;
+  }
+
+  .home-page .side-rail {
+    padding: 14px 12px 6px;
+  }
+
+  .home-page .brand-word {
+    font-size: 2.35rem;
+  }
+
+  .home-page .brand-note {
+    font-size: 0.98rem;
+  }
+
+  .home-page .rail-nav {
+    gap: 8px;
+  }
+
+  .home-page .rail-link,
+  .home-page .rail-link-static {
+    width: 100%;
+    text-align: center;
+    font-size: 0.96rem;
+  }
+
+  .home-page .hero-panel {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .home-page h1 {
+    font-size: clamp(2.35rem, 13vw, 3.25rem);
+    max-width: 8ch;
+  }
+
+  .home-page .hero-text {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .home-page .visual-frame {
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .home-page .field-image {
+    border-radius: 14px;
+  }
+
+  .home-page .module-card {
+    padding: 16px;
+  }
+
+  .home-page .module-card h2 {
+    font-size: 1.5rem;
   }
 }
