@@ -186,9 +186,9 @@ h2 {
 }
 
 h1 {
-  margin-top: 8px;
-  max-width: 11ch;
-  font-size: clamp(2.2rem, 4vw, 3.85rem);
+  margin-top: 0;
+  max-width: 12ch;
+  font-size: clamp(1.85rem, 3.2vw, 2.95rem);
 }
 
 h2 {
@@ -539,14 +539,15 @@ button:hover {
   }
 
   .home-page .rail-nav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .home-page .rail-label {
-    display: none;
+    display: block;
+    margin: 8px 0 2px;
+    text-align: center;
   }
 
   .home-page .rail-link,
@@ -594,7 +595,7 @@ button:hover {
   .home-page h1 {
     margin-left: auto;
     margin-right: auto;
-    max-width: 9ch;
+    max-width: 10ch;
   }
 
   .home-page .hero-text {
@@ -724,8 +725,8 @@ button:hover {
   }
 
   .home-page h1 {
-    font-size: clamp(2.35rem, 13vw, 3.25rem);
-    max-width: 8ch;
+    font-size: clamp(1.55rem, 7vw, 2.05rem);
+    max-width: 11ch;
   }
 
   .home-page .hero-text {
