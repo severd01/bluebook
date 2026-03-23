@@ -144,6 +144,21 @@ body {
   font-size: 1.95rem;
 }
 
+.topbar-home {
+  color: inherit;
+  text-decoration: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.topbar-home:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
 .topbar-divider {
   width: 1px;
   height: 28px;
@@ -354,6 +369,16 @@ button:hover {
 
 .situations-panel {
   grid-template-columns: minmax(320px, 1fr) minmax(280px, 0.8fr);
+}
+
+.situations-page .home-shell {
+  grid-template-columns: 1fr;
+}
+
+.situations-page .main-panel {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .situations-stats {
@@ -647,6 +672,10 @@ button:hover {
 
   .topbar-divider {
     display: none;
+  }
+
+  .topbar-home {
+    font-size: 1.8rem;
   }
 
   .topbar-subtitle {
