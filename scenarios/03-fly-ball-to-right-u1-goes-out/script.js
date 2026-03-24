@@ -545,6 +545,10 @@ function getMovementStatus(path, isActive, isFinished) {
 }
 
 function renderMovementTracker() {
+  if (!movementTrackerEl) {
+    return;
+  }
+
   const scenario = scenarios[scenarioIndex];
 
   movementTrackerEl.innerHTML = scenario.paths
@@ -614,21 +618,28 @@ function updateRoleDrawButtons() {
     const isActive = !roundFinished && index === activeRoleIndex;
     const canFinish = Boolean(selectedPath?.start) && selectedPath.points.length >= 2 && !isComplete;
 
+    button.classList.toggle("hidden", isComplete || roundFinished);
     button.classList.toggle("is-active", isActive);
     button.classList.toggle("is-complete", isComplete);
     button.disabled = roundFinished || isComplete;
-    button.textContent = isComplete
-      ? `${roleLabel} Path Complete`
-      : canFinish
-        ? `Finish ${roleLabel} Path`
-        : `Draw ${roleLabel} Path`;
+    button.textContent = canFinish
+      ? `Finish ${roleLabel} Path`
+      : `Draw ${roleLabel} Path`;
   });
 }
 
 function updateCheckButtonState() {
-  checkBtn.disabled = roundFinished || !selectedPaths.every(
-    (path) => path.completed && path.start && path.end
-  );
+  if (checkBtn) {
+    checkBtn.disabled = roundFinished || !selectedPaths.every(
+      (path) => path.completed && path.start && path.end
+    );
+    checkBtn.classList.toggle("hidden", roundFinished);
+  }
+
+  if (clearBtn) {
+    clearBtn.disabled = roundFinished;
+  }
+
   updateRoleDrawButtons();
   renderMovementTracker();
 }

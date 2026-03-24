@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umpire Position Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=13" />
+    <link rel="stylesheet" href="./styles.css?v=14" />
   </head>
   <body>
     <main class="app-shell">
@@ -45,13 +45,9 @@
           </div>
 
           <div class="actions">
-            <button id="check-btn" class="primary-btn" disabled>Check Movements</button>
-            <button id="clear-btn" class="ghost-btn">Clear Drawings</button>
             <button id="toggle-grid-btn" class="ghost-btn">Hide Grid</button>
             <button id="next-btn" class="ghost-btn" disabled>Next Play</button>
           </div>
-
-          <div id="movement-tracker" class="movement-tracker"></div>
 
           <p id="cursor-readout" class="cursor-readout">Cursor: x -, y -</p>
 
@@ -71,8 +67,16 @@
         <section class="panel field-panel">
           <div class="field-wrap">
             <div class="draw-controls" aria-label="Draw movement paths">
-              <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
-              <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw U1 Path</button>
+              <div class="draw-controls-side draw-controls-left">
+                <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
+                <button id="clear-btn" class="field-ghost-btn" type="button">Clear Drawings</button>
+              </div>
+              <div class="draw-controls-center">
+                <button id="check-btn" class="field-check-btn" type="button" disabled>Check Movements</button>
+              </div>
+              <div class="draw-controls-side draw-controls-right">
+                <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw U1 Path</button>
+              </div>
             </div>
             <svg
               id="field"
@@ -105,6 +109,6 @@
       };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <script src="./script.js?v=18"></script>
+    <script src="./script.js?v=19"></script>
   </body>
 </html>
