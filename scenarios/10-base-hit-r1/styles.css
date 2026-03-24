@@ -236,23 +236,6 @@ h1 {
   font-size: 0.82rem;
 }
 
-.runner-overlay {
-  pointer-events: none;
-}
-
-.runner-marker {
-  fill: #c53929;
-}
-
-.runner-label {
-  fill: #fff;
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 9px;
-  font-weight: 800;
-  text-anchor: middle;
-  dominant-baseline: central;
-}
-
 button {
   border: 0;
   border-radius: 999px;
@@ -347,6 +330,52 @@ button:disabled {
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
 }
+.draw-controls {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.role-draw-btn {
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  box-shadow: 0 14px 24px rgba(41, 27, 15, 0.18);
+  pointer-events: auto;
+  opacity: 0.92;
+}
+
+.role-draw-btn:hover:enabled {
+  opacity: 1;
+}
+
+.role-draw-btn.is-active {
+  outline: 3px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 1px;
+}
+
+.role-draw-btn.is-complete {
+  opacity: 0.6;
+}
+
+.role-btn-p {
+  background: #1f7a5f;
+}
+
+.role-btn-u1 {
+  background: #285a9b;
+}
+
+
 
 #field {
   display: block;
@@ -512,6 +541,7 @@ button:disabled {
   }
 }
 
+#finish-path-btn,
 #toggle-grid-btn,
 .cursor-readout {
   display: none !important;
@@ -653,6 +683,19 @@ button:disabled {
     border-radius: 16px;
   }
 
+  .draw-controls {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    gap: 8px;
+  }
+
+  .role-draw-btn {
+    min-height: 40px;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+  }
+
   .answer-card {
     padding: 7px 9px;
     font-size: 0.76rem;
@@ -670,6 +713,7 @@ button:disabled {
     height: 38%;
   }
 }
+
 
 @media (max-width: 520px) {
   .app-shell {
@@ -702,5 +746,10 @@ button:disabled {
 
   .ball-flight {
     stroke-width: 5;
+  }
+
+  .draw-controls {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

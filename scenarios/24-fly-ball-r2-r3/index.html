@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umpire Position Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=10" />
+    <link rel="stylesheet" href="./styles.css?v=13" />
   </head>
   <body>
     <main class="app-shell">
@@ -46,7 +46,6 @@
 
           <div class="actions">
             <button id="check-btn" class="primary-btn" disabled>Check Movements</button>
-            <button id="finish-path-btn" class="ghost-btn" disabled>Draw Plate Path</button>
             <button id="clear-btn" class="ghost-btn">Clear Drawings</button>
             <button id="toggle-grid-btn" class="ghost-btn">Hide Grid</button>
             <button id="next-btn" class="ghost-btn" disabled>Next Play</button>
@@ -71,6 +70,10 @@
 
         <section class="panel field-panel">
           <div class="field-wrap">
+            <div class="draw-controls" aria-label="Draw movement paths">
+              <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
+              <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw U1 Path</button>
+            </div>
             <svg
               id="field"
               viewBox="0 0 886 886"
@@ -112,6 +115,6 @@
       };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <script src="./script.js?v=15"></script>
+    <script src="./script.js?v=18"></script>
   </body>
 </html>

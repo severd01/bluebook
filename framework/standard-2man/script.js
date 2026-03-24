@@ -98,7 +98,8 @@ const feedbackTitleEl = document.getElementById("feedback-title");
 const feedbackBodyEl = document.getElementById("feedback-body");
 const feedbackEl = document.querySelector(".feedback");
 const checkBtn = document.getElementById("check-btn");
-const finishPathBtn = document.getElementById("finish-path-btn");
+const drawPBtn = document.getElementById("draw-p-btn");
+const drawU1Btn = document.getElementById("draw-u1-btn");
 const clearBtn = document.getElementById("clear-btn");
 const toggleGridBtn = document.getElementById("toggle-grid-btn");
 const nextBtn = document.getElementById("next-btn");
@@ -116,11 +117,156 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const FIELD_SIZE = 886;
 const GRID_STEP = 100;
 
+const PLAY_ALL_KEY = "bluebook-play-all-session";
+const PLAY_ALL_COMPLETE_KEY = "bluebook-play-all-complete";
+const DEFAULT_SCENARIO_ORDER = [
+  "01-routine-fly-ball-to-right-field",
+  "02-routine-fly-ball-to-left-field",
+  "03-fly-ball-to-right-u1-goes-out",
+  "04-pop-up-on-the-infield",
+  "05-foul-pop-up",
+  "06-base-hit-possible-triple",
+  "07-ground-ball",
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+];
+const currentScenarioSlug = window.location.pathname.replace(/\/$/, "").split("/").pop();
+
+function getStoredJson(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch (error) {
+    return null;
+  }
+}
+
+function setStoredJson(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getPlayAllSession() {
+  const session = getStoredJson(PLAY_ALL_KEY);
+  if (!session || !session.active) {
+    return null;
+  }
+
+  return session;
+}
+
+function getSessionOrder(session) {
+  return Array.isArray(session?.order) && session.order.length
+    ? session.order
+    : DEFAULT_SCENARIO_ORDER;
+}
+
+function syncPlayAllSessionOnLoad() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+
+  if (currentIndex === -1) {
+    return;
+  }
+
+  session.currentIndex = currentIndex;
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+
+  score = Number(session.score || 0);
+  attempts = Number(session.attempts || 0);
+}
+
+function persistPlayAllTotals() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  session.score = score;
+  session.attempts = attempts;
+  session.currentIndex = order.indexOf(currentScenarioSlug);
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+}
+
+function updateNextButtonLabel() {
+  const session = getPlayAllSession();
+  if (!session) {
+    nextBtn.textContent = "Next Play";
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  nextBtn.textContent = currentIndex >= order.length - 1
+    ? "Finish Session"
+    : "Next Scenario";
+}
+
+function goToNextPlayAllScenario() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return false;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  if (currentIndex === -1) {
+    return false;
+  }
+
+  const nextSlug = order[currentIndex + 1];
+
+  if (nextSlug) {
+    session.currentIndex = currentIndex + 1;
+    session.lastScenario = nextSlug;
+    setStoredJson(PLAY_ALL_KEY, session);
+    window.location.href = `../${nextSlug}/`;
+    return true;
+  }
+
+  setStoredJson(PLAY_ALL_COMPLETE_KEY, {
+    score,
+    attempts,
+    completedAt: new Date().toISOString(),
+    mode: session.mode || "all",
+    label: session.label || "Play All Scenarios",
+    order,
+    totalScenarios: order.length,
+  });
+  localStorage.removeItem(PLAY_ALL_KEY);
+  window.location.href = "../../results.html";
+  return true;
+}
+
 let scenarioIndex = 0;
 let score = 0;
 let attempts = 0;
 let roundFinished = false;
-let activeRoleIndex = 0;
+let activeRoleIndex = null;
 let selectedPaths = [];
 let roleArtifacts = [];
 let gridVisible = false;
@@ -380,6 +526,14 @@ function roleDisplayName(role) {
   return role;
 }
 
+function roleActionLabel(role) {
+  return role === "P" ? "Plate" : role;
+}
+
+function getFirstIncompleteRoleIndex() {
+  return selectedPaths.findIndex((path) => !path.completed);
+}
+
 function getMovementStatus(path, isActive, isFinished) {
   if (isFinished && path.start && path.end) {
     return "Movement locked in.";
@@ -391,10 +545,10 @@ function getMovementStatus(path, isActive, isFinished) {
 
   if (isActive) {
     if (!path.start) {
-      return "Click to place the starting position.";
+      return "Tap the field to place the starting position.";
     }
 
-    return "Keep adding route points, then finish the path.";
+    return "Keep adding route points, then finish on the field.";
   }
 
   if (path.start) {
@@ -425,6 +579,72 @@ function renderMovementTracker() {
       `;
     })
     .join("");
+}
+
+function updatePrompt() {
+  const scenario = scenarios[scenarioIndex];
+
+  if (roundFinished) {
+    return;
+  }
+
+  if (activeRoleIndex === null) {
+    feedbackTitleEl.textContent = "Choose Plate or U1 to begin drawing.";
+    renderMovementTracker();
+    return;
+  }
+
+  const activeRole = scenario.paths[activeRoleIndex];
+  const selectedPath = selectedPaths[activeRoleIndex];
+
+  if (!activeRole || !selectedPath) {
+    feedbackTitleEl.textContent = "Choose Plate or U1 to begin drawing.";
+    renderMovementTracker();
+    return;
+  }
+
+  const roleLabel = roleActionLabel(activeRole.role);
+
+  if (!selectedPath.start) {
+    feedbackTitleEl.textContent = `Tap the field to place ${roleLabel}'s starting position.`;
+  } else {
+    feedbackTitleEl.textContent = `Keep drawing ${roleLabel}'s route, then tap ${roleLabel} again to finish.`;
+  }
+
+  renderMovementTracker();
+}
+
+function updateRoleDrawButtons() {
+  const scenario = scenarios[scenarioIndex];
+  const buttonMap = { P: drawPBtn, U1: drawU1Btn };
+
+  scenario.paths.forEach((path, index) => {
+    const button = buttonMap[path.role];
+    if (!button) return;
+
+    const selectedPath = selectedPaths[index];
+    const roleLabel = roleActionLabel(path.role);
+    const isComplete = Boolean(selectedPath?.completed);
+    const isActive = !roundFinished && index === activeRoleIndex;
+    const canFinish = Boolean(selectedPath?.start) && selectedPath.points.length >= 2 && !isComplete;
+
+    button.classList.toggle("is-active", isActive);
+    button.classList.toggle("is-complete", isComplete);
+    button.disabled = roundFinished || isComplete;
+    button.textContent = isComplete
+      ? `${roleLabel} Path Complete`
+      : canFinish
+        ? `Finish ${roleLabel} Path`
+        : `Draw ${roleLabel} Path`;
+  });
+}
+
+function updateCheckButtonState() {
+  checkBtn.disabled = roundFinished || !selectedPaths.every(
+    (path) => path.completed && path.start && path.end
+  );
+  updateRoleDrawButtons();
+  renderMovementTracker();
 }
 
 function renderAnswerCard(element, section) {
@@ -472,60 +692,6 @@ function renderFeedbackBody(scenario) {
   feedbackBodyEl.innerHTML = `<p>${scenario.explanation}</p>`;
 }
 
-function updatePrompt() {
-  const scenario = scenarios[scenarioIndex];
-
-  if (roundFinished) {
-    return;
-  }
-
-  const activeRole = scenario.paths[activeRoleIndex];
-  const selectedPath = selectedPaths[activeRoleIndex];
-
-  if (!selectedPath.start) {
-    feedbackTitleEl.textContent = `Click ${activeRole.role}'s starting position.`;
-  } else {
-    feedbackTitleEl.textContent = `Click to build ${activeRole.role}'s route, then finish the path.`;
-  }
-
-  renderMovementTracker();
-}
-
-function updateFinishPathButtonStyle() {
-  const scenario = scenarios[scenarioIndex];
-  const activeRole = scenario.paths[activeRoleIndex]?.role;
-  const selectedPath = selectedPaths[activeRoleIndex];
-  const roleLabel = activeRole === "P" ? "Plate" : activeRole;
-
-  finishPathBtn.classList.remove("role-btn-p", "role-btn-u1");
-
-  if (activeRole === "P") {
-    finishPathBtn.classList.add("role-btn-p");
-  } else if (activeRole === "U1") {
-    finishPathBtn.classList.add("role-btn-u1");
-  }
-
-  if (!roleLabel) {
-    finishPathBtn.textContent = "Draw Plate Path";
-    return;
-  }
-
-  finishPathBtn.textContent = selectedPath?.start
-    ? `Finish ${roleLabel} Path`
-    : `Draw ${roleLabel} Path`;
-}
-
-function updateCheckButtonState() {
-  const activePath = selectedPaths[activeRoleIndex];
-  finishPathBtn.disabled =
-    roundFinished || !activePath || activePath.completed || activePath.points.length < 2;
-  updateFinishPathButtonStyle();
-  checkBtn.disabled = !selectedPaths.every(
-    (path) => path.completed && path.start && path.end
-  );
-  renderMovementTracker();
-}
-
 function updateCursorReadout(point) {
   cursorReadoutEl.textContent = `Cursor: x ${Math.round(point.x)}, y ${Math.round(point.y)}`;
 }
@@ -533,7 +699,7 @@ function updateCursorReadout(point) {
 function resetSelectedPaths() {
   const scenario = scenarios[scenarioIndex];
 
-  activeRoleIndex = 0;
+  activeRoleIndex = null;
   selectedPaths = scenario.paths.map(() => ({
     start: null,
     end: null,
@@ -548,8 +714,49 @@ function resetSelectedPaths() {
   });
 }
 
+function setActiveRole(index) {
+  if (roundFinished || index === null || index === undefined) {
+    return;
+  }
+
+  const selectedPath = selectedPaths[index];
+  if (!selectedPath || selectedPath.completed) {
+    return;
+  }
+
+  activeRoleIndex = index;
+  updatePrompt();
+  updateCheckButtonState();
+}
+
+function finishActiveRolePath() {
+  if (roundFinished || activeRoleIndex === null) {
+    return;
+  }
+
+  const selectedPath = selectedPaths[activeRoleIndex];
+  if (!selectedPath || selectedPath.completed || selectedPath.points.length < 2) {
+    return;
+  }
+
+  selectedPath.completed = true;
+
+  const nextIncompleteIndex = getFirstIncompleteRoleIndex();
+  activeRoleIndex = nextIncompleteIndex === -1 ? null : nextIncompleteIndex;
+
+  if (activeRoleIndex === null) {
+    feedbackTitleEl.textContent = "Check both movement paths when you're ready.";
+    renderMovementTracker();
+  } else {
+    updatePrompt();
+  }
+
+  updateCheckButtonState();
+}
+
 function loadScenario() {
   const scenario = scenarios[scenarioIndex];
+  syncPlayAllSessionOnLoad();
   titleEl.textContent = scenario.title;
   systemEl.textContent = scenario.system;
   systemEl.style.display = scenario.system ? "inline-flex" : "none";
@@ -569,8 +776,8 @@ function loadScenario() {
 
   ballFlight.classList.add("hidden");
   checkBtn.disabled = true;
-  finishPathBtn.disabled = true;
   nextBtn.disabled = true;
+  updateNextButtonLabel();
 
   if (scenario.ballFlightPath) {
     ballFlight.setAttribute("d", scenario.ballFlightPath);
@@ -582,13 +789,13 @@ function loadScenario() {
   renderMovementTracker();
   updatePrompt();
   feedbackBodyEl.textContent = "";
-  updateFinishPathButtonStyle();
+  updateRoleDrawButtons();
 
   renderScoreLine();
 }
 
 field.addEventListener("click", (event) => {
-  if (roundFinished) return;
+  if (roundFinished || activeRoleIndex === null) return;
 
   const clickPoint = getSvgPoint(event);
   const selectedPath = selectedPaths[activeRoleIndex];
@@ -627,27 +834,34 @@ field.addEventListener("mouseleave", () => {
   cursorReadoutEl.textContent = "Cursor: x -, y -";
 });
 
-finishPathBtn.addEventListener("click", () => {
-  if (roundFinished) return;
-
-  const scenario = scenarios[scenarioIndex];
-  const selectedPath = selectedPaths[activeRoleIndex];
-
-  if (!selectedPath || selectedPath.completed || selectedPath.points.length < 2) {
+drawPBtn?.addEventListener("click", () => {
+  const selectedPath = selectedPaths[0];
+  if (!selectedPath || roundFinished) {
     return;
   }
 
-  selectedPath.completed = true;
-
-  if (activeRoleIndex < scenario.paths.length - 1) {
-    activeRoleIndex += 1;
-    updatePrompt();
-  } else {
-    feedbackTitleEl.textContent = "Check both movement paths when you're ready.";
-    renderMovementTracker();
+  if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
+    activeRoleIndex = 0;
+    finishActiveRolePath();
+    return;
   }
 
-  updateCheckButtonState();
+  setActiveRole(0);
+});
+
+drawU1Btn?.addEventListener("click", () => {
+  const selectedPath = selectedPaths[1];
+  if (!selectedPath || roundFinished) {
+    return;
+  }
+
+  if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
+    activeRoleIndex = 1;
+    finishActiveRolePath();
+    return;
+  }
+
+  setActiveRole(1);
 });
 
 clearBtn.addEventListener("click", () => {
@@ -729,6 +943,17 @@ checkBtn.addEventListener("click", () => {
 
   renderScoreLine();
   nextBtn.disabled = false;
+  persistPlayAllTotals();
+  updateNextButtonLabel();
+  celebrateScore(result.points);
+  updateRoleDrawButtons();
+
+  if (result.tone === "perfect") {
+    feedbackEl?.classList.add("is-perfect");
+    nextBtn.classList.add("perfect-next");
+  } else if (result.tone === "partial") {
+    feedbackEl?.classList.add("is-partial");
+  }
 
   feedbackTitleEl.textContent = result.label;
   renderFeedbackBody(scenario);
@@ -737,6 +962,21 @@ checkBtn.addEventListener("click", () => {
 });
 
 nextBtn.addEventListener("click", () => {
+  if (goToNextPlayAllScenario()) {
+    return;
+  }
+
+  const currentIndex = DEFAULT_SCENARIO_ORDER.indexOf(currentScenarioSlug);
+  const nextSlug =
+    currentIndex === -1
+      ? null
+      : DEFAULT_SCENARIO_ORDER[(currentIndex + 1) % DEFAULT_SCENARIO_ORDER.length];
+
+  if (nextSlug) {
+    window.location.href = `../${nextSlug}/`;
+    return;
+  }
+
   scenarioIndex = (scenarioIndex + 1) % scenarios.length;
   loadScenario();
 });
