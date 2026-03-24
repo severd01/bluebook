@@ -70,6 +70,7 @@ const checkBtn = document.getElementById("check-btn");
 const drawPBtn = document.getElementById("draw-p-btn");
 const drawU1Btn = document.getElementById("draw-u1-btn");
 const clearBtn = document.getElementById("clear-btn");
+const undoBtn = document.getElementById("undo-btn");
 const toggleGridBtn = document.getElementById("toggle-grid-btn");
 const nextBtn = document.getElementById("next-btn");
 const scoreLineEl = document.querySelector(".score-line");
@@ -241,6 +242,7 @@ let attempts = 0;
 let roundFinished = false;
 let activeRoleIndex = null;
 let selectedPaths = [];
+let pointHistory = [];
 let roleArtifacts = [];
 let gridVisible = false;
 let gridLayer;
@@ -466,6 +468,41 @@ function describeGrade(pointsEarned, maxPoints, averageDistance) {
 function resetRoundFeedbackState() {
   feedbackEl?.classList.remove("is-perfect", "is-partial");
   nextBtn.classList.remove("perfect-next");
+}
+
+function renderSelectedPath(index) {
+  const selectedPath = selectedPaths[index];
+  const artifacts = roleArtifacts[index];
+
+  if (!selectedPath || !artifacts) {
+    return;
+  }
+
+  selectedPath.start = selectedPath.points[0] || null;
+  selectedPath.end =
+    selectedPath.points.length > 1
+      ? selectedPath.points[selectedPath.points.length - 1]
+      : null;
+
+  if (!selectedPath.start) {
+    selectedPath.completed = false;
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userStart);
+    hideElement(artifacts.userEnd);
+    return;
+  }
+
+  placeMarker(artifacts.userStart, selectedPath.start);
+
+  if (selectedPath.points.length === 1) {
+    selectedPath.completed = false;
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userEnd);
+    return;
+  }
+
+  placeMarker(artifacts.userEnd, selectedPath.end);
+  placePath(artifacts.userPath, selectedPath.points);
 }
 
 function getDisplayedMaxPoints() {
@@ -705,6 +742,12 @@ function updateCheckButtonState() {
     clearBtn.classList.toggle("hidden", roundFinished);
   }
 
+  if (undoBtn) {
+    const hasPoints = selectedPaths.some((path) => path.points.length > 0);
+    undoBtn.disabled = roundFinished || !hasPoints;
+    undoBtn.classList.toggle("hidden", roundFinished);
+  }
+
   if (fieldStatusEl) {
     fieldStatusEl.classList.toggle("hidden", roundFinished);
   }
@@ -773,6 +816,7 @@ function resetSelectedPaths() {
     points: [],
     completed: false,
   }));
+  pointHistory = [];
 
   roleArtifacts.forEach((artifacts) => {
     hideElement(artifacts.userPath);
@@ -874,6 +918,7 @@ field.addEventListener("click", (event) => {
   }
 
   selectedPath.points.push(clickPoint);
+  pointHistory.push(activeRoleIndex);
 
   if (!selectedPath.start) {
     selectedPath.start = clickPoint;
@@ -939,6 +984,26 @@ clearBtn.addEventListener("click", () => {
 
   resetSelectedPaths();
   if (feedbackBodyEl) feedbackBodyEl.textContent = "";
+  updatePrompt();
+  updateCheckButtonState();
+});
+
+undoBtn?.addEventListener("click", () => {
+  if (roundFinished || !pointHistory.length) {
+    return;
+  }
+
+  const lastRoleIndex = pointHistory.pop();
+  const selectedPath = selectedPaths[lastRoleIndex];
+  if (!selectedPath || !selectedPath.points.length) {
+    updateCheckButtonState();
+    return;
+  }
+
+  selectedPath.points.pop();
+  selectedPath.completed = false;
+  activeRoleIndex = lastRoleIndex;
+  renderSelectedPath(lastRoleIndex);
   updatePrompt();
   updateCheckButtonState();
 });

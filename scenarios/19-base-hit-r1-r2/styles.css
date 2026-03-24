@@ -352,6 +352,7 @@ button:disabled {
 .draw-controls-side {
   flex-direction: column;
   gap: 8px;
+  width: fit-content;
 }
 
 .draw-controls-left {
