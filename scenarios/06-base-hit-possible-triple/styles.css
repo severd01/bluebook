@@ -441,18 +441,25 @@ button:disabled {
 .field-next-btn {
   position: absolute;
   right: 14px;
-  bottom: 14px;
+  bottom: 56px;
   z-index: 5;
   min-height: 42px;
   padding: 10px 16px;
   border-radius: 999px;
-  background: rgba(255, 251, 243, 0.94);
-  border: 1px solid rgba(29, 38, 30, 0.14);
-  color: var(--text);
+  background: #285a9b;
+  border: 1px solid transparent;
+  color: #fff;
   font-size: 0.88rem;
   font-weight: 800;
   box-shadow: 0 14px 24px rgba(41, 27, 15, 0.16);
   pointer-events: auto;
+}
+
+.field-next-btn:disabled {
+  opacity: 1;
+  background: #285a9b;
+  color: #fff;
+  border-color: transparent;
 }
 
 .field-next-btn.perfect-next {
@@ -756,7 +763,7 @@ button:disabled {
   }
 
   .field-panel {
-    padding-bottom: 8px;
+    padding-bottom: 2px;
   }
 
   .field-wrap {
@@ -806,7 +813,7 @@ button:disabled {
 
   .field-next-btn {
     right: 10px;
-    bottom: 10px;
+    bottom: 42px;
     min-height: 34px;
     padding: 7px 10px;
     font-size: 0.72rem;
@@ -905,7 +912,7 @@ button:disabled {
 
   .field-next-btn {
     right: 8px;
-    bottom: 8px;
+    bottom: 40px;
     min-height: 32px;
     padding: 6px 9px;
     font-size: 0.66rem;
