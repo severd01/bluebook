@@ -87,6 +87,7 @@ const field = document.getElementById("field");
 const ballFlight = document.getElementById("ball-flight");
 const answerOverlayEl = document.getElementById("answer-overlay");
 const answerCardSharedEl = document.getElementById("answer-card-shared");
+const fieldStatusEl = document.getElementById("field-status");
 const MARKER_RADIUS = 11;
 const SCORING_POINT_DIAMETER = 60;
 const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
@@ -630,6 +631,10 @@ function updateCheckButtonState() {
   if (clearBtn) {
     clearBtn.disabled = roundFinished;
     clearBtn.classList.toggle("hidden", roundFinished);
+  }
+
+  if (fieldStatusEl) {
+    fieldStatusEl.classList.toggle("hidden", roundFinished);
   }
 
   updateRoleDrawButtons();
