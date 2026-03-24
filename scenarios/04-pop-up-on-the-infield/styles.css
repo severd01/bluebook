@@ -812,6 +812,15 @@ button:disabled {
     line-height: 1.16;
   }
 
+  #scenario-runners,
+  #scenario-outs {
+    white-space: nowrap;
+  }
+
+  #scenario-ball {
+    overflow-wrap: anywhere;
+  }
+
   .actions {
     position: sticky;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
