@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ Feedback</title>
+    <link rel="stylesheet" href="./menu.css?v=16" />
+  </head>
+  <body>
+    <main class="menu-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Feedback</p>
+        <h1>Help improve UmpIQ.</h1>
+        <p class="hero-text">
+          Tell me what felt useful, what was confusing, or what you would want next.
+          Every note helps shape the next version.
+        </p>
+
+        <section class="feedback-card">
+          <p class="feedback-label">Send Feedback</p>
+          <p id="feedback-context" class="feedback-context">
+            Feedback will be sent to the UmpIQ inbox.
+          </p>
+
+          <form
+            class="feedback-form"
+            action="https://formsubmit.co/severd01@gmail.com"
+            method="POST"
+          >
+            <input type="hidden" name="_subject" value="UmpIQ Feedback" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_next" value="https://umpiq.com/feedback-thanks.html" />
+            <input type="hidden" id="feedback-page" name="Page Context" value="" />
+
+            <div class="feedback-grid">
+              <div class="feedback-field">
+                <label for="feedback-name">Name</label>
+                <input id="feedback-name" name="Name" type="text" autocomplete="name" />
+              </div>
+
+              <div class="feedback-field">
+                <label for="feedback-email">Email</label>
+                <input id="feedback-email" name="Email" type="email" autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="feedback-field">
+              <label for="feedback-type">Type</label>
+              <select id="feedback-type" name="Feedback Type">
+                <option value="General feedback">General feedback</option>
+                <option value="Bug report">Bug report</option>
+                <option value="Idea / feature request">Idea / feature request</option>
+                <option value="Confusing flow">Confusing flow</option>
+              </select>
+            </div>
+
+            <div class="feedback-field">
+              <label for="feedback-message">Message</label>
+              <textarea
+                id="feedback-message"
+                name="Message"
+                required
+                placeholder="What felt helpful? What felt confusing? What would you change?"
+              ></textarea>
+            </div>
+
+            <button class="primary-btn" type="submit">Send Feedback</button>
+          </form>
+
+          <p class="feedback-note">
+            If this is your first submission through the form service, there may be a one-time
+            verification email before messages start forwarding normally.
+          </p>
+        </section>
+
+        <div class="hero-actions">
+          <a href="./situations.html" class="ghost-link">Back To Situations</a>
+          <a href="./" class="ghost-link">Back To Home</a>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        const context = document.getElementById("feedback-context");
+        const pageInput = document.getElementById("feedback-page");
+        const params = new URLSearchParams(window.location.search);
+        const referrer = document.referrer;
+        const source = params.get("from");
+        const page = source || referrer || "Direct visit";
+
+        pageInput.value = page;
+        context.textContent =
+          page === "Direct visit"
+            ? "Feedback will be sent to the UmpIQ inbox."
+            : `Feedback from: ${page}`;
+      })();
+    </script>
+    <script>
+      window.va = window.va || function () {
+        (window.vaq = window.vaq || []).push(arguments);
+      };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+  </body>
+</html>
