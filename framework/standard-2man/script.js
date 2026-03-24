@@ -113,6 +113,7 @@ const answerCardSharedEl = document.getElementById("answer-card-shared");
 const fieldStatusEl = document.getElementById("field-status");
 const fieldResultEl = document.getElementById("field-result");
 const fieldResultTextEl = document.getElementById("field-result-text");
+const fieldResultBurstEl = document.getElementById("field-result-burst");
 const MARKER_RADIUS = 11;
 const SCORING_POINT_DIAMETER = 60;
 const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
@@ -588,21 +589,79 @@ function renderMovementTracker() {
     .join("");
 }
 
+function runFieldResultAnimation(result) {
+  if (!fieldResultEl) return;
+
+  fieldResultEl.classList.remove("is-animating");
+  void fieldResultEl.offsetWidth;
+  fieldResultEl.classList.add("is-animating");
+  window.setTimeout(() => {
+    fieldResultEl?.classList.remove("is-animating");
+  }, 560);
+
+  if (!fieldResultBurstEl) return;
+  fieldResultBurstEl.innerHTML = "";
+  fieldResultBurstEl.classList.remove("is-active");
+
+  if (result.tone !== "perfect") {
+    return;
+  }
+
+  const colors = ["#38d199", "#ffcf5c", "#285a9b", "#1f7a5f", "#f0a266", "#fff1d6"];
+  const pieces = [
+    [-66, -42, "-28deg"],
+    [-32, -58, "-12deg"],
+    [18, -60, "14deg"],
+    [58, -40, "28deg"],
+    [-58, 20, "-18deg"],
+    [-16, 50, "-6deg"],
+    [20, 52, "10deg"],
+    [64, 18, "22deg"],
+  ];
+
+  pieces.forEach(([x, y, rotate], index) => {
+    const piece = document.createElement("span");
+    piece.className = "field-result-burst-piece";
+    piece.style.setProperty("--burst-x", `${x}px`);
+    piece.style.setProperty("--burst-y", `${y}px`);
+    piece.style.setProperty("--burst-rotate", rotate);
+    piece.style.background = colors[index % colors.length];
+    piece.style.animationDelay = `${index * 18}ms`;
+    fieldResultBurstEl.appendChild(piece);
+  });
+
+  void fieldResultBurstEl.offsetWidth;
+  fieldResultBurstEl.classList.add("is-active");
+  window.setTimeout(() => {
+    fieldResultBurstEl?.classList.remove("is-active");
+    if (fieldResultBurstEl) fieldResultBurstEl.innerHTML = "";
+  }, 900);
+}
+
 function clearFieldResult() {
   fieldResultEl?.classList.add("hidden");
-  fieldResultEl?.classList.remove("is-perfect", "is-partial");
+  fieldResultEl?.classList.remove("is-perfect", "is-partial", "is-close", "is-miss", "is-animating");
   if (fieldResultTextEl) fieldResultTextEl.textContent = "";
+  if (fieldResultBurstEl) {
+    fieldResultBurstEl.classList.remove("is-active");
+    fieldResultBurstEl.innerHTML = "";
+  }
 }
 
 function showFieldResult(result) {
   if (!fieldResultEl || !fieldResultTextEl) return;
   fieldResultTextEl.textContent = result.label;
-  fieldResultEl.classList.remove("hidden", "is-perfect", "is-partial");
+  fieldResultEl.classList.remove("hidden", "is-perfect", "is-partial", "is-close", "is-miss");
   if (result.tone === "perfect") {
     fieldResultEl.classList.add("is-perfect");
   } else if (result.tone === "partial") {
     fieldResultEl.classList.add("is-partial");
+  } else if (result.tone === "close") {
+    fieldResultEl.classList.add("is-close");
+  } else if (result.tone === "miss") {
+    fieldResultEl.classList.add("is-miss");
   }
+  runFieldResultAnimation(result);
 }
 
 function updatePrompt() {
