@@ -368,7 +368,9 @@ function updateGridVisibility() {
   if (!gridLayer) return;
 
   gridLayer.classList.toggle("hidden", !gridVisible);
-  toggleGridBtn.textContent = gridVisible ? "Hide Grid" : "Show Grid";
+  if (toggleGridBtn) {
+    toggleGridBtn.textContent = gridVisible ? "Hide Grid" : "Show Grid";
+  }
 }
 
 function getSvgPoint(event) {
@@ -950,7 +952,7 @@ clearBtn.addEventListener("click", () => {
   updateCheckButtonState();
 });
 
-toggleGridBtn.addEventListener("click", () => {
+toggleGridBtn?.addEventListener("click", () => {
   gridVisible = !gridVisible;
   updateGridVisibility();
 });
