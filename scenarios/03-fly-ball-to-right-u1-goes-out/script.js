@@ -205,7 +205,7 @@ function persistPlayAllTotals() {
 function updateNextButtonLabel() {
   const session = getPlayAllSession();
   if (!session) {
-    nextBtn.textContent = "Next Play";
+    nextBtn.textContent = "Next Situation";
     return;
   }
 
@@ -213,7 +213,7 @@ function updateNextButtonLabel() {
   const currentIndex = order.indexOf(currentScenarioSlug);
   nextBtn.textContent = currentIndex >= order.length - 1
     ? "Finish Session"
-    : "Next Scenario";
+    : "Next Situation";
 }
 
 function goToNextPlayAllScenario() {
