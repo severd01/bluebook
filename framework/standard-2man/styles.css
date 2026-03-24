@@ -453,6 +453,37 @@ button:disabled {
   border-color: transparent;
 }
 
+.field-result {
+  position: absolute;
+  left: 14px;
+  bottom: 56px;
+  z-index: 5;
+  max-width: min(38vw, 260px);
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(247, 243, 234, 0.94);
+  border: 1px solid rgba(29, 38, 30, 0.08);
+  box-shadow: 0 14px 24px rgba(41, 27, 15, 0.14);
+}
+
+.field-result.is-perfect {
+  background: rgba(31, 122, 95, 0.14);
+  border-color: rgba(31, 122, 95, 0.18);
+}
+
+.field-result.is-partial {
+  background: rgba(180, 125, 47, 0.12);
+  border-color: rgba(180, 125, 47, 0.16);
+}
+
+.field-result-text {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 
 #field {
   display: block;
@@ -785,6 +816,17 @@ button:disabled {
     max-width: min(28vw, 140px);
   }
 
+  .field-result {
+    left: 10px;
+    bottom: 42px;
+    max-width: min(34vw, 190px);
+    padding: 8px 10px;
+  }
+
+  .field-result-text {
+    font-size: 0.74rem;
+  }
+
   .answer-card {
     padding: 7px 9px;
     font-size: 0.76rem;
@@ -878,5 +920,16 @@ button:disabled {
     padding: 6px 9px;
     font-size: 0.66rem;
     max-width: min(30vw, 122px);
+  }
+
+  .field-result {
+    left: 8px;
+    bottom: 40px;
+    max-width: min(38vw, 156px);
+    padding: 7px 8px;
+  }
+
+  .field-result-text {
+    font-size: 0.68rem;
   }
 }

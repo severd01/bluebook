@@ -85,6 +85,8 @@ const ballFlight = document.getElementById("ball-flight");
 const answerOverlayEl = document.getElementById("answer-overlay");
 const answerCardSharedEl = document.getElementById("answer-card-shared");
 const fieldStatusEl = document.getElementById("field-status");
+const fieldResultEl = document.getElementById("field-result");
+const fieldResultTextEl = document.getElementById("field-result-text");
 const MARKER_RADIUS = 11;
 const SCORING_POINT_DIAMETER = 60;
 const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
@@ -560,6 +562,23 @@ function renderMovementTracker() {
     .join("");
 }
 
+function clearFieldResult() {
+  fieldResultEl?.classList.add("hidden");
+  fieldResultEl?.classList.remove("is-perfect", "is-partial");
+  if (fieldResultTextEl) fieldResultTextEl.textContent = "";
+}
+
+function showFieldResult(result) {
+  if (!fieldResultEl || !fieldResultTextEl) return;
+  fieldResultTextEl.textContent = result.label;
+  fieldResultEl.classList.remove("hidden", "is-perfect", "is-partial");
+  if (result.tone === "perfect") {
+    fieldResultEl.classList.add("is-perfect");
+  } else if (result.tone === "partial") {
+    fieldResultEl.classList.add("is-partial");
+  }
+}
+
 function updatePrompt() {
   const scenario = scenarios[scenarioIndex];
 
@@ -778,6 +797,7 @@ function loadScenario() {
 
   hideAnswerOverlay();
   resetRoundFeedbackState();
+  clearFieldResult();
   renderMovementTracker();
   updatePrompt();
   if (feedbackBodyEl) feedbackBodyEl.textContent = "";
@@ -948,6 +968,7 @@ checkBtn.addEventListener("click", () => {
   }
 
   feedbackTitleEl.textContent = result.label;
+  showFieldResult(result);
   renderFeedbackBody(scenario);
   renderAnswerOverlay(scenario);
   renderMovementTracker();
