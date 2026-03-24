@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umpire Position Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=17" />
+    <link rel="stylesheet" href="./styles.css?v=18" />
   </head>
   <body>
     <main class="app-shell">
@@ -46,7 +46,6 @@
 
           <div class="actions">
             <button id="toggle-grid-btn" class="ghost-btn">Hide Grid</button>
-            <button id="next-btn" class="ghost-btn" disabled>Next Play</button>
           </div>
 
           <p id="cursor-readout" class="cursor-readout">Cursor: x -, y -</p>
@@ -111,6 +110,8 @@
               <path id="ball-flight" class="ball-flight hidden" />
             </svg>
 
+            <button id="next-btn" class="field-next-btn" type="button" disabled>Next Play</button>
+
             <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
               <section id="answer-card-shared" class="answer-card answer-card-top"></section>
             </div>
@@ -124,6 +125,6 @@
       };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <script src="./script.js?v=21"></script>
+    <script src="./script.js?v=22"></script>
   </body>
 </html>
