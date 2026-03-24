@@ -95,6 +95,11 @@ const fieldResultBurstEl = document.getElementById("field-result-burst");
 const MARKER_RADIUS = 11;
 const SCORING_POINT_DIAMETER = 60;
 const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
+const START_TOLERANCE_RADIUS = 72;
+const END_TOLERANCE_RADIUS = 110;
+const WAYPOINT_TOLERANCE_RADIUS = 96;
+const ROUTE_AVERAGE_TOLERANCE = 68;
+const ROUTE_STRONG_TOLERANCE = 48;
 const SVG_NS = "http://www.w3.org/2000/svg";
 const FIELD_SIZE = 886;
 const GRID_STEP = 100;
@@ -431,6 +436,60 @@ function pathIntersectsZone(points, zone, padding) {
 
 function pathIntersectsPointTarget(points, target, radius) {
   return points.some((point) => pointInCircle(point, target, radius));
+}
+
+function distanceToSegment(point, start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+
+  if (dx === 0 && dy === 0) {
+    return distance(point, start);
+  }
+
+  const t = Math.max(
+    0,
+    Math.min(
+      1,
+      ((point.x - start.x) * dx + (point.y - start.y) * dy) /
+        (dx * dx + dy * dy)
+    )
+  );
+
+  return distance(point, {
+    x: start.x + t * dx,
+    y: start.y + t * dy,
+  });
+}
+
+function getExpectedRoutePoints(path) {
+  return path.routePoints?.length
+    ? path.routePoints
+    : [path.startAnswer, ...(path.waypoints || []), path.endAnswer];
+}
+
+function getAverageDistanceToRoute(points, expectedRoutePoints) {
+  if (!points.length || expectedRoutePoints.length < 2) {
+    return Infinity;
+  }
+
+  const totalDistance = points.reduce((sum, point) => {
+    let best = Infinity;
+
+    for (let index = 0; index < expectedRoutePoints.length - 1; index += 1) {
+      best = Math.min(
+        best,
+        distanceToSegment(
+          point,
+          expectedRoutePoints[index],
+          expectedRoutePoints[index + 1]
+        )
+      );
+    }
+
+    return sum + best;
+  }, 0);
+
+  return totalDistance / points.length;
 }
 
 function describeGrade(pointsEarned, maxPoints, averageDistance) {
@@ -1032,20 +1091,28 @@ checkBtn.addEventListener("click", () => {
 
   scenario.paths.forEach((path, index) => {
     const selected = selectedPaths[index];
+    const expectedRoutePoints = getExpectedRoutePoints(path);
     const startHit = pointInCircle(
       selected.start,
       path.startAnswer,
-      SCORING_POINT_RADIUS
+      START_TOLERANCE_RADIUS
     );
     const endHit = pointInCircle(
       selected.end,
       path.endAnswer,
-      SCORING_POINT_RADIUS
+      END_TOLERANCE_RADIUS
     );
     const waypointHits = (path.waypoints || []).every((waypoint) =>
-      pathIntersectsPointTarget(selected.points, waypoint, SCORING_POINT_RADIUS)
+      pathIntersectsPointTarget(selected.points, waypoint, WAYPOINT_TOLERANCE_RADIUS)
     );
-    const roleHit = startHit && waypointHits && endHit;
+    const averageRouteDistance = getAverageDistanceToRoute(
+      selected.points,
+      expectedRoutePoints
+    );
+    const routeHit = averageRouteDistance <= ROUTE_AVERAGE_TOLERANCE;
+    const strongRouteHit = averageRouteDistance <= ROUTE_STRONG_TOLERANCE;
+    const routeOrWaypointHit = waypointHits || routeHit;
+    const roleHit = startHit && routeOrWaypointHit && (endHit || strongRouteHit);
 
     if (roleHit) {
       pointsEarned += 1;
