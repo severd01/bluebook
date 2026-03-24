@@ -619,6 +619,7 @@ function updateCheckButtonState() {
 
   if (clearBtn) {
     clearBtn.disabled = roundFinished;
+    clearBtn.classList.toggle("hidden", roundFinished);
   }
 
   updateRoleDrawButtons();
@@ -924,7 +925,7 @@ checkBtn.addEventListener("click", () => {
   persistPlayAllTotals();
   updateNextButtonLabel();
   celebrateScore(result.points);
-  updateRoleDrawButtons();
+  updateCheckButtonState();
 
   if (result.tone === "perfect") {
     feedbackEl?.classList.add("is-perfect");

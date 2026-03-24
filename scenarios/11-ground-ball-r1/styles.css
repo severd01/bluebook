@@ -731,33 +731,31 @@ button:disabled {
     top: 10px;
     left: 10px;
     right: 10px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "check check"
-      "left right";
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: start;
     gap: 8px;
   }
 
   .draw-controls-left {
-    grid-area: left;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   .draw-controls-right {
-    grid-area: right;
-    align-items: stretch;
+    align-items: flex-end;
   }
 
   .draw-controls-center {
-    grid-area: check;
+    justify-content: center;
   }
 
   .role-draw-btn,
   .field-check-btn,
   .field-ghost-btn {
-    min-height: 40px;
-    padding: 9px 12px;
-    font-size: 0.82rem;
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 0.72rem;
+    border-radius: 999px;
+    max-width: min(34vw, 150px);
   }
 
   .answer-card {
@@ -813,10 +811,31 @@ button:disabled {
   }
 
   .draw-controls {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "check"
-      "left"
-      "right";
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .draw-controls-side {
+    gap: 6px;
+  }
+
+  .draw-controls-left {
+    align-items: flex-start;
+  }
+
+  .draw-controls-right {
+    align-items: flex-end;
+  }
+
+  .role-draw-btn,
+  .field-check-btn,
+  .field-ghost-btn {
+    min-height: 32px;
+    padding: 6px 9px;
+    font-size: 0.66rem;
+    max-width: min(32vw, 132px);
   }
 }
