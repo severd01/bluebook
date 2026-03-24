@@ -162,7 +162,7 @@ h1 {
 }
 
 #scenario-runners {
-  color: #c53929;
+  color: var(--text);
   font-weight: 800;
 }
 
