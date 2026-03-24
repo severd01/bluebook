@@ -32,14 +32,13 @@ const scenarios = [
     paths: [
       {
         role: "P",
-        startAnswer: { x: 444, y: 693 },
+        startAnswer: { x: 441, y: 694 },
         routePoints: [
-          { x: 444, y: 693 },
-          { x: 407, y: 690 },
-          { x: 474, y: 679 },
+          { x: 441, y: 694 },
+          { x: 356, y: 614 },
         ],
-        waypoints: [{ x: 407, y: 690 }],
-        endAnswer: { x: 474, y: 679 },
+        waypoints: [],
+        endAnswer: { x: 356, y: 614 },
       },
       {
         role: "U1",
