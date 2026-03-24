@@ -441,10 +441,12 @@ button:disabled {
 }
 
 .field-next-btn:disabled {
-  opacity: 1;
+  opacity: 0.28;
   background: #285a9b;
   color: #fff;
   border-color: transparent;
+  box-shadow: 0 6px 12px rgba(41, 27, 15, 0.08);
+  filter: saturate(0.55) brightness(0.88);
 }
 
 .field-next-btn.perfect-next {
