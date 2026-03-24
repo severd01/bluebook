@@ -683,6 +683,7 @@ function hideAnswerOverlay() {
 }
 
 function renderFeedbackBody(scenario) {
+  if (!feedbackBodyEl) return;
   feedbackBodyEl.innerHTML = `<p>${scenario.explanation}</p>`;
 }
 
@@ -782,7 +783,7 @@ function loadScenario() {
   resetRoundFeedbackState();
   renderMovementTracker();
   updatePrompt();
-  feedbackBodyEl.textContent = "";
+  if (feedbackBodyEl) feedbackBodyEl.textContent = "";
   updateRoleDrawButtons();
 
   renderScoreLine();
@@ -864,7 +865,7 @@ clearBtn.addEventListener("click", () => {
   }
 
   resetSelectedPaths();
-  feedbackBodyEl.textContent = "";
+  if (feedbackBodyEl) feedbackBodyEl.textContent = "";
   updatePrompt();
   updateCheckButtonState();
 });

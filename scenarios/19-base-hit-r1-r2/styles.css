@@ -278,25 +278,10 @@ button:disabled {
   font-weight: 700;
 }
 
-.feedback {
-  min-height: 78px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: rgba(25, 52, 32, 0.06);
-}
-
 .feedback-title {
   margin: 0 0 6px;
   font-size: 0.92rem;
   font-weight: 800;
-}
-
-.legend {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 0.82rem;
 }
 
 .dot {
@@ -645,16 +630,6 @@ button:disabled {
   color: #1f7a5f;
 }
 
-.feedback.is-perfect {
-  background: rgba(31, 122, 95, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(31, 122, 95, 0.18);
-}
-
-.feedback.is-partial {
-  background: rgba(180, 125, 47, 0.12);
-  box-shadow: inset 0 0 0 1px rgba(180, 125, 47, 0.16);
-}
-
 
 @keyframes score-pop {
   0% {
@@ -752,17 +727,7 @@ button:disabled {
     font-size: 0.92rem;
   }
 
-  .legend {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .feedback {
-    min-height: 84px;
-    padding: 10px;
-  }
-
-  .field-panel {
+      .field-panel {
     padding-bottom: 2px;
   }
 
@@ -857,11 +822,7 @@ button:disabled {
     min-width: 38px;
   }
 
-  .feedback {
-    min-height: 90px;
-  }
-
-  .answer-card-top {
+    .answer-card-top {
     left: 3%;
     top: 3%;
     width: 94%;
