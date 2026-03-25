@@ -5,6 +5,10 @@
   margin-left: auto;
 }
 
+.auth-inline-mobile {
+  display: none;
+}
+
 .auth-btn,
 .auth-linklike {
   border: 1px solid rgba(67, 55, 33, 0.12);
@@ -190,7 +194,11 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 860px) {
+  .auth-inline-mobile {
+    display: flex;
+  }
+
   .auth-inline {
     width: 100%;
     justify-content: flex-start;
