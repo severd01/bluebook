@@ -111,6 +111,16 @@ function createAuthUi() {
     authInlineRoots.push(root);
   }
 
+  if (document.body.classList.contains("home-page")) {
+    const homeSlot = document.querySelector(".auth-home-slot");
+    if (homeSlot) {
+      const root = document.createElement("div");
+      root.className = "auth-inline auth-inline-mobile";
+      homeSlot.appendChild(root);
+      authInlineRoots.push(root);
+    }
+  }
+
   const scenarioNav = document.querySelector(".scenario-nav");
   if (scenarioNav) {
     const root = document.createElement("div");

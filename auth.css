@@ -9,6 +9,10 @@
   display: none;
 }
 
+.auth-home-slot {
+  display: none;
+}
+
 .auth-btn,
 .auth-linklike {
   border: 1px solid rgba(67, 55, 33, 0.12);
@@ -195,6 +199,12 @@
 }
 
 @media (max-width: 860px) {
+  .auth-home-slot {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+  }
+
   .auth-inline-mobile {
     display: flex;
   }
