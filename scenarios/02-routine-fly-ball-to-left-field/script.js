@@ -94,6 +94,7 @@ const END_TOLERANCE_RADIUS = 110;
 const WAYPOINT_TOLERANCE_RADIUS = 96;
 const ROUTE_AVERAGE_TOLERANCE = 68;
 const ROUTE_STRONG_TOLERANCE = 48;
+const ROUTE_MAX_DEVIATION_TOLERANCE = 92;
 const SVG_NS = "http://www.w3.org/2000/svg";
 const FIELD_SIZE = 886;
 const GRID_STEP = 100;
@@ -484,6 +485,29 @@ function getAverageDistanceToRoute(points, expectedRoutePoints) {
   }, 0);
 
   return totalDistance / points.length;
+}
+
+function getMaxDistanceToRoute(points, expectedRoutePoints) {
+  if (!points.length || expectedRoutePoints.length < 2) {
+    return Infinity;
+  }
+
+  return points.reduce((worst, point) => {
+    let best = Infinity;
+
+    for (let index = 0; index < expectedRoutePoints.length - 1; index += 1) {
+      best = Math.min(
+        best,
+        distanceToSegment(
+          point,
+          expectedRoutePoints[index],
+          expectedRoutePoints[index + 1]
+        )
+      );
+    }
+
+    return Math.max(worst, best);
+  }, 0);
 }
 
 function describeGrade(pointsEarned, maxPoints, averageDistance) {
@@ -1103,10 +1127,19 @@ checkBtn.addEventListener("click", () => {
       selected.points,
       expectedRoutePoints
     );
+    const maxRouteDistance = getMaxDistanceToRoute(
+      selected.points,
+      expectedRoutePoints
+    );
     const routeHit = averageRouteDistance <= ROUTE_AVERAGE_TOLERANCE;
     const strongRouteHit = averageRouteDistance <= ROUTE_STRONG_TOLERANCE;
-    const routeOrWaypointHit = waypointHits || routeHit;
-    const roleHit = startHit && routeOrWaypointHit && (endHit || strongRouteHit);
+    const routeWithinBounds = maxRouteDistance <= ROUTE_MAX_DEVIATION_TOLERANCE;
+    const routeOrWaypointHit = waypointHits || (routeHit && routeWithinBounds);
+    const roleHit =
+      startHit &&
+      routeOrWaypointHit &&
+      endHit &&
+      (waypointHits || strongRouteHit || routeWithinBounds);
 
     if (roleHit) {
       pointsEarned += 1;
