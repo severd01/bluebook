@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ | Base Hit to Right Field Animation Prototype</title>
+    <meta name="description" content="Animation prototype for testing Base Hit to Right Field in UmpIQ." />
+    <link rel="canonical" href="https://umpiq.com/scenarios/animation-template/" />
+    <meta property="og:title" content="UmpIQ | Base Hit to Right Field Animation Prototype" />
+    <meta property="og:description" content="Animation prototype for testing Base Hit to Right Field in UmpIQ." />
+    <meta property="og:url" content="https://umpiq.com/scenarios/animation-template/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ | Base Hit to Right Field Animation Prototype" />
+    <meta name="twitter:description" content="Animation prototype for testing Base Hit to Right Field in UmpIQ." />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+<link rel="stylesheet" href="./styles.css?v=23" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <h1>Base Hit to Right Field Animation Prototype</h1>
+        <nav class="scenario-nav" aria-label="Scenario navigation">
+          <a class="scenario-nav-link scenario-brand-link" href="../../">UmpIQ</a>
+        </nav>
+      </section>
+
+      <section class="game-layout">
+        <aside class="panel scenario-panel">
+          <div class="panel-header">
+            <p class="panel-label">Situation</p>
+          </div>
+
+          <h2 id="scenario-title">Loading scenario...</h2>
+          <p id="scenario-system" class="system-pill"></p>
+          <p id="scenario-description" class="scenario-description"></p>
+
+          <div class="details">
+            <div>
+              <p class="detail-label">Runners</p>
+              <p id="scenario-runners"></p>
+            </div>
+            <div>
+              <p class="detail-label">Outs</p>
+              <p id="scenario-outs"></p>
+            </div>
+            <div>
+              <p class="detail-label">Situation</p>
+              <p id="scenario-ball"></p>
+            </div>
+          </div>
+
+          <p id="cursor-readout" class="cursor-readout">Cursor: x -, y -</p>
+          <section class="poll-panel" aria-labelledby="prototype-poll-heading">
+            <p class="detail-label">Quick Poll</p>
+            <h3 id="prototype-poll-heading" class="poll-title">Does animation add value here?</h3>
+            <p class="poll-copy">We are testing whether animation helps explain rotations and coverage.</p>
+            <div class="poll-actions">
+              <button id="poll-yes-btn" class="poll-btn poll-btn-yes" type="button">Yes, add animation</button>
+              <button id="poll-no-btn" class="poll-btn poll-btn-no" type="button">No, too clunky</button>
+            </div>
+            <p id="poll-status" class="poll-status">Loading poll results...</p>
+            <div class="poll-results" aria-live="polite">
+              <div class="poll-result-row">
+                <div class="poll-result-labels">
+                  <span>Yes</span>
+                  <span id="poll-yes-count">0%</span>
+                </div>
+                <div class="poll-result-bar">
+                  <span id="poll-yes-bar" class="poll-result-fill"></span>
+                </div>
+              </div>
+              <div class="poll-result-row">
+                <div class="poll-result-labels">
+                  <span>No</span>
+                  <span id="poll-no-count">0%</span>
+                </div>
+                <div class="poll-result-bar">
+                  <span id="poll-no-bar" class="poll-result-fill poll-result-fill-no"></span>
+                </div>
+              </div>
+              <p id="poll-total" class="poll-total">0 responses</p>
+            </div>
+          </section>
+        </aside>
+
+        <section class="panel field-panel">
+          <div class="field-wrap">
+            <div class="draw-controls" aria-label="Draw movement paths">
+              <div class="draw-controls-side draw-controls-left">
+                <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
+                <button id="clear-btn" class="field-ghost-btn" type="button">Clear Drawings</button>
+                <button id="undo-btn" class="field-ghost-btn" type="button">Clear Last Point</button>
+                <button id="toggle-playback-btn" class="field-ghost-btn field-play-btn" type="button">▶ Play</button>
+              </div>
+              <div class="draw-controls-center">
+                <button id="check-btn" class="field-check-btn" type="button" disabled>Check Movements</button>
+                <div id="field-status" class="field-status">
+                  <p id="feedback-title" class="feedback-title field-status-text">Draw the umpire movements on the field.</p>
+                </div>
+              </div>
+              <div class="draw-controls-side draw-controls-right">
+                <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw U1 Path</button>
+              </div>
+            </div>
+            <svg
+              id="field"
+              viewBox="0 0 886 886"
+              role="img"
+              aria-label="Baseball field diagram"
+            >
+              <image
+                href="./field2.jpeg"
+                x="0"
+                y="0"
+                width="886"
+                height="886"
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              <path id="ball-flight" class="ball-flight hidden" />
+              <g id="animation-objects-layer" class="runner-overlay" aria-hidden="true"></g>
+            </svg>
+
+            <div id="field-result" class="field-result hidden" aria-live="polite">
+              <p id="field-result-text" class="field-result-text"></p>
+              <div id="field-result-burst" class="field-result-burst" aria-hidden="true"></div>
+            </div>
+
+            <button id="next-btn" class="field-next-btn" type="button" disabled>Next Situation</button>
+
+            <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
+              <section id="answer-card-shared" class="answer-card answer-card-top"></section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="../../supabase-config.js"></script>
+    <script src="./script.js?v=25"></script>
+  </body>
+</html>

@@ -120,6 +120,51 @@ body {
   box-shadow: 0 14px 24px rgba(211, 91, 42, 0.2);
 }
 
+.rail-link-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.rail-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2ea1ff 0%, #1877f2 100%);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1;
+  text-transform: none;
+  flex: 0 0 auto;
+}
+
+.rail-social-copy {
+  display: grid;
+  gap: 1px;
+  line-height: 1;
+}
+
+.rail-social-kicker {
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.rail-social-brand {
+  color: #1877f2;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: none;
+}
+
 .main-panel {
   padding: 24px 28px 32px;
 }
