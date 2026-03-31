@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Easy Mode Results</title>
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href="https://umpiq.com/easy-results.html" />
+    <link rel="stylesheet" href="./menu.css?v=16" />
+    <link rel="stylesheet" href="./auth.css?v=3" />
+  </head>
+  <body>
+    <main class="menu-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Easy Mode Complete</p>
+        <h1>Easy Mode Results</h1>
+        <p class="hero-copy">
+          Here’s how the Easy Mode session turned out.
+        </p>
+
+        <section class="results-card">
+          <p class="results-label">Final Score</p>
+          <p id="final-score" class="results-score">--/--</p>
+          <p id="results-detail" class="results-detail"></p>
+        </section>
+
+        <div class="hero-actions">
+          <button id="replay-btn" class="primary-btn">Replay Easy Mode</button>
+          <a href="./easy-situations.html" class="ghost-link">Back To Easy Mode</a>
+          <a href="./feedback.html" class="ghost-link">Give Feedback</a>
+          <a href="./" class="ghost-link">Back To Home</a>
+        </div>
+      </section>
+    </main>
+    <script src="./supabase-config.js"></script>
+    <script type="module" src="./auth.js?v=2"></script>
+    <script>
+      window.va = window.va || function () {
+        (window.vaq = window.vaq || []).push(arguments);
+      };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <script src="./easy-results.js?v=1"></script>
+  </body>
+</html>

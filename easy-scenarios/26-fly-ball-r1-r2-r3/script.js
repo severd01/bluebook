@@ -1,0 +1,1418 @@
+const scenarios = [
+  {
+    title: "Fly Ball, R1,R2,R3",
+    system: "",
+    description: "R1, R2, R3, fly ball to centerfield. U1 has the catch/no catch.",
+    runners: "R1, R2, R3",
+    outs: "No Outs",
+    ball: "Routine fly to center field.",
+    type: "dual-movement",
+    ballFlightPath:
+      "M 442 664 C 470 560, 490 330, 443 146",
+    prompt: "Click P's starting position for Scenario 26.",
+    explanation: "",
+    answerNotes: [
+      {
+        heading: "Plate",
+        bullets: [
+          "Move into position to observe R3's tag at 3rd;",
+          "Retreat toward home.",
+        ],
+      },
+      {
+        heading: "U1",
+        bullets: [
+          "Move into position to rule on the catch;",
+          "Make the catch/no catch call;",
+          "Observe R2's and R1's tag ups;",
+          "Let the throw take you to the play.",
+        ],
+      },
+    ],
+    paths: [
+      {
+        role: "P",
+        startAnswer: { x: 443, y: 690 },
+        routePoints: [
+          { x: 443, y: 690 },
+          { x: 403, y: 697 },
+          { x: 467, y: 683 },
+        ],
+        waypoints: [{ x: 403, y: 697 }],
+        endAnswer: { x: 467, y: 683 },
+      },
+      {
+        role: "U1",
+        startAnswer: { x: 413, y: 512 },
+        routePoints: [
+          { x: 413, y: 512 },
+          { x: 443, y: 510 },
+        ],
+        waypoints: [],
+        endAnswer: { x: 443, y: 510 },
+      },
+    ],
+  },
+];
+
+const scoreEl = document.getElementById("score");
+const attemptsEl = document.getElementById("attempts");
+const titleEl = document.getElementById("scenario-title");
+const systemEl = document.getElementById("scenario-system");
+const descriptionEl = document.getElementById("scenario-description");
+const runnersEl = document.getElementById("scenario-runners");
+const outsEl = document.getElementById("scenario-outs");
+const ballEl = document.getElementById("scenario-ball");
+const feedbackTitleEl = document.getElementById("feedback-title");
+const feedbackBodyEl = document.getElementById("feedback-body");
+const feedbackEl = document.querySelector(".feedback");
+const checkBtn = document.getElementById("check-btn");
+const drawPBtn = document.getElementById("draw-p-btn");
+const drawU1Btn = document.getElementById("draw-u1-btn");
+const catchResponsibilityPanelEl = document.getElementById("catch-responsibility-panel");
+const catchResponsibilityTitleEl = document.getElementById("catch-responsibility-title");
+const catchResponsibilityStatusEl = document.getElementById("catch-responsibility-status");
+const catchChoicePEl = document.getElementById("catch-choice-p");
+const catchChoiceU1El = document.getElementById("catch-choice-u1");
+const clearBtn = document.getElementById("clear-btn");
+const undoBtn = document.getElementById("undo-btn");
+const toggleGridBtn = document.getElementById("toggle-grid-btn");
+const nextBtn = document.getElementById("next-btn");
+const scoreLineEl = document.querySelector(".score-line");
+const movementTrackerEl = document.getElementById("movement-tracker");
+const cursorReadoutEl = document.getElementById("cursor-readout");
+const field = document.getElementById("field");
+const ballFlight = document.getElementById("ball-flight");
+const answerOverlayEl = document.getElementById("answer-overlay");
+const answerCardSharedEl = document.getElementById("answer-card-shared");
+const fieldStatusEl = document.getElementById("field-status");
+const catchResultEl = document.getElementById("catch-result");
+const catchResultTextEl = document.getElementById("catch-result-text");
+const fieldResultEl = document.getElementById("field-result");
+const fieldResultTextEl = document.getElementById("field-result-text");
+const fieldResultBurstEl = document.getElementById("field-result-burst");
+const MARKER_RADIUS = 5.5;
+const SCORING_POINT_DIAMETER = 60;
+const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
+const START_TOLERANCE_RADIUS = 72;
+const END_TOLERANCE_RADIUS = 110;
+const WAYPOINT_TOLERANCE_RADIUS = 96;
+const ROUTE_AVERAGE_TOLERANCE = 68;
+const ROUTE_STRONG_TOLERANCE = 48;
+const ROUTE_MAX_DEVIATION_TOLERANCE = 92;
+const SVG_NS = "http://www.w3.org/2000/svg";
+const FIELD_SIZE = 886;
+const GRID_STEP = 100;
+
+const PLAY_ALL_KEY = "bluebook-easy-play-all-session";
+const PLAY_ALL_COMPLETE_KEY = "bluebook-easy-play-all-complete";
+const DEFAULT_SCENARIO_ORDER = [
+  "01-routine-fly-ball-to-right-field",
+  "02-routine-fly-ball-to-left-field",
+  "03-fly-ball-to-right-u1-goes-out",
+  "04-pop-up-on-the-infield",
+  "05-foul-pop-up",
+  "06-base-hit-possible-triple",
+  "07-ground-ball",
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+];
+const currentScenarioSlug = window.location.pathname.replace(/\/$/, "").split("/").pop();
+const CATCH_RESPONSIBILITY_BY_SCENARIO = {
+  "01-routine-fly-ball-to-right-field": "P",
+  "02-routine-fly-ball-to-left-field": "P",
+  "03-fly-ball-to-right-u1-goes-out": "U1",
+  "04-pop-up-on-the-infield": "P",
+  "08-fly-ball-r1": "U1",
+  "09-fly-ball-rf-line-r1": "P",
+  "12-fly-ball-r2": "U1",
+  "14-fly-ball-r3": "U1",
+  "15-fly-ball-rf-line-r3": "P",
+  "17-fly-ball-r1-r2": "U1",
+  "18-fly-ball-rf-line-r1-r2": "P",
+  "21-fly-ball-rf-line-r1-r3": "P",
+  "24-fly-ball-r2-r3": "U1",
+  "26-fly-ball-r1-r2-r3": "U1",
+};
+
+function getStoredJson(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch (error) {
+    return null;
+  }
+}
+
+function setStoredJson(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getPlayAllSession() {
+  const session = getStoredJson(PLAY_ALL_KEY);
+  if (!session || !session.active) {
+    return null;
+  }
+
+  return session;
+}
+
+function getSessionOrder(session) {
+  return Array.isArray(session?.order) && session.order.length
+    ? session.order
+    : DEFAULT_SCENARIO_ORDER;
+}
+
+function syncPlayAllSessionOnLoad() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+
+  if (currentIndex === -1) {
+    return;
+  }
+
+  session.currentIndex = currentIndex;
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+
+  score = Number(session.score || 0);
+  attempts = Number(session.attempts || 0);
+}
+
+function persistPlayAllTotals() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  session.score = score;
+  session.attempts = attempts;
+  session.currentIndex = order.indexOf(currentScenarioSlug);
+  session.lastScenario = currentScenarioSlug;
+  setStoredJson(PLAY_ALL_KEY, session);
+}
+
+function updateNextButtonLabel() {
+  const session = getPlayAllSession();
+  if (!session) {
+    nextBtn.textContent = "Next Situation";
+    return;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  nextBtn.textContent = currentIndex >= order.length - 1
+    ? "Finish Session"
+    : "Next Situation";
+}
+
+function goToNextPlayAllScenario() {
+  const session = getPlayAllSession();
+  if (!session) {
+    return false;
+  }
+
+  const order = getSessionOrder(session);
+  const currentIndex = order.indexOf(currentScenarioSlug);
+  if (currentIndex === -1) {
+    return false;
+  }
+
+  const nextSlug = order[currentIndex + 1];
+
+  if (nextSlug) {
+    session.currentIndex = currentIndex + 1;
+    session.lastScenario = nextSlug;
+    setStoredJson(PLAY_ALL_KEY, session);
+    window.location.href = `../${nextSlug}/`;
+    return true;
+  }
+
+  setStoredJson(PLAY_ALL_COMPLETE_KEY, {
+    score,
+    attempts,
+    completedAt: new Date().toISOString(),
+    mode: session.mode || "all",
+    label: session.label || "Play All Scenarios",
+    order,
+    totalScenarios: order.length,
+  });
+  localStorage.removeItem(PLAY_ALL_KEY);
+  window.location.href = "../../easy-results.html";
+  return true;
+}
+
+let scenarioIndex = 0;
+let score = 0;
+let attempts = 0;
+let roundFinished = false;
+let activeRoleIndex = null;
+let selectedPaths = [];
+let pointHistory = [];
+let roleArtifacts = [];
+let gridVisible = false;
+let gridLayer;
+let selectedCatchResponsibility = null;
+let catchResponsibilityResult = null;
+
+function createSvgElement(tagName, attributes, className) {
+  const element = document.createElementNS(SVG_NS, tagName);
+  Object.entries(attributes).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+  if (className) {
+    element.setAttribute("class", className);
+  }
+  field.appendChild(element);
+  return element;
+}
+
+function initializeRoleArtifacts() {
+  const maxRoles = Math.max(
+    ...scenarios.map((scenario) => (scenario.paths ? scenario.paths.length : 0))
+  );
+
+  for (let i = 0; i < maxRoles; i += 1) {
+    const role = scenarios.find((scenario) => scenario.paths && scenario.paths[i])?.paths[i]
+      ?.role;
+    const roleClass = role ? ` role-${role.toLowerCase()}` : "";
+    const userPath = createSvgElement(
+      "polyline",
+      {},
+      `path-line${roleClass} hidden`
+    );
+    const answerPath = createSvgElement(
+      "polyline",
+      {},
+      `answer-path${roleClass} hidden`
+    );
+    const userStart = createSvgElement(
+      "circle",
+      { r: MARKER_RADIUS },
+      `marker${roleClass} hidden`
+    );
+    const userEnd = createSvgElement(
+      "circle",
+      { r: MARKER_RADIUS },
+      `marker${roleClass} hidden`
+    );
+    const answerStart = createSvgElement(
+      "circle",
+      { r: MARKER_RADIUS },
+      `answer${roleClass} hidden`
+    );
+    const answerEnd = createSvgElement(
+      "circle",
+      { r: MARKER_RADIUS },
+      `answer${roleClass} hidden`
+    );
+
+    roleArtifacts.push({
+      userPath,
+      answerPath,
+      userStart,
+      userEnd,
+      answerStart,
+      answerEnd,
+    });
+  }
+}
+
+function createTextLabel(x, y, text) {
+  const label = document.createElementNS(SVG_NS, "text");
+  label.setAttribute("x", x);
+  label.setAttribute("y", y);
+  label.setAttribute("class", "grid-label");
+  label.textContent = text;
+  return label;
+}
+
+function initializeGrid() {
+  gridLayer = document.createElementNS(SVG_NS, "g");
+  gridLayer.setAttribute("id", "coordinate-grid");
+
+  for (let value = 0; value <= FIELD_SIZE; value += GRID_STEP) {
+    const verticalLine = document.createElementNS(SVG_NS, "line");
+    verticalLine.setAttribute("x1", value);
+    verticalLine.setAttribute("y1", 0);
+    verticalLine.setAttribute("x2", value);
+    verticalLine.setAttribute("y2", FIELD_SIZE);
+    verticalLine.setAttribute(
+      "class",
+      `grid-line${value % 200 === 0 ? " major" : ""}`
+    );
+    gridLayer.appendChild(verticalLine);
+
+    const horizontalLine = document.createElementNS(SVG_NS, "line");
+    horizontalLine.setAttribute("x1", 0);
+    horizontalLine.setAttribute("y1", value);
+    horizontalLine.setAttribute("x2", FIELD_SIZE);
+    horizontalLine.setAttribute("y2", value);
+    horizontalLine.setAttribute(
+      "class",
+      `grid-line${value % 200 === 0 ? " major" : ""}`
+    );
+    gridLayer.appendChild(horizontalLine);
+
+    if (value < FIELD_SIZE) {
+      gridLayer.appendChild(createTextLabel(value + 6, 18, String(value)));
+      gridLayer.appendChild(
+        createTextLabel(6, value < 22 ? value + 16 : value - 6, String(value))
+      );
+    }
+  }
+
+  field.insertBefore(gridLayer, ballFlight);
+}
+
+function updateGridVisibility() {
+  if (!gridLayer) return;
+
+  gridLayer.classList.toggle("hidden", !gridVisible);
+  if (toggleGridBtn) {
+    toggleGridBtn.textContent = gridVisible ? "Hide Grid" : "Show Grid";
+  }
+}
+
+function getSvgPoint(event) {
+  const point = field.createSVGPoint();
+  point.x = event.clientX;
+  point.y = event.clientY;
+  const transformed = point.matrixTransform(field.getScreenCTM().inverse());
+  return { x: transformed.x, y: transformed.y };
+}
+
+function placeMarker(marker, point) {
+  marker.setAttribute("cx", point.x);
+  marker.setAttribute("cy", point.y);
+  marker.classList.remove("hidden");
+}
+
+function placePath(line, points) {
+  line.setAttribute(
+    "points",
+    points.map((point) => `${point.x},${point.y}`).join(" ")
+  );
+  line.classList.remove("hidden");
+}
+
+function hideElement(element) {
+  element.classList.add("hidden");
+}
+
+function distance(a, b) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function pointInExpandedRotatedRect(point, zone, padding) {
+  const radians = (-zone.rotation * Math.PI) / 180;
+  const dx = point.x - zone.cx;
+  const dy = point.y - zone.cy;
+  const localX = dx * Math.cos(radians) - dy * Math.sin(radians);
+  const localY = dx * Math.sin(radians) + dy * Math.cos(radians);
+
+  return (
+    Math.abs(localX) <= zone.width / 2 + padding &&
+    Math.abs(localY) <= zone.height / 2 + padding
+  );
+}
+
+function pointInCircle(point, target, radius) {
+  return distance(point, target) <= radius;
+}
+
+function pathIntersectsZone(points, zone, padding) {
+  return points.some((point) =>
+    pointInExpandedRotatedRect(point, zone, padding)
+  );
+}
+
+function pathIntersectsPointTarget(points, target, radius) {
+  return points.some((point) => pointInCircle(point, target, radius));
+}
+
+function distanceToSegment(point, start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+
+  if (dx === 0 && dy === 0) {
+    return distance(point, start);
+  }
+
+  const t = Math.max(
+    0,
+    Math.min(
+      1,
+      ((point.x - start.x) * dx + (point.y - start.y) * dy) /
+        (dx * dx + dy * dy)
+    )
+  );
+
+  return distance(point, {
+    x: start.x + t * dx,
+    y: start.y + t * dy,
+  });
+}
+
+function getExpectedRoutePoints(path) {
+  return path.routePoints?.length
+    ? path.routePoints
+    : [path.startAnswer, ...(path.waypoints || []), path.endAnswer];
+}
+
+function getAverageDistanceToRoute(points, expectedRoutePoints) {
+  if (!points.length || expectedRoutePoints.length < 2) {
+    return Infinity;
+  }
+
+  const totalDistance = points.reduce((sum, point) => {
+    let best = Infinity;
+
+    for (let index = 0; index < expectedRoutePoints.length - 1; index += 1) {
+      best = Math.min(
+        best,
+        distanceToSegment(
+          point,
+          expectedRoutePoints[index],
+          expectedRoutePoints[index + 1]
+        )
+      );
+    }
+
+    return sum + best;
+  }, 0);
+
+  return totalDistance / points.length;
+}
+
+function getMaxDistanceToRoute(points, expectedRoutePoints) {
+  if (!points.length || expectedRoutePoints.length < 2) {
+    return Infinity;
+  }
+
+  return points.reduce((worst, point) => {
+    let best = Infinity;
+
+    for (let index = 0; index < expectedRoutePoints.length - 1; index += 1) {
+      best = Math.min(
+        best,
+        distanceToSegment(
+          point,
+          expectedRoutePoints[index],
+          expectedRoutePoints[index + 1]
+        )
+      );
+    }
+
+    return Math.max(worst, best);
+  }, 0);
+}
+
+function describeGrade(pointsEarned, maxPoints, averageDistance) {
+  if (pointsEarned === maxPoints) {
+    return {
+      label: `Excellent. ${pointsEarned}/${maxPoints} correct.`,
+      points: pointsEarned,
+      tone: "perfect",
+    };
+  }
+
+  if (pointsEarned > 0) {
+    return {
+      label: `Nice work. ${pointsEarned}/${maxPoints} correct.`,
+      points: pointsEarned,
+      tone: "partial",
+    };
+  }
+
+  if (averageDistance <= 35) {
+    return {
+      label: `0/${maxPoints} correct, but very close.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  if (averageDistance <= 75) {
+    return {
+      label: `0/${maxPoints} correct. Close, but outside the target zone.`,
+      points: 0,
+      tone: "close",
+    };
+  }
+
+  return {
+    label: `0/${maxPoints} correct.`,
+    points: 0,
+    tone: "miss",
+  };
+}
+
+function resetRoundFeedbackState() {
+  feedbackEl?.classList.remove("is-perfect", "is-partial");
+  nextBtn.classList.remove("perfect-next");
+}
+
+function getCatchResponsibilityConfig(slug = currentScenarioSlug) {
+  const correctRole = CATCH_RESPONSIBILITY_BY_SCENARIO[slug];
+
+  if (!correctRole) {
+    return null;
+  }
+
+  return {
+    prompt: "Who has catch/no catch responsibility?",
+    correctRole,
+    showButtons: true,
+  };
+}
+
+function getScenarioPointValue(scenario = scenarios[scenarioIndex], slug = currentScenarioSlug) {
+  return (scenario?.paths?.length || 0) + (getCatchResponsibilityConfig(slug) ? 1 : 0);
+}
+
+function getCatchRoleLabel(role) {
+  if (role === "P") return "Plate";
+  if (role === "U1") return "U1";
+  return role;
+}
+
+function renderCatchResponsibilityPanel() {
+  const prompt = getCatchResponsibilityConfig();
+  const shouldShowDuringRound =
+    Boolean(prompt?.showButtons) &&
+    selectedPaths.every((path) => path.completed && path.start && path.end);
+  const hasPrompt = Boolean(prompt?.showButtons) && shouldShowDuringRound && !roundFinished;
+
+  catchResponsibilityPanelEl?.classList.toggle("hidden", !hasPrompt);
+
+  if (!hasPrompt) {
+    return;
+  }
+
+  if (catchResponsibilityTitleEl) {
+    catchResponsibilityTitleEl.textContent =
+      prompt.prompt || "Who has catch/no catch responsibility?";
+  }
+
+  const buttons = [
+    { role: "P", element: catchChoicePEl },
+    { role: "U1", element: catchChoiceU1El },
+  ];
+
+  buttons.forEach(({ role, element }) => {
+    if (!element) return;
+    element.classList.toggle("is-selected", selectedCatchResponsibility === role);
+    element.classList.remove("is-correct", "is-incorrect");
+
+    if (roundFinished && catchResponsibilityResult) {
+      if (role === prompt.correctRole) {
+        element.classList.add("is-correct");
+      } else if (selectedCatchResponsibility === role && !catchResponsibilityResult.correct) {
+        element.classList.add("is-incorrect");
+      }
+    }
+
+    element.disabled = roundFinished;
+  });
+
+  if (!catchResponsibilityStatusEl) {
+    return;
+  }
+
+  catchResponsibilityStatusEl.textContent = selectedCatchResponsibility
+    ? `${getCatchRoleLabel(selectedCatchResponsibility)} selected.`
+    : "Choose one, then check your work.";
+}
+
+function renderSelectedPath(index) {
+  const selectedPath = selectedPaths[index];
+  const artifacts = roleArtifacts[index];
+
+  if (!selectedPath || !artifacts) {
+    return;
+  }
+
+  selectedPath.start = selectedPath.points[0] || null;
+  selectedPath.end =
+    selectedPath.points.length > 1
+      ? selectedPath.points[selectedPath.points.length - 1]
+      : null;
+
+  if (!selectedPath.start) {
+    selectedPath.completed = false;
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userStart);
+    hideElement(artifacts.userEnd);
+    return;
+  }
+
+  placeMarker(artifacts.userStart, selectedPath.start);
+
+  if (selectedPath.points.length === 1) {
+    selectedPath.completed = false;
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userEnd);
+    return;
+  }
+
+  placeMarker(artifacts.userEnd, selectedPath.end);
+  placePath(artifacts.userPath, selectedPath.points);
+}
+
+function getDisplayedMaxPoints() {
+  const session = getPlayAllSession();
+  if (session?.active && Array.isArray(session.order) && session.order.length) {
+    return session.order.reduce(
+      (sum, slug) => sum + 2 + (getCatchResponsibilityConfig(slug) ? 1 : 0),
+      0
+    );
+  }
+
+  return attempts;
+}
+
+function renderScoreLine() {
+  scoreEl.textContent = String(score);
+  attemptsEl.textContent = String(getDisplayedMaxPoints());
+}
+
+function celebrateScore(pointsEarned) {
+  if (!scoreLineEl || pointsEarned <= 0) {
+    return;
+  }
+
+  scoreLineEl.classList.remove("is-celebrating");
+  void scoreLineEl.offsetWidth;
+  scoreLineEl.classList.add("is-celebrating");
+  window.setTimeout(() => {
+    scoreLineEl.classList.remove("is-celebrating");
+  }, 1200);
+}
+
+function roleDisplayName(role) {
+  if (role === "P") return "Plate Umpire";
+  if (role === "U1") return "Base Umpire";
+  return role;
+}
+
+function roleActionLabel(role) {
+  return role === "P" ? "Plate" : role;
+}
+
+function getFirstIncompleteRoleIndex() {
+  return selectedPaths.findIndex((path) => !path.completed);
+}
+
+function getMovementStatus(path, isActive, isFinished) {
+  if (isFinished && path.start && path.end) {
+    return "Movement locked in.";
+  }
+
+  if (path.completed && path.start && path.end) {
+    return "Path drawn and ready to check.";
+  }
+
+  if (isActive) {
+    if (!path.start) {
+      return "Tap the field to place the starting position.";
+    }
+
+    return "Keep adding route points, then finish on the field.";
+  }
+
+  if (path.start) {
+    return "Route started.";
+  }
+
+  return "Waiting for your path.";
+}
+
+function renderMovementTracker() {
+  if (!movementTrackerEl) {
+    return;
+  }
+
+  const scenario = scenarios[scenarioIndex];
+
+  movementTrackerEl.innerHTML = scenario.paths
+    .map((path, index) => {
+      const selectedPath = selectedPaths[index];
+      const isActive = !roundFinished && index === activeRoleIndex;
+      const roleClass = path.role.toLowerCase();
+      const status = getMovementStatus(selectedPath, isActive, roundFinished);
+
+      return `
+        <div class="movement-card${isActive ? " is-active" : ""}">
+          <div class="movement-role role-${roleClass}">${path.role}</div>
+          <div class="movement-meta">
+            <p class="movement-name">${roleDisplayName(path.role)}</p>
+            <p class="movement-status">${status}</p>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function runFieldResultAnimation(result) {
+  if (!fieldResultEl) return;
+
+  fieldResultEl.classList.remove("is-animating");
+  void fieldResultEl.offsetWidth;
+  fieldResultEl.classList.add("is-animating");
+  window.setTimeout(() => {
+    fieldResultEl?.classList.remove("is-animating");
+  }, 560);
+
+  if (!fieldResultBurstEl) return;
+  fieldResultBurstEl.innerHTML = "";
+  fieldResultBurstEl.classList.remove("is-active");
+
+  if (result.tone !== "perfect") {
+    return;
+  }
+
+  const colors = ["#38d199", "#ffcf5c", "#285a9b", "#1f7a5f", "#f0a266", "#fff1d6"];
+  const pieces = [
+    [-66, -42, "-28deg"],
+    [-32, -58, "-12deg"],
+    [18, -60, "14deg"],
+    [58, -40, "28deg"],
+    [-58, 20, "-18deg"],
+    [-16, 50, "-6deg"],
+    [20, 52, "10deg"],
+    [64, 18, "22deg"],
+  ];
+
+  pieces.forEach(([x, y, rotate], index) => {
+    const piece = document.createElement("span");
+    piece.className = "field-result-burst-piece";
+    piece.style.setProperty("--burst-x", `${x}px`);
+    piece.style.setProperty("--burst-y", `${y}px`);
+    piece.style.setProperty("--burst-rotate", rotate);
+    piece.style.background = colors[index % colors.length];
+    piece.style.animationDelay = `${index * 18}ms`;
+    fieldResultBurstEl.appendChild(piece);
+  });
+
+  void fieldResultBurstEl.offsetWidth;
+  fieldResultBurstEl.classList.add("is-active");
+  window.setTimeout(() => {
+    fieldResultBurstEl?.classList.remove("is-active");
+    if (fieldResultBurstEl) fieldResultBurstEl.innerHTML = "";
+  }, 900);
+}
+
+function clearFieldResult() {
+  catchResultEl?.classList.add("hidden");
+  catchResultEl?.classList.remove("is-correct", "is-incorrect");
+  if (catchResultTextEl) catchResultTextEl.textContent = "";
+
+  fieldResultEl?.classList.add("hidden");
+  fieldResultEl?.classList.remove("is-perfect", "is-partial", "is-close", "is-miss", "is-animating");
+  if (fieldResultTextEl) fieldResultTextEl.textContent = "";
+  if (fieldResultBurstEl) {
+    fieldResultBurstEl.classList.remove("is-active");
+    fieldResultBurstEl.innerHTML = "";
+  }
+}
+
+function showFieldResult(result) {
+  if (!fieldResultEl || !fieldResultTextEl) return;
+  fieldResultTextEl.textContent = result.label;
+  fieldResultEl.classList.remove("hidden", "is-perfect", "is-partial", "is-close", "is-miss");
+  if (result.tone === "perfect") {
+    fieldResultEl.classList.add("is-perfect");
+  } else if (result.tone === "partial") {
+    fieldResultEl.classList.add("is-partial");
+  } else if (result.tone === "close") {
+    fieldResultEl.classList.add("is-close");
+  } else if (result.tone === "miss") {
+    fieldResultEl.classList.add("is-miss");
+  }
+  runFieldResultAnimation(result);
+}
+
+function showCatchResult(catchResult) {
+  if (!catchResultEl || !catchResultTextEl || !catchResult) {
+    return;
+  }
+
+  catchResultTextEl.textContent = catchResult.correct
+    ? `Correct. ${getCatchRoleLabel(catchResult.correctRole)} has catch/no catch responsibility.`
+    : `Not quite. ${getCatchRoleLabel(catchResult.correctRole)} has catch/no catch responsibility.`;
+
+  catchResultEl.classList.remove("hidden", "is-correct", "is-incorrect");
+  catchResultEl.classList.add(catchResult.correct ? "is-correct" : "is-incorrect");
+}
+
+function updatePrompt() {
+  const scenario = scenarios[scenarioIndex];
+  const catchPrompt = getCatchResponsibilityConfig();
+
+  if (roundFinished) {
+    return;
+  }
+
+  if (activeRoleIndex === null) {
+    if (
+      catchPrompt?.showButtons &&
+      selectedPaths.every((path) => path.completed && path.start && path.end) &&
+      !selectedCatchResponsibility
+    ) {
+      feedbackTitleEl.textContent = "Choose who has catch/no catch responsibility.";
+      renderMovementTracker();
+      return;
+    }
+
+    feedbackTitleEl.textContent = "Choose Plate or U1 to begin drawing.";
+    renderMovementTracker();
+    return;
+  }
+
+  const activeRole = scenario.paths[activeRoleIndex];
+  const selectedPath = selectedPaths[activeRoleIndex];
+
+  if (!activeRole || !selectedPath) {
+    feedbackTitleEl.textContent = "Choose Plate or U1 to begin drawing.";
+    renderMovementTracker();
+    return;
+  }
+
+  const roleLabel = roleActionLabel(activeRole.role);
+
+  if (!selectedPath.start) {
+    feedbackTitleEl.textContent = `Easy Mode: start on the visible ${roleLabel} marker, then draw the route.`;
+  } else {
+    feedbackTitleEl.textContent = `Keep drawing ${roleLabel}'s route, then tap ${roleLabel} again to finish.`;
+  }
+
+  renderMovementTracker();
+}
+
+function updateRoleDrawButtons() {
+  const scenario = scenarios[scenarioIndex];
+  const buttonMap = { P: drawPBtn, U1: drawU1Btn };
+
+  scenario.paths.forEach((path, index) => {
+    const button = buttonMap[path.role];
+    if (!button) return;
+
+    const selectedPath = selectedPaths[index];
+    const roleLabel = roleActionLabel(path.role);
+    const isComplete = Boolean(selectedPath?.completed);
+    const isActive = !roundFinished && index === activeRoleIndex;
+    const canFinish = Boolean(selectedPath?.start) && selectedPath.points.length >= 2 && !isComplete;
+
+    button.classList.toggle("hidden", isComplete || roundFinished);
+    button.classList.toggle("is-active", isActive);
+    button.classList.toggle("is-complete", isComplete);
+    button.disabled = roundFinished || isComplete;
+    button.textContent = canFinish
+      ? `Finish ${roleLabel} Path`
+      : `Draw ${roleLabel} Path`;
+  });
+}
+
+function updateCheckButtonState() {
+  const catchPromptRequired = Boolean(getCatchResponsibilityConfig()?.showButtons);
+  const catchPromptReady = !catchPromptRequired || Boolean(selectedCatchResponsibility);
+
+  if (checkBtn) {
+    checkBtn.disabled =
+      roundFinished ||
+      !selectedPaths.every((path) => path.completed && path.start && path.end) ||
+      !catchPromptReady;
+    checkBtn.classList.toggle("hidden", roundFinished);
+  }
+
+  if (clearBtn) {
+    clearBtn.disabled = roundFinished;
+    clearBtn.classList.toggle("hidden", roundFinished);
+  }
+
+  if (undoBtn) {
+    const hasPoints = selectedPaths.some((path) => path.points.length > 0);
+    undoBtn.disabled = roundFinished || !hasPoints;
+    undoBtn.classList.toggle("hidden", roundFinished);
+  }
+
+  if (fieldStatusEl) {
+    fieldStatusEl.classList.toggle("hidden", roundFinished);
+  }
+
+  updateRoleDrawButtons();
+  renderMovementTracker();
+  renderCatchResponsibilityPanel();
+}
+
+function renderAnswerCard(element, section) {
+  const sections = (section || [])
+    .map((item) => {
+      const introMarkup = item.intro
+        ? `<p class="answer-card-intro">${item.intro}</p>`
+        : "";
+      const bulletsMarkup = item.bullets
+        ? `<ul class="answer-card-list">${item.bullets
+            .map((entry) => `<li>${entry}</li>`)
+            .join("")}</ul>`
+        : "";
+      const numberedMarkup = item.numbered
+        ? `<ol class="answer-card-list">${item.numbered
+            .map((entry) => `<li>${entry}</li>`)
+            .join("")}</ol>`
+        : "";
+
+      return `
+        <section class="answer-card-section">
+          <p class="answer-card-title">${item.heading}</p>
+          ${introMarkup}
+          ${bulletsMarkup}
+          ${numberedMarkup}
+        </section>
+      `;
+    })
+    .join("");
+
+  element.innerHTML = sections;
+}
+
+function renderAnswerOverlay(scenario) {
+  renderAnswerCard(answerCardSharedEl, scenario.answerNotes || []);
+  answerOverlayEl.classList.remove("hidden");
+}
+
+function hideAnswerOverlay() {
+  answerOverlayEl.classList.add("hidden");
+  answerCardSharedEl.innerHTML = "";
+}
+
+function renderFeedbackBody(scenario, catchResult = null) {
+  if (!feedbackBodyEl) return;
+  const explanationMarkup = scenario.explanation
+    ? `<p>${scenario.explanation}</p>`
+    : "";
+  const catchMarkup =
+    getCatchResponsibilityConfig() && catchResult
+      ? `<p><strong>Catch/No Catch Responsibility:</strong> ${
+          catchResult.correct
+            ? `Correct, ${getCatchRoleLabel(catchResult.correctRole)}.`
+            : `You selected ${getCatchRoleLabel(catchResult.selectedRole)}. Correct answer: ${getCatchRoleLabel(catchResult.correctRole)}.`
+        }</p>`
+      : "";
+
+  feedbackBodyEl.innerHTML = `${explanationMarkup}${catchMarkup}`;
+}
+
+function updateCursorReadout(point) {
+  cursorReadoutEl.textContent = `Cursor: x ${Math.round(point.x)}, y ${Math.round(point.y)}`;
+}
+
+function resetSelectedPaths() {
+  const scenario = scenarios[scenarioIndex];
+
+  activeRoleIndex = null;
+  selectedPaths = scenario.paths.map(() => ({
+    start: null,
+    end: null,
+    points: [],
+    completed: false,
+  }));
+  pointHistory = [];
+
+  roleArtifacts.forEach((artifacts) => {
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userStart);
+    hideElement(artifacts.userEnd);
+  });
+}
+
+function setActiveRole(index) {
+  if (roundFinished || index === null || index === undefined) {
+    return;
+  }
+
+  const selectedPath = selectedPaths[index];
+  if (!selectedPath || selectedPath.completed) {
+    return;
+  }
+
+  activeRoleIndex = index;
+  updatePrompt();
+  updateCheckButtonState();
+}
+
+function finishActiveRolePath() {
+  if (roundFinished || activeRoleIndex === null) {
+    return;
+  }
+
+  const catchPrompt = getCatchResponsibilityConfig();
+  const selectedPath = selectedPaths[activeRoleIndex];
+  if (!selectedPath || selectedPath.completed || selectedPath.points.length < 2) {
+    return;
+  }
+
+  selectedPath.completed = true;
+
+  const nextIncompleteIndex = getFirstIncompleteRoleIndex();
+  activeRoleIndex = nextIncompleteIndex === -1 ? null : nextIncompleteIndex;
+
+  if (activeRoleIndex === null) {
+    if (catchPrompt?.showButtons) {
+      feedbackTitleEl.textContent = "Choose who has catch/no catch responsibility, then check your work.";
+    } else {
+      feedbackTitleEl.textContent = "Check both movement paths when you're ready.";
+    }
+    renderMovementTracker();
+  } else {
+    updatePrompt();
+  }
+
+  updateCheckButtonState();
+}
+
+function loadScenario() {
+  const scenario = scenarios[scenarioIndex];
+  syncPlayAllSessionOnLoad();
+  titleEl.textContent = scenario.title;
+  systemEl.textContent = scenario.system;
+  systemEl.style.display = scenario.system ? "inline-flex" : "none";
+  descriptionEl.textContent = scenario.description;
+  runnersEl.textContent = scenario.runners;
+  outsEl.textContent = scenario.outs;
+  ballEl.textContent = scenario.ball;
+
+  roundFinished = false;
+  selectedCatchResponsibility = null;
+  catchResponsibilityResult = null;
+  resetSelectedPaths();
+
+  roleArtifacts.forEach((artifacts) => {
+    hideElement(artifacts.answerPath);
+    hideElement(artifacts.answerStart);
+    hideElement(artifacts.answerEnd);
+  });
+
+  scenario.paths.forEach((path, index) => {
+    const artifacts = roleArtifacts[index];
+    if (!artifacts) {
+      return;
+    }
+
+    placeMarker(artifacts.answerStart, path.startAnswer);
+  });
+
+  ballFlight.classList.add("hidden");
+  checkBtn.disabled = true;
+  nextBtn.disabled = true;
+  updateNextButtonLabel();
+
+  if (scenario.ballFlightPath) {
+    ballFlight.setAttribute("d", scenario.ballFlightPath);
+    ballFlight.classList.remove("hidden");
+  }
+
+  hideAnswerOverlay();
+  resetRoundFeedbackState();
+  clearFieldResult();
+  renderMovementTracker();
+  updatePrompt();
+  if (feedbackBodyEl) feedbackBodyEl.textContent = "";
+  updateRoleDrawButtons();
+  renderCatchResponsibilityPanel();
+
+  renderScoreLine();
+}
+
+function selectCatchResponsibility(role) {
+  const catchPrompt = getCatchResponsibilityConfig();
+  if (roundFinished || !catchPrompt?.showButtons) {
+    return;
+  }
+
+  selectedCatchResponsibility = role;
+  renderCatchResponsibilityPanel();
+  updateCheckButtonState();
+}
+
+field.addEventListener("click", (event) => {
+  if (roundFinished || activeRoleIndex === null) return;
+
+  const clickPoint = getSvgPoint(event);
+  const selectedPath = selectedPaths[activeRoleIndex];
+  const artifacts = roleArtifacts[activeRoleIndex];
+
+  if (selectedPath.completed) {
+    return;
+  }
+
+  selectedPath.points.push(clickPoint);
+  pointHistory.push(activeRoleIndex);
+
+  if (!selectedPath.start) {
+    selectedPath.start = clickPoint;
+    placeMarker(artifacts.userStart, clickPoint);
+  } else {
+    selectedPath.end = clickPoint;
+    placeMarker(artifacts.userEnd, clickPoint);
+  }
+
+  if (selectedPath.points.length === 1) {
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userEnd);
+  } else {
+    placePath(artifacts.userPath, selectedPath.points);
+  }
+
+  updatePrompt();
+  updateCheckButtonState();
+});
+
+field.addEventListener("mousemove", (event) => {
+  updateCursorReadout(getSvgPoint(event));
+});
+
+field.addEventListener("mouseleave", () => {
+  cursorReadoutEl.textContent = "Cursor: x -, y -";
+});
+
+drawPBtn?.addEventListener("click", () => {
+  const selectedPath = selectedPaths[0];
+  if (!selectedPath || roundFinished) {
+    return;
+  }
+
+  if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
+    activeRoleIndex = 0;
+    finishActiveRolePath();
+    return;
+  }
+
+  setActiveRole(0);
+});
+
+drawU1Btn?.addEventListener("click", () => {
+  const selectedPath = selectedPaths[1];
+  if (!selectedPath || roundFinished) {
+    return;
+  }
+
+  if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
+    activeRoleIndex = 1;
+    finishActiveRolePath();
+    return;
+  }
+
+  setActiveRole(1);
+});
+
+clearBtn.addEventListener("click", () => {
+  if (roundFinished) {
+    return;
+  }
+
+  resetSelectedPaths();
+  if (feedbackBodyEl) feedbackBodyEl.textContent = "";
+  updatePrompt();
+  updateCheckButtonState();
+});
+
+undoBtn?.addEventListener("click", () => {
+  if (roundFinished || !pointHistory.length) {
+    return;
+  }
+
+  const lastRoleIndex = pointHistory.pop();
+  const selectedPath = selectedPaths[lastRoleIndex];
+  if (!selectedPath || !selectedPath.points.length) {
+    updateCheckButtonState();
+    return;
+  }
+
+  selectedPath.points.pop();
+  selectedPath.completed = false;
+  activeRoleIndex = lastRoleIndex;
+  renderSelectedPath(lastRoleIndex);
+  updatePrompt();
+  updateCheckButtonState();
+});
+
+toggleGridBtn?.addEventListener("click", () => {
+  gridVisible = !gridVisible;
+  updateGridVisibility();
+});
+
+checkBtn.addEventListener("click", () => {
+  const scenario = scenarios[scenarioIndex];
+  const catchPrompt = getCatchResponsibilityConfig();
+  if (
+    roundFinished ||
+    !selectedPaths.every((path) => path.start && path.end) ||
+    (catchPrompt?.showButtons && !selectedCatchResponsibility)
+  ) {
+    return;
+  }
+
+  let totalDistance = 0;
+  let pointsEarned = 0;
+
+  scenario.paths.forEach((path, index) => {
+    const selected = selectedPaths[index];
+    const expectedRoutePoints = getExpectedRoutePoints(path);
+    const startHit = pointInCircle(
+      selected.start,
+      path.startAnswer,
+      START_TOLERANCE_RADIUS
+    );
+    const endHit = pointInCircle(
+      selected.end,
+      path.endAnswer,
+      END_TOLERANCE_RADIUS
+    );
+    const waypointHits = (path.waypoints || []).every((waypoint) =>
+      pathIntersectsPointTarget(selected.points, waypoint, WAYPOINT_TOLERANCE_RADIUS)
+    );
+    const averageRouteDistance = getAverageDistanceToRoute(
+      selected.points,
+      expectedRoutePoints
+    );
+    const maxRouteDistance = getMaxDistanceToRoute(
+      selected.points,
+      expectedRoutePoints
+    );
+    const routeHit = averageRouteDistance <= ROUTE_AVERAGE_TOLERANCE;
+    const strongRouteHit = averageRouteDistance <= ROUTE_STRONG_TOLERANCE;
+    const routeWithinBounds = maxRouteDistance <= ROUTE_MAX_DEVIATION_TOLERANCE;
+    const routeOrWaypointHit = waypointHits || (routeHit && routeWithinBounds);
+    const roleHit =
+      startHit &&
+      routeOrWaypointHit &&
+      endHit &&
+      (waypointHits || strongRouteHit || routeWithinBounds);
+
+    if (roleHit) {
+      pointsEarned += 1;
+    }
+
+    totalDistance += distance(selected.start, path.startAnswer);
+    totalDistance += distance(selected.end, path.endAnswer);
+    (path.waypoints || []).forEach((waypoint) => {
+      const nearestPointDistance = Math.min(
+        ...selected.points.map((point) => distance(point, waypoint))
+      );
+      totalDistance += nearestPointDistance;
+    });
+
+    const artifacts = roleArtifacts[index];
+    placeMarker(artifacts.answerStart, path.startAnswer);
+    placeMarker(artifacts.answerEnd, path.endAnswer);
+    placePath(
+      artifacts.answerPath,
+      path.routePoints || [path.startAnswer, path.endAnswer]
+    );
+  });
+
+  const movementMaxPoints = scenario.paths.length;
+  const averageDistance =
+    totalDistance /
+    scenario.paths.reduce(
+      (sum, path) => sum + 2 + (path.waypoints ? path.waypoints.length : 0),
+      0
+    );
+  catchResponsibilityResult = catchPrompt?.showButtons
+    ? {
+        correct: selectedCatchResponsibility === catchPrompt.correctRole,
+        correctRole: catchPrompt.correctRole,
+        selectedRole: selectedCatchResponsibility,
+      }
+    : null;
+  const catchPointsEarned = catchResponsibilityResult?.correct ? 1 : 0;
+  const maxPoints = movementMaxPoints + (catchPrompt ? 1 : 0);
+  const result = describeGrade(pointsEarned + catchPointsEarned, maxPoints, averageDistance);
+
+  attempts += maxPoints;
+  score += result.points;
+  roundFinished = true;
+
+  renderScoreLine();
+  nextBtn.disabled = false;
+  persistPlayAllTotals();
+  updateNextButtonLabel();
+  celebrateScore(result.points);
+  updateCheckButtonState();
+
+  if (result.tone === "perfect") {
+    feedbackEl?.classList.add("is-perfect");
+    nextBtn.classList.add("perfect-next");
+  } else if (result.tone === "partial") {
+    feedbackEl?.classList.add("is-partial");
+  }
+
+  feedbackTitleEl.textContent = result.label;
+  showCatchResult(catchResponsibilityResult);
+  showFieldResult(result);
+  renderFeedbackBody(scenario, catchResponsibilityResult);
+  renderAnswerOverlay(scenario);
+  renderMovementTracker();
+  renderCatchResponsibilityPanel();
+});
+
+catchChoicePEl?.addEventListener("click", () => {
+  selectCatchResponsibility("P");
+});
+
+catchChoiceU1El?.addEventListener("click", () => {
+  selectCatchResponsibility("U1");
+});
+
+nextBtn.addEventListener("click", () => {
+  if (goToNextPlayAllScenario()) {
+    return;
+  }
+
+  const currentIndex = DEFAULT_SCENARIO_ORDER.indexOf(currentScenarioSlug);
+  const nextSlug =
+    currentIndex === -1
+      ? null
+      : DEFAULT_SCENARIO_ORDER[(currentIndex + 1) % DEFAULT_SCENARIO_ORDER.length];
+
+  if (nextSlug) {
+    window.location.href = `../${nextSlug}/`;
+    return;
+  }
+
+  scenarioIndex = (scenarioIndex + 1) % scenarios.length;
+  loadScenario();
+});
+
+initializeGrid();
+initializeRoleArtifacts();
+updateGridVisibility();
+loadScenario();

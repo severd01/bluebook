@@ -1,0 +1,61 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FCF5EA"/>
+      <stop offset="1" stop-color="#F3EBDD"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="1200" height="630" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#6B5532" flood-opacity="0.10"/>
+    </filter>
+    <clipPath id="leftCrop">
+      <rect x="54" y="162" width="520" height="360" rx="28"/>
+    </clipPath>
+    <clipPath id="rightCrop">
+      <rect x="626" y="162" width="520" height="360" rx="28"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="36" y="28" width="1128" height="574" rx="34" fill="#FFF9F1"/>
+  </g>
+
+  <text x="600" y="88" text-anchor="middle" fill="#2C2D28" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700" letter-spacing="-1.8">
+    UmpIQ
+  </text>
+  <text x="600" y="126" text-anchor="middle" fill="#8B5E3C" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="21" font-weight="800" letter-spacing="4.5">
+    BASEBALL + SOFTBALL
+  </text>
+  <text x="600" y="154" text-anchor="middle" fill="#525248" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="28" font-weight="700">
+    2-Umpire Mechanics Trainer
+  </text>
+
+  <rect x="54" y="162" width="520" height="360" rx="28" fill="#F6EFE4"/>
+  <rect x="626" y="162" width="520" height="360" rx="28" fill="#F6EFE4"/>
+
+  <g clip-path="url(#leftCrop)">
+    <image href="./baseball-social-source.png" x="8" y="128" width="640" height="598" preserveAspectRatio="xMidYMid slice"/>
+  </g>
+
+  <g clip-path="url(#rightCrop)">
+    <image href="./softball-social-source.png" x="585" y="124" width="650" height="602" preserveAspectRatio="xMidYMid slice"/>
+  </g>
+
+  <rect x="584" y="182" width="32" height="320" rx="16" fill="#FFF9F1"/>
+  <rect x="598" y="210" width="4" height="264" rx="2" fill="#D9C8B0"/>
+
+  <rect x="74" y="178" width="132" height="36" rx="18" fill="#2E6F57"/>
+  <text x="140" y="202" text-anchor="middle" fill="#FFF8EE" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="17" font-weight="800" letter-spacing="1.4">
+    BASEBALL
+  </text>
+
+  <rect x="994" y="178" width="132" height="36" rx="18" fill="#4063A8"/>
+  <text x="1060" y="202" text-anchor="middle" fill="#FFF8EE" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="17" font-weight="800" letter-spacing="1.4">
+    SOFTBALL
+  </text>
+
+  <text x="600" y="572" text-anchor="middle" fill="#5E5D54" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="23" font-weight="700">
+    Free interactive training at umpiq.com
+  </text>
+</svg>

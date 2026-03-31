@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ | Managing a Scorecard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="scorecard-shell">
+      <section class="intro-panel">
+        <p class="eyebrow">Lineup Card Trainer</p>
+        <h1>Managing a lineup card.</h1>
+        <p class="intro-copy">
+          Practice lineup-card management using a real paper-card style layout. Read the
+          game event, update the card, then check whether your bookkeeping matches the
+          expected answer.
+        </p>
+
+        <div class="intro-metrics">
+          <article class="metric-card">
+            <p class="metric-label">Situation</p>
+            <p id="scenario-index" class="metric-value">1 / 4</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Score</p>
+            <p id="score-line" class="metric-value">0 / 0</p>
+          </article>
+        </div>
+
+        <section class="prompt-card">
+          <p class="eyebrow">Game Event</p>
+          <h2 id="scenario-title">Loading...</h2>
+          <p id="scenario-prompt" class="prompt-copy"></p>
+
+          <div class="prompt-notes">
+            <div>
+              <p class="detail-label">Focus</p>
+              <p id="scenario-focus"></p>
+            </div>
+            <div>
+              <p class="detail-label">State</p>
+              <p id="scenario-context"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="action-card">
+          <div class="action-card-header">
+            <div>
+              <p class="eyebrow">Action</p>
+              <h3 id="editor-title">Select a row</h3>
+            </div>
+            <p id="selected-slot-chip" class="slot-chip">No slot selected</p>
+          </div>
+
+          <div id="action-tabs" class="action-tabs" aria-label="Scorecard actions"></div>
+          <form id="action-form" class="action-form"></form>
+
+          <div class="action-buttons">
+            <button id="apply-btn" class="primary-btn" type="button">Apply Update</button>
+            <button id="reset-btn" class="ghost-btn" type="button">Reset Situation</button>
+            <button id="check-btn" class="ghost-btn ghost-btn-strong" type="button">Check Work</button>
+            <button id="next-btn" class="ghost-btn" type="button">Next Situation</button>
+          </div>
+        </section>
+
+        <section class="feedback-card">
+          <p class="eyebrow">Result</p>
+          <h3 id="feedback-title">Choose a lineup slot to begin.</h3>
+          <p id="feedback-body" class="feedback-copy">
+            This prototype uses guided actions so we can focus on lineup-card logic first.
+          </p>
+        </section>
+      </section>
+
+      <section class="card-stage">
+        <section class="lineup-board">
+          <div class="lineup-board-header">
+            <div>
+              <p class="eyebrow">Reference Layout</p>
+              <h2>Baseball Line-Up Card</h2>
+            </div>
+            <p class="board-meta">Tap a batting slot to work that row.</p>
+          </div>
+
+          <section class="paper-card">
+            <header class="paper-header">
+              <div class="paper-title-row">
+                <h3 class="paper-title">Baseball Line-Up Card</h3>
+                <p id="paper-coach" class="paper-coach">HC — Coach Tom</p>
+              </div>
+
+              <div class="paper-meta-grid">
+                <div class="paper-meta-field">
+                  <span class="paper-meta-label">Opponent</span>
+                  <span class="paper-meta-value">Training Squad</span>
+                </div>
+                <div class="paper-meta-field">
+                  <span class="paper-meta-label">Date</span>
+                  <span class="paper-meta-value">Practice Rep</span>
+                </div>
+                <div class="paper-meta-switches">
+                  <span class="paper-toggle active">Visitor</span>
+                  <span class="paper-toggle">Home</span>
+                </div>
+              </div>
+            </header>
+
+            <div class="paper-body">
+              <section class="paper-left">
+                <div class="paper-table paper-table-head">
+                  <div class="paper-cell paper-cell-slot">Pos.</div>
+                  <div class="paper-cell paper-cell-pos">No.</div>
+                  <div class="paper-cell paper-cell-num">Starter</div>
+                  <div class="paper-cell paper-cell-subnum">No.</div>
+                  <div class="paper-cell paper-cell-sub">Substitutes</div>
+                </div>
+                <div id="lineup-rows" class="lineup-rows paper-table-body"></div>
+              </section>
+
+              <aside class="paper-right">
+                <section class="paper-panel">
+                  <div class="paper-panel-head">
+                    <span class="paper-panel-label">No.</span>
+                    <span class="paper-panel-title">Substitutes</span>
+                  </div>
+                  <div id="bench-list" class="bench-list"></div>
+                </section>
+
+                <p class="equipment-certification">
+                  All of my players are equipped according to the rules
+                </p>
+
+                <div class="signature-block">
+                  <span class="signature-label">Signature of Coach</span>
+                  <span class="signature-line"></span>
+                </div>
+
+                <section class="conference-card">
+                  <p class="conference-title">Charged Conferences</p>
+                  <div class="conference-grid conference-grid-head">
+                    <span></span>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                  </div>
+                  <div class="conference-grid">
+                    <span>Off.</span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="conference-grid">
+                    <span>Def.</span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </section>
+
+                <section class="paper-notes">
+                  <p class="paper-panel-title">Game Notes</p>
+                  <div id="incident-log" class="incident-log">
+                    <p class="empty-state">No events logged yet.</p>
+                  </div>
+                </section>
+              </aside>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

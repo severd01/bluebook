@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Softball 2 Umpire Mechanics Template</title>
+    <meta name="robots" content="noindex,follow" />
+    <link rel="stylesheet" href="./styles.css?v=1" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <h1>Softball 2 Umpire Mechanics</h1>
+        <nav class="scenario-nav" aria-label="Scenario navigation">
+          <a class="scenario-nav-link scenario-brand-link" href="../../">UmpIQ</a>
+          <a class="scenario-nav-link" href="../../softball-situations.html">Softball Situations</a>
+        </nav>
+      </section>
+
+      <section class="game-layout">
+        <aside class="panel scenario-panel">
+          <div class="panel-header">
+            <p class="panel-label">Situation</p>
+            <p class="score-line">
+              Score <span id="score">0</span>/<span id="attempts">0</span>
+            </p>
+          </div>
+
+          <h2 id="scenario-title">Loading scenario...</h2>
+          <p id="scenario-system" class="system-pill"></p>
+          <p id="scenario-description" class="scenario-description"></p>
+
+          <div class="details">
+            <div>
+              <p class="detail-label">Runners</p>
+              <p id="scenario-runners"></p>
+            </div>
+            <div>
+              <p class="detail-label">Outs</p>
+              <p id="scenario-outs"></p>
+            </div>
+            <div>
+              <p class="detail-label">Situation</p>
+              <p id="scenario-ball"></p>
+            </div>
+          </div>
+
+          <p id="cursor-readout" class="cursor-readout">Cursor: x -, y -</p>
+          <button id="toggle-grid-btn" class="ghost-btn" type="button">Hide Grid</button>
+        </aside>
+
+        <section class="panel field-panel">
+          <div class="field-wrap">
+            <div class="draw-controls" aria-label="Draw movement paths">
+              <div class="draw-controls-side draw-controls-left">
+                <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
+                <button id="clear-btn" class="field-ghost-btn" type="button">Clear Drawings</button>
+                <button id="undo-btn" class="field-ghost-btn" type="button">Clear Last Point</button>
+              </div>
+              <div class="draw-controls-center">
+                <button id="check-btn" class="field-check-btn" type="button" disabled>Check Movements</button>
+                <div id="field-status" class="field-status">
+                  <p id="feedback-title" class="feedback-title field-status-text">Draw the umpire movements on the field.</p>
+                </div>
+              </div>
+              <div class="draw-controls-side draw-controls-right">
+                <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw B Path</button>
+              </div>
+            </div>
+            <svg id="field" viewBox="74 74 738 738" role="img" aria-label="Softball field diagram">
+              <image href="../../assets/softball/softball_field_nfhs_with_fence_corrected_no_top_lines_white_bases.svg" x="0" y="0" width="886" height="886" preserveAspectRatio="xMidYMid meet" />
+              <path id="ball-flight" class="ball-flight hidden" />
+            </svg>
+
+            <div id="field-result" class="field-result hidden" aria-live="polite">
+              <p id="field-result-text" class="field-result-text"></p>
+              <div id="field-result-burst" class="field-result-burst" aria-hidden="true"></div>
+            </div>
+
+            <button id="next-btn" class="field-next-btn" type="button" disabled>Next Situation</button>
+
+            <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
+              <section id="answer-card-shared" class="answer-card answer-card-top"></section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="./script.js?v=1"></script>
+  </body>
+</html>

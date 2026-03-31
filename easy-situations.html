@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ Easy Mode | 2 Umpire Mechanics</title>
+    <meta
+      name="description"
+      content="Practice 27 baseball umpire situations, run a 5-random session, or jump into a specific 2 umpire mechanics rep on UmpIQ."
+    />
+    <link rel="canonical" href="https://umpiq.com/easy-situations.html" />
+    <meta property="og:title" content="UmpIQ Easy Mode | 2 Umpire Mechanics" />
+    <meta
+      property="og:description"
+      content="Run the full 27-situation Easy Mode session, play 5 random reps, or open a specific baseball umpire mechanics scenario with visible starting spots."
+    />
+    <meta property="og:url" content="https://umpiq.com/easy-situations.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ Easy Mode | 2 Umpire Mechanics" />
+    <meta
+      name="twitter:description"
+      content="Run the full 27-situation Easy Mode session, play 5 random reps, or open a specific baseball umpire mechanics scenario with visible starting spots."
+    />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+    <link rel="stylesheet" href="./menu.css?v=16" />
+    <link rel="stylesheet" href="./auth.css?v=3" />
+  </head>
+  <body class="situations-page">
+    <main class="home-shell">
+      <section class="main-panel">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <a class="topbar-home" href="./">UmpIQ</a>
+            <span class="topbar-divider"></span>
+            <span class="topbar-subtitle">2 Umpire Mechanics Easy Mode</span>
+          </div>
+        </header>
+
+        <section class="hero-panel situations-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">2 Umpire Mechanics Easy Mode</p>
+            <h1>Choose your reps.</h1>
+            <p class="hero-text">
+              Run the full 27-scenario session, jump into 5 random situations, or
+              open a specific play with visible umpire starting spots.
+            </p>
+
+            <div class="hero-actions">
+              <button id="play-all-btn" class="primary-btn">Play All Easy Scenarios</button>
+              <button id="random-five-btn" class="ghost-btn">Play 5 Easy Random</button>
+              <button id="resume-btn" class="ghost-btn hidden">Resume Easy Session</button>
+              <a class="ghost-link" href="./situations.html">Standard Mode</a>
+              <a class="ghost-link" href="./feedback.html">Give Feedback</a>
+            </div>
+
+            <section id="session-summary" class="session-summary hidden" aria-live="polite"></section>
+          </div>
+
+          <div class="situations-stats">
+            <article class="module-card module-card-featured">
+              <p class="module-kicker">Session</p>
+              <h2>27 Plays</h2>
+              <p class="module-copy">Same scoring and feedback, with visible starting positions.</p>
+            </article>
+
+            <article class="module-card">
+              <p class="module-kicker">Quick Run</p>
+              <h2>5 Random</h2>
+              <p class="module-copy">Fast Easy Mode session for short practice blocks.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="library-panel">
+          <div class="library-header">
+            <div>
+              <p class="eyebrow">Easy Scenario Library</p>
+              <h2>Select A Specific Scenario</h2>
+            </div>
+            <p class="library-count"><span id="scenario-count">0</span> plays</p>
+          </div>
+
+          <div id="scenario-grid" class="scenario-grid"></div>
+        </section>
+      </section>
+    </main>
+    <script src="./supabase-config.js"></script>
+    <script type="module" src="./auth.js?v=2"></script>
+    <script>
+      window.va = window.va || function () {
+        (window.vaq = window.vaq || []).push(arguments);
+      };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <script src="./easy-menu.js?v=1"></script>
+  </body>
+</html>
