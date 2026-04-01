@@ -15,7 +15,7 @@
     <meta name="twitter:title" content="UmpIQ Scenario 09 | Fly Ball RF Line R1" />
     <meta name="twitter:description" content="Practice Scenario 09, Fly Ball RF Line R1, in UmpIQ's interactive baseball umpire trainer for 2 umpire mechanics." />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-<link rel="stylesheet" href="./styles.css?v=23" />
+<link rel="stylesheet" href="./styles.css?v=25" />
     <link rel="stylesheet" href="../../auth.css?v=3" />
   </head>
   <body>
@@ -63,6 +63,16 @@
 
         <section class="panel field-panel">
           <div class="field-wrap">
+                        <section id="pre-pitch-overlay" class="pre-pitch-overlay hidden" aria-live="polite">
+              <div class="pre-pitch-panel">
+                <p class="pre-pitch-eyebrow">Pre-Pitch Signal</p>
+                <h3 class="pre-pitch-title">Select the correct signal before the pitch.</h3>
+                <p id="pre-pitch-feedback" class="pre-pitch-feedback">
+                  Choose the signal that matches this situation.
+                </p>
+                <div id="pre-pitch-options" class="pre-pitch-options"></div>
+              </div>
+            </section>
             <div class="draw-controls" aria-label="Draw movement paths">
               <div class="draw-controls-side draw-controls-left">
                 <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
@@ -125,6 +135,6 @@
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
-    <script src="./script.js?v=25"></script>
+    <script src="./script.js?v=27"></script>
   </body>
 </html>

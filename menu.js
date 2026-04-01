@@ -1,5 +1,27 @@
 const PLAY_ALL_KEY = "bluebook-play-all-session";
 const PLAY_ALL_COMPLETE_KEY = "bluebook-play-all-complete";
+const PRE_PITCH_SCENARIO_SLUGS = new Set([
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+]);
 
 const scenarios = [
   ["01-routine-fly-ball-to-right-field", "Routine Fly Ball to Right Field"],
@@ -59,6 +81,13 @@ function shuffle(items) {
   return copy;
 }
 
+function getSessionMaxPoints(order) {
+  return order.reduce(
+    (sum, slug) => sum + (PRE_PITCH_SCENARIO_SLUGS.has(slug) ? 3 : 2),
+    0
+  );
+}
+
 function startSession(order, mode, label) {
   const safeOrder = order.length ? order : scenarios.map((scenario) => scenario.slug);
   const session = {
@@ -111,7 +140,7 @@ function renderSessionSummary() {
       scenarios.find((scenario) => scenario.slug === nextSlug) || scenarios[0];
     const sessionLabel = activeSession.label || "Play-all";
     const totalScenarios = Number((activeSession.order || []).length || 0);
-    const maxPoints = totalScenarios * 2;
+    const maxPoints = getSessionMaxPoints(activeSession.order || []);
 
     if (resumeBtn) {
       resumeBtn.classList.remove("hidden");
@@ -138,7 +167,10 @@ function renderSessionSummary() {
 
   if (completedSession) {
     const totalScenarios = Number(completedSession.totalScenarios || (completedSession.order || []).length || 0);
-    const maxPoints = Math.max(totalScenarios * 2, Number(completedSession.attempts || 0));
+    const maxPoints = Math.max(
+      getSessionMaxPoints(completedSession.order || []),
+      Number(completedSession.attempts || 0)
+    );
     if (sessionSummary) {
       sessionSummary.classList.remove("hidden");
       sessionSummary.innerHTML = `

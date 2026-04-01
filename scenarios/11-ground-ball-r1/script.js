@@ -10,6 +10,24 @@ const scenarios = [
     ballFlightPath:
       "M 442 664 L 372 441",
     prompt: "Click P's starting position for Scenario 11.",
+    prePitchSignal: {
+      prompt: "Choose the correct pre-pitch signal for this situation.",
+      correctOption: "Standard Rotation",
+      options: [
+        {
+          label: "Standard Rotation",
+          image: "./pre-pitch-standard-rotation.png",
+        },
+        {
+          label: "Plate Covers 3rd on Fly",
+          image: "./pre-pitch-plate-covers-third.png",
+        },
+        {
+          label: "Staying Home",
+          image: "./pre-pitch-staying-home.png",
+        },
+      ],
+    },
     explanation: "",
     answerNotes: [
       {
@@ -87,6 +105,9 @@ const fieldStatusEl = document.getElementById("field-status");
 const fieldResultEl = document.getElementById("field-result");
 const fieldResultTextEl = document.getElementById("field-result-text");
 const fieldResultBurstEl = document.getElementById("field-result-burst");
+const prePitchOverlayEl = document.getElementById("pre-pitch-overlay");
+const prePitchOptionsEl = document.getElementById("pre-pitch-options");
+const prePitchFeedbackEl = document.getElementById("pre-pitch-feedback");
 const MARKER_RADIUS = 5.5;
 const SCORING_POINT_DIAMETER = 60;
 const SCORING_POINT_RADIUS = SCORING_POINT_DIAMETER / 2;
@@ -99,6 +120,29 @@ const ROUTE_MAX_DEVIATION_TOLERANCE = 92;
 const SVG_NS = "http://www.w3.org/2000/svg";
 const FIELD_SIZE = 886;
 const GRID_STEP = 100;
+const PRE_PITCH_UNLOCK_DELAY = 900;
+const PRE_PITCH_SCENARIO_SLUGS = new Set([
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+]);
 
 const PLAY_ALL_KEY = "bluebook-play-all-session";
 const PLAY_ALL_COMPLETE_KEY = "bluebook-play-all-complete";
@@ -255,6 +299,37 @@ let pointHistory = [];
 let roleArtifacts = [];
 let gridVisible = false;
 let gridLayer;
+let prePitchUnlocked = true;
+let prePitchAttempts = 0;
+let prePitchScore = 0;
+
+function getCurrentScenario() {
+  return scenarios[scenarioIndex];
+}
+
+function hasPrePitchSignal() {
+  return Boolean(getCurrentScenario()?.prePitchSignal);
+}
+
+function isPrePitchLocked() {
+  return hasPrePitchSignal() && !prePitchUnlocked;
+}
+
+function focusFirstPrePitchOption() {
+  const firstOption = prePitchOptionsEl?.querySelector(".pre-pitch-option");
+  firstOption?.focus();
+}
+
+function getScenarioMaxPointsBySlug(slug) {
+  return PRE_PITCH_SCENARIO_SLUGS.has(slug) ? 3 : 2;
+}
+
+function getSessionMaxPoints(order) {
+  return order.reduce(
+    (sum, slug) => sum + getScenarioMaxPointsBySlug(slug),
+    0
+  );
+}
 
 function createSvgElement(tagName, attributes, className) {
   const element = document.createElementNS(SVG_NS, tagName);
@@ -594,7 +669,7 @@ function renderSelectedPath(index) {
 function getDisplayedMaxPoints() {
   const session = getPlayAllSession();
   if (session?.active && Array.isArray(session.order) && session.order.length) {
-    return session.order.length * 2;
+    return getSessionMaxPoints(session.order);
   }
 
   return attempts;
@@ -759,9 +834,15 @@ function showFieldResult(result) {
 }
 
 function updatePrompt() {
-  const scenario = scenarios[scenarioIndex];
+  const scenario = getCurrentScenario();
 
   if (roundFinished) {
+    return;
+  }
+
+  if (isPrePitchLocked()) {
+    feedbackTitleEl.textContent = "Select the correct pre-pitch signal to begin.";
+    renderMovementTracker();
     return;
   }
 
@@ -792,7 +873,7 @@ function updatePrompt() {
 }
 
 function updateRoleDrawButtons() {
-  const scenario = scenarios[scenarioIndex];
+  const scenario = getCurrentScenario();
   const buttonMap = { P: drawPBtn, U1: drawU1Btn };
 
   scenario.paths.forEach((path, index) => {
@@ -808,7 +889,7 @@ function updateRoleDrawButtons() {
     button.classList.toggle("hidden", isComplete || roundFinished);
     button.classList.toggle("is-active", isActive);
     button.classList.toggle("is-complete", isComplete);
-    button.disabled = roundFinished || isComplete;
+    button.disabled = roundFinished || isComplete || isPrePitchLocked();
     button.textContent = canFinish
       ? `Finish ${roleLabel} Path`
       : `Draw ${roleLabel} Path`;
@@ -817,20 +898,20 @@ function updateRoleDrawButtons() {
 
 function updateCheckButtonState() {
   if (checkBtn) {
-    checkBtn.disabled = roundFinished || !selectedPaths.every(
+    checkBtn.disabled = roundFinished || isPrePitchLocked() || !selectedPaths.every(
       (path) => path.completed && path.start && path.end
     );
     checkBtn.classList.toggle("hidden", roundFinished);
   }
 
   if (clearBtn) {
-    clearBtn.disabled = roundFinished;
+    clearBtn.disabled = roundFinished || isPrePitchLocked();
     clearBtn.classList.toggle("hidden", roundFinished);
   }
 
   if (undoBtn) {
     const hasPoints = selectedPaths.some((path) => path.points.length > 0);
-    undoBtn.disabled = roundFinished || !hasPoints;
+    undoBtn.disabled = roundFinished || isPrePitchLocked() || !hasPoints;
     undoBtn.classList.toggle("hidden", roundFinished);
   }
 
@@ -952,7 +1033,7 @@ function finishActiveRolePath() {
 }
 
 function loadScenario() {
-  const scenario = scenarios[scenarioIndex];
+  const scenario = getCurrentScenario();
   syncPlayAllSessionOnLoad();
   titleEl.textContent = scenario.title;
   systemEl.textContent = scenario.system;
@@ -963,6 +1044,9 @@ function loadScenario() {
   ballEl.textContent = scenario.ball;
 
   roundFinished = false;
+  prePitchUnlocked = !scenario.prePitchSignal;
+  prePitchAttempts = 0;
+  prePitchScore = 0;
   resetSelectedPaths();
 
   roleArtifacts.forEach((artifacts) => {
@@ -984,6 +1068,7 @@ function loadScenario() {
   hideAnswerOverlay();
   resetRoundFeedbackState();
   clearFieldResult();
+  renderPrePitchSignalOverlay();
   renderMovementTracker();
   updatePrompt();
   if (feedbackBodyEl) feedbackBodyEl.textContent = "";
@@ -992,8 +1077,95 @@ function loadScenario() {
   renderScoreLine();
 }
 
+function renderPrePitchSignalOverlay() {
+  const scenario = getCurrentScenario();
+  const config = scenario.prePitchSignal;
+
+  if (!prePitchOverlayEl || !prePitchOptionsEl || !prePitchFeedbackEl) {
+    return;
+  }
+
+  if (!config || prePitchUnlocked) {
+    prePitchOverlayEl.classList.add("hidden");
+    prePitchOverlayEl.setAttribute("aria-hidden", "true");
+    prePitchOptionsEl.innerHTML = "";
+    prePitchFeedbackEl.textContent = "";
+    return;
+  }
+
+  prePitchFeedbackEl.textContent =
+    config.prompt || "Choose the signal that matches this situation.";
+
+    prePitchOptionsEl.innerHTML = config.options
+    .map(
+      (option) => `
+        <button
+          class="pre-pitch-option"
+          type="button"
+          data-signal-label="${option.label}"
+          aria-label="${option.label}"
+          aria-pressed="false"
+        >
+          <img class="pre-pitch-option-image" src="${option.image}" alt="${option.label}" />
+          <span class="pre-pitch-option-check" aria-hidden="true">✓</span>
+          <span class="pre-pitch-option-label">${option.label}</span>
+        </button>
+      `
+    )
+    .join("");
+
+  prePitchOverlayEl.classList.remove("hidden");
+  prePitchOverlayEl.setAttribute("aria-hidden", "false");
+  window.requestAnimationFrame(() => {
+    focusFirstPrePitchOption();
+  });
+}
+
+function handlePrePitchSelection(label, button) {
+  const config = getCurrentScenario()?.prePitchSignal;
+  if (!config || !prePitchFeedbackEl) {
+    return;
+  }
+
+  prePitchAttempts += 1;
+
+  const optionButtons = Array.from(
+    prePitchOptionsEl?.querySelectorAll(".pre-pitch-option") || []
+  );
+
+  optionButtons.forEach((optionButton) => {
+    optionButton.classList.remove("is-correct", "is-incorrect");
+    optionButton.disabled = false;
+    optionButton.setAttribute("aria-pressed", "false");
+  });
+
+  if (label !== config.correctOption) {
+    button?.classList.add("is-incorrect");
+    button?.setAttribute("aria-pressed", "true");
+    prePitchFeedbackEl.textContent = "Not quite. Try again.";
+    button?.focus();
+    return;
+  }
+
+  button?.classList.add("is-correct");
+  optionButtons.forEach((optionButton) => {
+    optionButton.disabled = true;
+  });
+  button?.setAttribute("aria-pressed", "true");
+  prePitchScore = prePitchAttempts === 1 ? 1 : 0;
+  prePitchFeedbackEl.textContent = "Correct! Pre-pitch signal matched. Loading the scenario.";
+
+  window.setTimeout(() => {
+    prePitchUnlocked = true;
+    renderPrePitchSignalOverlay();
+    updatePrompt();
+    updateCheckButtonState();
+    drawPBtn?.focus();
+  }, PRE_PITCH_UNLOCK_DELAY);
+}
+
 field.addEventListener("click", (event) => {
-  if (roundFinished || activeRoleIndex === null) return;
+  if (roundFinished || activeRoleIndex === null || isPrePitchLocked()) return;
 
   const clickPoint = getSvgPoint(event);
   const selectedPath = selectedPaths[activeRoleIndex];
@@ -1035,7 +1207,7 @@ field.addEventListener("mouseleave", () => {
 
 drawPBtn?.addEventListener("click", () => {
   const selectedPath = selectedPaths[0];
-  if (!selectedPath || roundFinished) {
+  if (!selectedPath || roundFinished || isPrePitchLocked()) {
     return;
   }
 
@@ -1050,7 +1222,7 @@ drawPBtn?.addEventListener("click", () => {
 
 drawU1Btn?.addEventListener("click", () => {
   const selectedPath = selectedPaths[1];
-  if (!selectedPath || roundFinished) {
+  if (!selectedPath || roundFinished || isPrePitchLocked()) {
     return;
   }
 
@@ -1064,7 +1236,7 @@ drawU1Btn?.addEventListener("click", () => {
 });
 
 clearBtn.addEventListener("click", () => {
-  if (roundFinished) {
+  if (roundFinished || isPrePitchLocked()) {
     return;
   }
 
@@ -1075,7 +1247,7 @@ clearBtn.addEventListener("click", () => {
 });
 
 undoBtn?.addEventListener("click", () => {
-  if (roundFinished || !pointHistory.length) {
+  if (roundFinished || isPrePitchLocked() || !pointHistory.length) {
     return;
   }
 
@@ -1100,13 +1272,17 @@ toggleGridBtn?.addEventListener("click", () => {
 });
 
 checkBtn.addEventListener("click", () => {
-  if (roundFinished || !selectedPaths.every((path) => path.start && path.end)) {
+  if (
+    roundFinished ||
+    isPrePitchLocked() ||
+    !selectedPaths.every((path) => path.start && path.end)
+  ) {
     return;
   }
 
   const scenario = scenarios[scenarioIndex];
   let totalDistance = 0;
-  let pointsEarned = 0;
+  let pointsEarned = scenario.prePitchSignal ? prePitchScore : 0;
 
   scenario.paths.forEach((path, index) => {
     const selected = selectedPaths[index];
@@ -1164,7 +1340,7 @@ checkBtn.addEventListener("click", () => {
     );
   });
 
-  const maxPoints = scenario.paths.length;
+  const maxPoints = scenario.paths.length + (scenario.prePitchSignal ? 1 : 0);
   const averageDistance =
     totalDistance /
     scenario.paths.reduce(
@@ -1216,6 +1392,37 @@ nextBtn.addEventListener("click", () => {
 
   scenarioIndex = (scenarioIndex + 1) % scenarios.length;
   loadScenario();
+});
+
+prePitchOptionsEl?.addEventListener("click", (event) => {
+  const button = event.target.closest(".pre-pitch-option");
+  if (!button || !prePitchOptionsEl.contains(button)) {
+    return;
+  }
+
+  handlePrePitchSelection(button.dataset.signalLabel, button);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.defaultPrevented || !isPrePitchLocked()) {
+    return;
+  }
+
+  const keyIndex = Number.parseInt(event.key, 10) - 1;
+  if (!Number.isInteger(keyIndex) || keyIndex < 0) {
+    return;
+  }
+
+  const optionButtons = Array.from(
+    prePitchOptionsEl?.querySelectorAll(".pre-pitch-option") || []
+  );
+  const button = optionButtons[keyIndex];
+  if (!button || button.disabled) {
+    return;
+  }
+
+  event.preventDefault();
+  handlePrePitchSelection(button.dataset.signalLabel, button);
 });
 
 initializeGrid();

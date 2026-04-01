@@ -1,5 +1,27 @@
 const PLAY_ALL_KEY = "bluebook-play-all-session";
 const PLAY_ALL_COMPLETE_KEY = "bluebook-play-all-complete";
+const PRE_PITCH_SCENARIO_SLUGS = new Set([
+  "08-fly-ball-r1",
+  "09-fly-ball-rf-line-r1",
+  "10-base-hit-r1",
+  "11-ground-ball-r1",
+  "12-fly-ball-r2",
+  "13-base-hit-r2",
+  "14-fly-ball-r3",
+  "15-fly-ball-rf-line-r3",
+  "16-base-hit-r3",
+  "17-fly-ball-r1-r2",
+  "18-fly-ball-rf-line-r1-r2",
+  "19-base-hit-r1-r2",
+  "20-ground-ball-r1-r2",
+  "21-fly-ball-rf-line-r1-r3",
+  "22-base-hit-r1-r3",
+  "23-ground-ball-r1-r3",
+  "24-fly-ball-r2-r3",
+  "25-base-hit-r2-r3",
+  "26-fly-ball-r1-r2-r3",
+  "27-base-hit-r1-r2-r3",
+]);
 const scenarios = [
   "01-routine-fly-ball-to-right-field",
   "02-routine-fly-ball-to-left-field",
@@ -55,6 +77,13 @@ function shuffle(items) {
   return copy;
 }
 
+function getSessionMaxPoints(order) {
+  return order.reduce(
+    (sum, slug) => sum + (PRE_PITCH_SCENARIO_SLUGS.has(slug) ? 3 : 2),
+    0
+  );
+}
+
 function renderResults() {
   const result = getStoredJson(PLAY_ALL_COMPLETE_KEY);
 
@@ -69,7 +98,10 @@ function renderResults() {
   const percent = attempts > 0 ? Math.round((score / attempts) * 100) : 0;
   const sessionLabel = result.label || "Session";
   const totalScenarios = Number(result.totalScenarios || 27);
-  const maxPoints = Math.max(totalScenarios * 2, attempts);
+  const maxPoints = Math.max(
+    getSessionMaxPoints(result.order || scenarios),
+    attempts
+  );
 
   finalScoreEl.textContent = `${score}/${maxPoints}`;
   resultsDetailEl.textContent = `You completed ${sessionLabel.toLowerCase()} with ${percent}% accuracy across ${totalScenarios} scenario${totalScenarios === 1 ? "" : "s"} for a score of ${score}/${maxPoints}.`;

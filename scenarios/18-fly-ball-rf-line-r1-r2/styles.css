@@ -330,6 +330,131 @@ button:disabled {
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
 }
+
+.pre-pitch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(15, 16, 16, 0.54);
+  backdrop-filter: blur(4px);
+}
+
+.pre-pitch-panel {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(247, 243, 234, 0.98);
+  border: 1px solid rgba(29, 38, 30, 0.08);
+  box-shadow: 0 24px 50px rgba(12, 10, 8, 0.22);
+}
+
+.pre-pitch-eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.76rem;
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+
+.pre-pitch-title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  line-height: 1.05;
+}
+
+.pre-pitch-feedback {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.4;
+}
+
+.pre-pitch-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.pre-pitch-option {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 2px solid rgba(29, 38, 30, 0.12);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text);
+  box-shadow: 0 12px 24px rgba(41, 27, 15, 0.08);
+}
+
+.pre-pitch-option:hover:enabled {
+  border-color: rgba(180, 71, 47, 0.34);
+  box-shadow: 0 16px 28px rgba(41, 27, 15, 0.12);
+}
+
+.pre-pitch-option:focus-visible {
+  outline: 4px solid rgba(40, 90, 155, 0.34);
+  outline-offset: 3px;
+  border-color: rgba(40, 90, 155, 0.5);
+}
+
+.pre-pitch-option.is-correct {
+  border-color: rgba(31, 122, 95, 0.68);
+  background: rgba(31, 122, 95, 0.1);
+}
+
+.pre-pitch-option.is-incorrect {
+  border-color: rgba(180, 71, 47, 0.65);
+  background: rgba(180, 71, 47, 0.09);
+}
+
+.pre-pitch-option-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(29, 38, 30, 0.14);
+  background: #d3d3d3;
+}
+
+.pre-pitch-option-check {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #1f7a5f;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 14px 28px rgba(31, 122, 95, 0.28);
+  opacity: 0;
+  transform: scale(0.72);
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.pre-pitch-option.is-correct .pre-pitch-option-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pre-pitch-option-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
 .draw-controls {
   position: absolute;
   top: 14px;
@@ -736,6 +861,10 @@ button:disabled {
     left: 6%;
     top: 3%;
     width: 88%;
+  }
+
+  .pre-pitch-options {
+    grid-template-columns: 1fr;
   }
 }
 
