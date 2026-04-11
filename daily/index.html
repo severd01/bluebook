@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ Daily Challenge | R1, Base Hit to Right Field</title>
+    <meta
+      name="description"
+      content="Play UmpIQ's April 10, 2026 daily challenge: R1, base hit to right field with movement scoring, an overthrow ruling, and NFHS 8-3-3c review."
+    />
+    <link rel="canonical" href="https://umpiq.com/daily/" />
+    <meta property="og:title" content="UmpIQ Daily Challenge | R1, Base Hit to Right Field" />
+    <meta
+      property="og:description"
+      content="Play UmpIQ's April 10, 2026 daily challenge: R1, base hit to right field with movement scoring, an overthrow ruling, and NFHS 8-3-3c review."
+    />
+    <meta property="og:url" content="https://umpiq.com/daily/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ Daily Challenge | R1, Base Hit to Right Field" />
+    <meta
+      name="twitter:description"
+      content="Play UmpIQ's April 10, 2026 daily challenge: R1, base hit to right field with movement scoring, an overthrow ruling, and NFHS 8-3-3c review."
+    />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+    <link rel="stylesheet" href="./styles.css?v=1" />
+    <link rel="stylesheet" href="../auth.css?v=3" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p id="daily-kicker" class="daily-kicker">April 10, 2026</p>
+        <h1 id="daily-hero-title">R1, base hit to right field.</h1>
+        <nav class="scenario-nav" aria-label="Scenario navigation">
+          <a class="scenario-nav-link scenario-brand-link" href="../">UmpIQ</a>
+          <a class="scenario-nav-link" href="./archive.html">Archive</a>
+        </nav>
+      </section>
+
+      <section class="game-layout">
+        <aside class="panel scenario-panel">
+          <div class="panel-header">
+            <p class="panel-label">Situation</p>
+          </div>
+
+          <div class="details">
+            <div>
+              <p class="detail-label">Runners</p>
+              <p id="scenario-runners"></p>
+            </div>
+            <div>
+              <p class="detail-label">Outs</p>
+              <p id="scenario-outs"></p>
+            </div>
+            <div>
+              <p class="detail-label">Situation</p>
+              <p id="scenario-ball"></p>
+            </div>
+          </div>
+
+          <section class="daily-panel" aria-labelledby="daily-panel-heading">
+            <h3 id="daily-panel-heading" class="daily-panel-title">R1, base hit to right field.</h3>
+            <p class="daily-panel-copy">
+              Start with the pre-pitch signal, watch the play unfold, draw the Plate and U1 paths, make your call on what you saw, then see how your score stacks up against other users.
+            </p>
+            <div class="auth-home-slot daily-auth-slot" aria-label="Login and streaks"></div>
+          </section>
+          <section id="daily-results-panel" class="daily-results-panel hidden" aria-live="polite">
+            <p class="detail-label">Results</p>
+            <h3 id="daily-results-score" class="daily-results-score">0/4</h3>
+            <p id="daily-results-summary" class="daily-results-copy">
+              Finish the challenge to see your score.
+            </p>
+            <p id="daily-results-count" class="daily-results-count">Out of 0 users:</p>
+            <div id="daily-results-breakdown" class="daily-results-meta">
+              <p class="daily-results-pill"><span>4/4</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>3/4</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>2/4</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>1/4</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>0/4</span><span>0%</span></p>
+            </div>
+          </section>
+        </aside>
+
+        <section class="panel field-panel">
+          <div class="field-wrap">
+            <section id="pre-pitch-overlay" class="pre-pitch-overlay hidden" aria-live="polite">
+              <div class="pre-pitch-panel">
+                <p class="pre-pitch-eyebrow">Pre-Pitch Signal</p>
+                <h3 class="pre-pitch-title">Select the correct signal before the pitch.</h3>
+                <p id="pre-pitch-feedback" class="pre-pitch-feedback">
+                  Choose the signal that matches this situation.
+                </p>
+                <div id="pre-pitch-options" class="pre-pitch-options"></div>
+              </div>
+            </section>
+            <div class="draw-controls" aria-label="Draw movement paths">
+              <div class="draw-controls-side draw-controls-left">
+                <button id="draw-p-btn" class="role-draw-btn role-btn-p" type="button">Draw Plate Path</button>
+                <button id="clear-btn" class="field-ghost-btn" type="button">Clear Drawings</button>
+                <button id="undo-btn" class="field-ghost-btn" type="button">Clear Last Point</button>
+                <button id="toggle-playback-btn" class="field-ghost-btn field-play-btn" type="button">▶ Play</button>
+              </div>
+              <div class="draw-controls-center">
+                <button id="check-btn" class="field-check-btn" type="button" disabled>Check Movements</button>
+                <div id="field-status" class="field-status">
+                  <p id="feedback-title" class="feedback-title field-status-text">Draw the umpire movements on the field.</p>
+                  <p id="feedback-body" class="feedback-body field-status-detail"></p>
+                </div>
+              </div>
+              <div class="draw-controls-side draw-controls-right">
+                <button id="draw-u1-btn" class="role-draw-btn role-btn-u1" type="button">Draw U1 Path</button>
+              </div>
+            </div>
+            <svg
+              id="field"
+              viewBox="0 0 886 886"
+              role="img"
+              aria-label="Baseball field diagram"
+            >
+              <image
+                href="./field2.jpeg"
+                x="0"
+                y="0"
+                width="886"
+                height="886"
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              <path id="ball-flight" class="ball-flight hidden" />
+              <g id="animation-objects-layer" class="runner-overlay" aria-hidden="true"></g>
+            </svg>
+
+            <div id="field-result" class="field-result hidden" aria-live="polite">
+              <p id="field-result-text" class="field-result-text"></p>
+              <div id="field-result-burst" class="field-result-burst" aria-hidden="true"></div>
+            </div>
+
+            <button id="next-btn" class="field-next-btn" type="button" disabled>Play Again</button>
+
+            <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
+              <section id="answer-card-shared" class="answer-card answer-card-top"></section>
+              <button id="reveal-observation-btn" class="reveal-observation-btn hidden" type="button">
+                Continue to What Did You See?
+              </button>
+              <section id="observation-card" class="observation-card hidden" aria-live="polite">
+                <p class="observation-eyebrow">What Did You See?</p>
+                <h3 id="observation-prompt" class="observation-prompt">Choose the best read from the play.</h3>
+                <div id="observation-options" class="observation-options"></div>
+              </section>
+              <section id="rule-summary-card" class="rule-summary-card hidden" aria-live="polite">
+                <p id="rule-summary-label" class="rule-summary-label">NFHS 8-3-3c</p>
+                <h3 id="rule-summary-title" class="rule-summary-title">Rule Summary</h3>
+                <p id="rule-summary-body" class="rule-summary-body"></p>
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="../supabase-config.js"></script>
+    <script type="module" src="../auth.js?v=2"></script>
+    <script type="module" src="./script.js?v=22"></script>
+  </body>
+</html>

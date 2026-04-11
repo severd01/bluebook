@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ | Situation Challenge Archive</title>
+    <meta
+      name="description"
+      content="Browse archived UmpIQ situation challenges by date."
+    />
+    <link rel="canonical" href="https://umpiq.com/daily/archive.html" />
+    <meta property="og:title" content="UmpIQ | Situation Challenge Archive" />
+    <meta
+      property="og:description"
+      content="Browse archived UmpIQ situation challenges by date."
+    />
+    <meta property="og:url" content="https://umpiq.com/daily/archive.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ | Situation Challenge Archive" />
+    <meta
+      name="twitter:description"
+      content="Browse archived UmpIQ situation challenges by date."
+    />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+    <link rel="stylesheet" href="../menu.css?v=16" />
+    <link rel="stylesheet" href="../auth.css?v=3" />
+    <style>
+      .archive-page {
+        min-height: 100vh;
+      }
+
+      .archive-shell {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 28px 18px 40px;
+      }
+
+      .archive-hero {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .archive-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .archive-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 800;
+      }
+
+      .archive-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .archive-card {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
+        border-radius: 22px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      .archive-date {
+        margin: 0;
+        color: #7c5d43;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .archive-title {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .archive-copy {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .archive-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .archive-pill {
+        display: inline-flex;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: rgba(211, 91, 42, 0.1);
+        color: var(--accent-deep);
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .archive-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      @media (max-width: 720px) {
+        .archive-shell {
+          padding: 20px 14px 32px;
+        }
+      }
+    </style>
+  </head>
+  <body class="archive-page">
+    <main class="archive-shell">
+      <section class="archive-hero">
+        <p class="eyebrow">Situation Challenge</p>
+        <h1>Archive</h1>
+        <p class="brand-note">
+          Browse past situation challenges by date. This gives us a clean home for replayable featured reps as the archive grows.
+        </p>
+
+        <nav class="archive-nav" aria-label="Situation challenge navigation">
+          <a class="archive-link" href="./">Today's Situation</a>
+          <a class="archive-link" href="../">UmpIQ Home</a>
+        </nav>
+      </section>
+
+      <section
+        id="archive-grid"
+        class="archive-grid"
+        aria-label="Archived situation challenges"
+      ></section>
+    </main>
+    <script src="../supabase-config.js"></script>
+    <script type="module" src="../auth.js?v=2"></script>
+    <script type="module" src="./archive.js?v=1"></script>
+  </body>
+</html>
