@@ -1756,27 +1756,27 @@ button:disabled {
   }
 
   body[data-daily-reveal-mode="compact"] .reveal-observation-btn {
-    left: 4%;
+    left: 3%;
     top: 40%;
-    width: 92%;
+    width: 94%;
   }
 
   body[data-daily-reveal-mode="compact"] .observation-card {
     position: absolute;
-    left: 4%;
-    top: 48%;
-    width: 92%;
-    max-height: 26%;
+    left: 3%;
+    top: 45%;
+    width: 94%;
+    max-height: 40%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   body[data-daily-reveal-mode="compact"] .rule-summary-card {
     position: absolute;
-    left: 4%;
-    top: 48%;
-    width: 92%;
-    max-height: 26%;
+    left: 3%;
+    top: 45%;
+    width: 94%;
+    max-height: 40%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
