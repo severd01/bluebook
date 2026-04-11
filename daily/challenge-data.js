@@ -1,3 +1,124 @@
+const APRIL_5_ANIMATION_PRESETS = {
+  BALL: {
+    start: { x: 446, y: 669 },
+    segments: [
+      {
+        dur: "5s",
+        path: "M 446 669 L 442 628 L 442 570 L 432 522 L 425 471 L 411 414 L 402 376 L 391 346 L 371 306 L 345 264 L 329 244 L 319 236 L 297 176",
+      },
+      {
+        dur: "7s",
+        path: "M 294 179 L 303 335 L 327 548",
+      },
+    ],
+  },
+  R2: {
+    start: { x: 396, y: 449 },
+    segments: [
+      {
+        dur: "5.5s",
+        path: "M 396 449 L 396 449",
+      },
+      {
+        dur: "6s",
+        path: "M 396 449 L 354 486 L 333 498 L 327 511 L 325 526 L 325 545 L 330 553 L 354 584 L 382 615 L 413 641 L 440 665 L 487 691",
+      },
+    ],
+  },
+  R1: {
+    start: { x: 528, y: 509 },
+    segments: [
+      {
+        dur: "5.5s",
+        path: "M 528 509 L 502 479 L 476 458 L 458 453 L 440 450 L 409 453 L 385 464 L 374 476 L 400 453",
+      },
+      {
+        pause: "1s",
+      },
+      {
+        dur: "7.5s",
+        path: "M 399 456 L 366 476 L 340 491 L 327 505 L 327 522 L 330 544 L 344 559 L 370 590 L 399 626 L 424 647 L 442 662 L 520 668",
+      },
+    ],
+  },
+  BR: {
+    dur: "12s",
+    path: "M 442 679 L 476 640 L 504 618 L 534 606 L 548 589 L 552 575 L 550 562 L 543 548 L 537 535 L 523 516 L 508 497 L 520 505 L 535 520 L 548 538 L 552 546",
+    start: { x: 442, y: 679 },
+  },
+  F6: {
+    dur: "5.1s",
+    path: "M 374 475 L 301 391",
+    start: { x: 374, y: 475 },
+  },
+  F5: {
+    dur: "5s",
+    path: "M 340 502 L 326 487 L 323 546",
+    start: { x: 340, y: 502 },
+  },
+  F7: {
+    dur: "5s",
+    path: "M 219 314 L 244 300 L 256 285 L 266 264 L 267 245 L 271 219 L 272 194",
+    start: { x: 219, y: 314 },
+  },
+};
+
+const APRIL_10_ANIMATION_PRESETS = {
+  BALL: {
+    start: { x: 451, y: 641 },
+    segments: [
+      {
+        dur: "6s",
+        path: "M 451 641 L 454 621 L 462 604 L 468 586 L 473 571 L 484 547 L 498 513 L 508 492 L 524 455 L 541 422 L 560 388 L 583 353 L 608 320 L 637 290 L 648 282 L 707 247",
+      },
+      {
+        dur: "2s",
+        path: "M 707 247 L 499 404",
+      },
+      {
+        pause: "1s",
+      },
+      {
+        dur: "3s",
+        path: "M 497 404 L 151 606",
+      },
+    ],
+  },
+  R1: {
+    start: { x: 530, y: 510 },
+    segments: [
+      {
+        dur: "5s",
+        path: "M 530 510 L 504 474",
+      },
+      {
+        dur: "5s",
+        path: "M 504 474 L 488 447 L 465 432 L 440 436 L 407 452 L 378 478 L 358 505 L 348 522 L 337 547",
+      },
+    ],
+  },
+  BR: {
+    dur: "12s",
+    path: "M 442 679 L 476 640 L 504 618 L 534 606 L 548 589 L 552 575 L 550 562 L 543 548 L 537 535 L 523 516 L 508 497 L 520 505 L 535 520 L 548 538 L 552 546",
+    start: { x: 442, y: 679 },
+  },
+  F9: {
+    dur: "6s",
+    path: "M 637 396 L 715 261",
+    start: { x: 637, y: 396 },
+  },
+  F4: {
+    dur: "5s",
+    path: "M 521 462 L 499 404",
+    start: { x: 521, y: 462 },
+  },
+  F5: {
+    dur: "5s",
+    path: "M 360 477 L 323 546",
+    start: { x: 360, y: 477 },
+  },
+};
+
 export const dailyChallenges = [
   {
     id: "2026-04-05-base-hit-left-center",
@@ -12,6 +133,7 @@ export const dailyChallenges = [
     mechanics: "2 Umpire Mechanics",
     summary:
       "Animated two-umpire situation challenge focused on plate clearance, fair-territory movement, and U1 staying ahead of the batter-runner.",
+    animationPresets: APRIL_5_ANIMATION_PRESETS,
     type: "dual-movement",
     ballFlightPath: "M 442 664 Q 447 348 319 234",
     prePitchSignal: {
@@ -96,6 +218,7 @@ export const dailyChallenges = [
     mechanics: "2 Umpire Mechanics",
     summary:
       "Animated two-umpire situation challenge focused on standard rotation, Plate taking the runner into third, and U1 covering touches at first and second.",
+    animationPresets: APRIL_10_ANIMATION_PRESETS,
     type: "dual-movement",
     ballFlightPath:
       "M 442 664 C 470 560, 545 390, 612 314 C 630 294, 642 282, 650 276",
@@ -192,6 +315,7 @@ export const dailyChallenges = [
     mechanics: "2 Umpire Mechanics",
     summary:
       "Animated two-umpire situation challenge focused on standard rotation, Plate taking the runner into third, and U1 covering touches at first and second.",
+    animationPresets: APRIL_10_ANIMATION_PRESETS,
     type: "dual-movement",
     ballFlightPath:
       "M 442 664 C 470 560, 545 390, 612 314 C 630 294, 642 282, 650 276",

@@ -109,7 +109,7 @@ const ANIMATION_OBJECTS = [
 const ANIMATION_OBJECT_MAP = new Map(
   ANIMATION_OBJECTS.map((object) => [object.name.toUpperCase(), object])
 );
-const ANIMATION_PRESETS = {
+const DEFAULT_ANIMATION_PRESETS = {
   BALL: {
     start: { x: 451, y: 641 },
     segments: [
@@ -165,6 +165,10 @@ const ANIMATION_PRESETS = {
   },
 };
 const reducedMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null;
+
+function getCurrentAnimationPresets() {
+  return getCurrentScenario()?.animationPresets || DEFAULT_ANIMATION_PRESETS;
+}
 
 function updateNextButtonLabel() {
   nextBtn.textContent = "Play Again";
@@ -388,7 +392,7 @@ function createAnimationObject(object) {
     return;
   }
 
-  const preset = ANIMATION_PRESETS[object.name.toUpperCase()];
+  const preset = getCurrentAnimationPresets()[object.name.toUpperCase()];
 
   const group = document.createElementNS(SVG_NS, "g");
   group.setAttribute(
@@ -460,6 +464,11 @@ function createAnimationObject(object) {
 }
 
 function initializeAnimationObjects() {
+  if (animationObjectsLayer) {
+    animationObjectsLayer.innerHTML = "";
+  }
+
+  animationObjectElements = new Map();
   animationStarterElements = [];
   ANIMATION_OBJECTS.forEach(createAnimationObject);
   resetAnimationObjectVisibility();
@@ -506,7 +515,7 @@ function parseDurationToMs(duration) {
 }
 
 function getLongestPresetDurationMs() {
-  return Object.values(ANIMATION_PRESETS).reduce((longest, preset) => {
+  return Object.values(getCurrentAnimationPresets()).reduce((longest, preset) => {
     const segments = Array.isArray(preset.segments)
       ? preset.segments
       : [{ dur: preset.dur }];
@@ -592,10 +601,11 @@ function tickAnimationPlaybackTime() {
 function startAnimationCycle(startTimeMs = 0) {
   const totalMs = Math.max(getLongestPresetDurationMs(), 1);
   const normalizedStartMs = ((startTimeMs % totalMs) + totalMs) % totalMs;
+  const animationPresets = getCurrentAnimationPresets();
 
   field.pauseAnimations();
   animationObjectElements.forEach((element, name) => {
-    if (ANIMATION_PRESETS[name]) {
+    if (animationPresets[name]) {
       element.setAttribute("transform", "translate(0,0)");
     }
   });
@@ -701,8 +711,9 @@ function startPresetAnimations() {
 }
 
 function updateAnimationObjectPreview() {
+  const animationPresets = getCurrentAnimationPresets();
   animationObjectElements.forEach((element, name) => {
-    const preset = ANIMATION_PRESETS[name];
+    const preset = animationPresets[name];
     const defaultVisibility = Boolean(preset);
     const visibilityOverride = animationObjectVisibility.get(name);
     const shouldShow = visibilityOverride ?? defaultVisibility;
@@ -730,10 +741,11 @@ function updateAnimationObjectPreview() {
 }
 
 function resetAnimationObjectVisibility() {
+  const animationPresets = getCurrentAnimationPresets();
   animationObjectVisibility = new Map(
     ANIMATION_OBJECTS.map((object) => [
       object.name.toUpperCase(),
-      Boolean(ANIMATION_PRESETS[object.name.toUpperCase()]),
+      Boolean(animationPresets[object.name.toUpperCase()]),
     ])
   );
 }
@@ -759,10 +771,11 @@ function getPresetDurationSeconds(preset) {
 }
 
 function resetAnimationObjectDurations() {
+  const animationPresets = getCurrentAnimationPresets();
   animationObjectDurations = new Map(
     ANIMATION_OBJECTS.map((object) => {
       const key = object.name.toUpperCase();
-      return [key, getPresetDurationSeconds(ANIMATION_PRESETS[key])];
+      return [key, getPresetDurationSeconds(animationPresets[key])];
     })
   );
 }
@@ -1778,6 +1791,7 @@ function loadScenario() {
   resetRoundFeedbackState();
   clearFieldResult();
   renderPrePitchSignalOverlay();
+  initializeAnimationObjects();
   resetPresetAnimations();
   renderMovementTracker();
   updatePrompt();
@@ -2238,9 +2252,9 @@ prePitchOptionsEl?.addEventListener("click", (event) => {
 initializeGrid();
 initializeRoleArtifacts();
 resetAnimationObjectDurations();
-initializeAnimationObjects();
 initializeAnimationEditorArtifacts();
 updateGridVisibility();
+initializeAnimationObjects();
 resetPresetAnimations();
 loadScenario();
 
