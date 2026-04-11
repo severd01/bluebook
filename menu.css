@@ -184,6 +184,14 @@ body {
   box-shadow: 0 14px 24px rgba(211, 91, 42, 0.2);
 }
 
+.rail-link-daily {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.28), transparent 38%),
+    linear-gradient(135deg, #234b64, #0f7a7a);
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(16, 72, 86, 0.2);
+}
+
 .rail-link-secondary {
   background: linear-gradient(180deg, rgba(243, 172, 122, 0.28), rgba(240, 145, 83, 0.18));
   color: #8f3d16;
@@ -349,6 +357,10 @@ h2 {
   line-height: 1.68;
 }
 
+.hero-text strong {
+  color: var(--ink);
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -451,8 +463,22 @@ button:hover {
 
 .hero-visual {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.hero-visual-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.hero-visual-kicker {
+  width: 100%;
+  margin: 0 0 12px;
+  text-align: center;
 }
 
 .visual-frame {
@@ -478,6 +504,7 @@ button:hover {
 
 .hero-video {
   background: rgba(255, 255, 255, 0.6);
+  aspect-ratio: 16 / 10;
 }
 
 .module-strip {
@@ -824,6 +851,15 @@ button:hover {
     border-color: transparent;
   }
 
+  .home-page .rail-link-daily {
+    background:
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.28), transparent 38%),
+      linear-gradient(135deg, #234b64, #0f7a7a);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 16px 28px rgba(16, 72, 86, 0.16);
+  }
+
   .home-page .rail-link-secondary {
     background: linear-gradient(180deg, rgba(232, 137, 77, 0.88), rgba(205, 94, 40, 0.82));
     border-color: rgba(255, 255, 255, 0.14);
@@ -834,6 +870,13 @@ button:hover {
   .home-page .rail-link-secondary .rail-link-badge {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
+  }
+
+  .home-page .rail-link-daily .rail-link-subline,
+  .home-page .rail-link-daily .rail-link-copy,
+  .home-page .rail-link-daily .rail-link-subline-detail {
+    color: rgba(255, 255, 255, 0.96);
+    opacity: 1;
   }
 
   .home-page .rail-link-secondary .rail-link-subline,
@@ -858,9 +901,11 @@ button:hover {
     border-radius: 24px;
   }
 
-  .home-page .hero-visual {
-    order: 0;
-  }
+.home-page .hero-visual {
+  order: 0;
+  min-width: 0;
+  width: 100%;
+}
 
   .home-page .hero-copy {
     text-align: center;
@@ -892,10 +937,17 @@ button:hover {
     width: min(100%, 320px);
   }
 
-  .home-page .visual-frame {
-    padding: 10px;
-    border-radius: 20px;
-  }
+.home-page .visual-frame {
+  padding: 10px;
+  border-radius: 20px;
+  width: min(100%, 560px);
+  min-width: 420px;
+  margin: 0 auto;
+}
+
+.home-page .hero-video {
+  aspect-ratio: 16 / 9;
+}
 
   .home-page .module-strip {
     margin-top: 14px;
@@ -1020,6 +1072,8 @@ button:hover {
   .home-page .visual-frame {
     padding: 8px;
     border-radius: 18px;
+    width: 100%;
+    min-width: 0;
   }
 
   .home-page .field-image {
