@@ -208,6 +208,7 @@ export const dailyChallenges = [
   {
     id: "2026-04-10-base-hit-r1",
     date: "2026-04-10",
+    mobileCompactReveal: true,
     title: "R1, base hit to right field.",
     system: "",
     description: "R1, base hit to right field.",

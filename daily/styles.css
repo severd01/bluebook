@@ -1738,6 +1738,49 @@ button:disabled {
     pointer-events: auto;
   }
 
+  body[data-daily-reveal-mode="compact"] .answer-overlay:not(.hidden) {
+    display: block;
+    padding: 0;
+    overflow: visible;
+  }
+
+  body[data-daily-reveal-mode="compact"] .answer-card-top {
+    position: absolute;
+    left: 4%;
+    top: 4%;
+    width: 92%;
+    height: 34%;
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body[data-daily-reveal-mode="compact"] .reveal-observation-btn {
+    left: 4%;
+    top: 40%;
+    width: 92%;
+  }
+
+  body[data-daily-reveal-mode="compact"] .observation-card {
+    position: absolute;
+    left: 4%;
+    top: 48%;
+    width: 92%;
+    max-height: 26%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body[data-daily-reveal-mode="compact"] .rule-summary-card {
+    position: absolute;
+    left: 4%;
+    top: 48%;
+    width: 92%;
+    max-height: 26%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .observation-prompt {
     font-size: 0.92rem;
   }

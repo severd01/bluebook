@@ -1726,6 +1726,7 @@ function finishActiveRolePath() {
 function loadScenario() {
   const scenario = getCurrentScenario();
   if (!scenario) {
+    document.body.dataset.dailyRevealMode = "default";
     if (titleEl) titleEl.textContent = "Daily challenge coming soon";
     if (descriptionEl) {
       descriptionEl.textContent =
@@ -1743,6 +1744,10 @@ function loadScenario() {
     togglePlaybackBtn.disabled = true;
     return;
   }
+
+  document.body.dataset.dailyRevealMode = scenario.mobileCompactReveal
+    ? "compact"
+    : "default";
 
   applyChallengeLabels(scenario);
   if (titleEl) titleEl.textContent = scenario.title;
