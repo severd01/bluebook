@@ -3,25 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UmpIQ Daily Challenge | Go Ahead Run?</title>
+    <title>UmpIQ Daily Challenge Template | Go Ahead Run?</title>
     <meta
       name="description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Local template page for the April 19, 2026 Go Ahead Run? challenge based on Scenario 13."
     />
     <link rel="canonical" href="https://umpiq.com/daily/" />
-    <meta property="og:title" content="UmpIQ Daily Challenge | Go Ahead Run?" />
+    <meta property="og:title" content="UmpIQ Daily Challenge Template | Go Ahead Run?" />
     <meta
       property="og:description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Local template page for the April 19, 2026 Go Ahead Run? challenge based on Scenario 13."
     />
     <meta property="og:url" content="https://umpiq.com/daily/" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://umpiq.com/social-preview.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="UmpIQ Daily Challenge | Go Ahead Run?" />
+    <meta name="twitter:title" content="UmpIQ Daily Challenge Template | Go Ahead Run?" />
     <meta
       name="twitter:description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Local template page for the April 19, 2026 Go Ahead Run? challenge based on Scenario 13."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
     <link rel="stylesheet" href="./styles.css?v=3" />
@@ -66,6 +66,7 @@
             </p>
             <div class="auth-home-slot daily-auth-slot" aria-label="Login and streaks"></div>
           </section>
+          <div id="movement-tracker" class="movement-tracker" aria-live="polite"></div>
           <section id="daily-results-panel" class="daily-results-panel hidden" aria-live="polite">
             <p class="detail-label">Results</p>
             <h3 id="daily-results-score" class="daily-results-score">0/4</h3>
@@ -150,7 +151,7 @@
                 <div id="observation-options" class="observation-options"></div>
               </section>
               <section id="rule-summary-card" class="rule-summary-card hidden" aria-live="polite">
-                <p id="rule-summary-label" class="rule-summary-label">NFHS 8-3-3c</p>
+                <p id="rule-summary-label" class="rule-summary-label">Rule Summary</p>
                 <h3 id="rule-summary-title" class="rule-summary-title">Rule Summary</h3>
                 <p id="rule-summary-body" class="rule-summary-body"></p>
               </section>
@@ -159,8 +160,12 @@
         </section>
       </section>
     </main>
+    <script>
+      window.__UMPIQ_USE_TEMPLATE__ = true;
+      window.__UMPIQ_TEMPLATE_DATE__ = "";
+    </script>
     <script src="../supabase-config.js"></script>
     <script type="module" src="../auth.js?v=2"></script>
-    <script type="module" src="./script.js?v=23"></script>
+    <script type="module" src="./script.js?v=24"></script>
   </body>
 </html>
