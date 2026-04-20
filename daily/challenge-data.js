@@ -119,6 +119,45 @@ const APRIL_10_ANIMATION_PRESETS = {
   },
 };
 
+const APRIL_16_ANIMATION_PRESETS = {
+  BALL: {
+    start: { x: 442, y: 665 },
+    segments: [
+      {
+        dur: "8s",
+        path:
+          "M 442 665 L 455 624 L 469 596 L 483 566 L 504 537 L 520 508 L 541 479 L 560 460 L 587 430 L 614 405 L 636 383 L 662 363 L 674 355 L 693 346 L 711 335 L 728 326 L 739 326 L 784 300",
+      },
+      {
+        dur: "4.5s",
+        path: "M 790 299 L 784 300 L 527 405 L 338 546",
+      },
+    ],
+  },
+  BR: {
+    dur: "12s",
+    start: { x: 447, y: 669 },
+    path:
+      "M 447 669 L 475 657 L 495 641 L 513 625 L 526 608 L 539 592 L 543 575 L 546 556 L 546 535 L 541 516 L 528 496 L 509 478 L 494 464 L 475 453 L 454 447 L 435 445 L 415 452 L 392 467 L 374 479 L 360 494 L 354 508 L 343 520 L 340 527 L 334 546",
+  },
+  F9: {
+    dur: "8s",
+    start: { x: 642, y: 340 },
+    path:
+      "M 642 340 L 659 332 L 676 324 L 693 313 L 717 303 L 729 299 L 747 296 L 773 302",
+  },
+  F4: {
+    dur: "8s",
+    start: { x: 504, y: 485 },
+    path: "M 504 485 L 523 431 L 526 416",
+  },
+  F5: {
+    dur: "8s",
+    start: { x: 336, y: 475 },
+    path: "M 336 475 L 356 560",
+  },
+};
+
 export const dailyChallenges = [
   {
     id: "2026-04-19-base-hit-r2",
@@ -347,6 +386,108 @@ export const dailyChallenges = [
         ],
         waypoints: [],
         endAnswer: { x: 437, y: 514 },
+      },
+    ],
+  },
+  {
+    id: "2026-04-16-base-hit-r1",
+    date: "2026-04-16",
+    mobileCompactReveal: true,
+    title: "Trouble Ball to Right Field",
+    system: "",
+    description: "Trouble Ball to Right Field",
+    runners: "No Runners",
+    outs: "No Outs",
+    ball: "Hit to right field.",
+    sport: "Baseball",
+    mechanics: "2 Umpire Mechanics",
+    summary:
+      "Animated two-umpire situation challenge focused on standard rotation, Plate taking the runner into third, and U1 covering touches at first and second.",
+    animationPresets: APRIL_16_ANIMATION_PRESETS,
+    type: "dual-movement",
+    ballFlightPath:
+      "M 442 665 L 455 624 L 469 596 L 483 566 L 504 537 L 520 508 L 541 479 L 560 460 L 587 430 L 614 405 L 636 383 L 662 363 L 674 355 L 693 346 L 711 335 L 728 326 L 739 326 L 784 300",
+    explanation:
+      "Read the base hit with a runner on first, then draw how Plate and U1 should move to stay ahead of the next likely play.",
+    observationPrompt:
+      "The plate umpire observes that BR misses a touch of 2nd base. What is the proper mechanic?",
+    observationOptions: [
+      "Plate should point at 2nd base after the missed touch, then wait for a possible appeal.",
+      "Plate should immediately verbalize that the runner missed 2nd and call the runner out.",
+      "Plate should wait until all play stops, then privately tell U1 the runner missed 2nd so U1 can call the out.",
+      "Nothing.",
+    ],
+    correctObservationIndex: 3,
+    ruleSummary: {
+      label: "Mechanics Read",
+      title: "No mechanic is given on the missed touch",
+      body:
+        "If Plate observes the batter-runner miss 2nd base, Plate does nothing. The runner is not out unless the defense properly appeals, and no signal or point is given by Plate on the missed touch itself.",
+    },
+    answerNotes: [
+      {
+        heading: "Plate",
+        bullets: [
+          "Come out between first and the mound.",
+          "Responsible for the BR's touches of 1st, 2nd, 3rd, and home, if U1 cannot get back to home.",
+          "Path should keep you ahead of BR.",
+        ],
+      },
+      {
+        heading: "U1",
+        bullets: [
+          "Communicate that you're going out.",
+          "Come to a complete stop when the catch is about to occur.",
+          "After determining that the ball will not go out of play, turn, watching the ball, and hustle home in foul territory.",
+          "Only cover the plate if you get there prior to a possible play.",
+          "\"I've got home!\" once in position.",
+        ],
+      },
+    ],
+    paths: [
+      {
+        role: "P",
+        startAnswer: { x: 446, y: 701 },
+        routePoints: [
+          { x: 446, y: 701 },
+          { x: 446, y: 668 },
+          { x: 454, y: 632 },
+          { x: 479, y: 599 },
+          { x: 493, y: 564 },
+          { x: 491, y: 540 },
+          { x: 479, y: 516 },
+          { x: 461, y: 500 },
+          { x: 443, y: 491 },
+          { x: 422, y: 501 },
+          { x: 406, y: 515 },
+          { x: 396, y: 530 },
+          { x: 385, y: 542 },
+          { x: 373, y: 549 },
+        ],
+        waypoints: [],
+        endAnswer: { x: 373, y: 549 },
+      },
+      {
+        role: "U1",
+        startAnswer: { x: 616, y: 523 },
+        routePoints: [
+          { x: 616, y: 523 },
+          { x: 631, y: 493 },
+          { x: 648, y: 467 },
+          { x: 659, y: 452 },
+          { x: 677, y: 438 },
+          { x: 681, y: 447 },
+          { x: 681, y: 467 },
+          { x: 676, y: 491 },
+          { x: 656, y: 519 },
+          { x: 618, y: 559 },
+          { x: 570, y: 595 },
+          { x: 526, y: 641 },
+          { x: 487, y: 672 },
+          { x: 469, y: 684 },
+        ],
+        waypoints: [],
+        endAnswer: { x: 469, y: 684 },
       },
     ],
   },
