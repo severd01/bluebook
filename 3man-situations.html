@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ Situations | 3 Umpire Mechanics</title>
+    <meta
+      name="description"
+      content="Practice 3-man baseball umpire mechanics on UmpIQ with scenario reps built from the 3-man mechanic manual."
+    />
+    <link rel="canonical" href="https://umpiq.com/3man-situations.html" />
+    <meta property="og:title" content="UmpIQ Situations | 3 Umpire Mechanics" />
+    <meta
+      property="og:description"
+      content="Open the new 3-man baseball mechanic training reps and work through the scenario library."
+    />
+    <meta property="og:url" content="https://umpiq.com/3man-situations.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ Situations | 3 Umpire Mechanics" />
+    <meta
+      name="twitter:description"
+      content="Open the new 3-man baseball mechanic training reps and work through the scenario library."
+    />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+    <link rel="stylesheet" href="./menu.css?v=18" />
+    <link rel="stylesheet" href="./auth.css?v=3" />
+  
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-63RJH3RJXH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-63RJH3RJXH');
+    </script>
+  </head>
+  <body class="situations-page">
+    <main class="home-shell">
+      <section class="main-panel">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <a class="topbar-home" href="./">UmpIQ</a>
+            <span class="topbar-divider"></span>
+            <span class="topbar-subtitle">3 Umpire Mechanics</span>
+          </div>
+        </header>
+
+        <section class="hero-panel situations-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">3 Umpire Mechanics</p>
+            <h1>Run the full 3-man mechanic set.</h1>
+            <p class="hero-text">
+              This 3-man baseball module follows the mechanic PDF and now spans the
+              playable runner-state reps across the full training set.
+            </p>
+            <p class="hero-text">
+              Work through no-runner, single-runner, multiple-runner, and bases-loaded
+              situations with dedicated `P`, `U1`, and `U3` path drawing on every page.
+            </p>
+
+            <div class="hero-actions">
+              <button id="play-all-btn" class="primary-btn">Play Full 3-Man Set</button>
+              <button id="random-five-btn" class="ghost-btn">Play Random Rep</button>
+              <button id="resume-btn" class="ghost-btn hidden">Resume Session</button>
+              <a class="ghost-link" href="./situations.html">2-Man Situations</a>
+              <a class="ghost-link" href="./feedback.html">Give Feedback</a>
+            </div>
+
+            <section id="session-summary" class="session-summary hidden" aria-live="polite"></section>
+          </div>
+
+          <div class="situations-stats">
+            <article class="module-card module-card-featured">
+              <p class="module-kicker">Build</p>
+              <h2>25 Plays Live</h2>
+              <p class="module-copy">The full playable 3-man movement set is now live across the core runner states.</p>
+            </article>
+
+            <article class="module-card">
+              <p class="module-kicker">Target</p>
+              <h2>Full PDF Set</h2>
+              <p class="module-copy">This track is now ready for browser QA, mechanic tuning, and any scenario-by-scenario refinements you want.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="library-panel">
+          <div class="library-header">
+            <div>
+              <p class="eyebrow">Scenario Library</p>
+              <h2>Select A 3-Man Scenario</h2>
+            </div>
+            <p class="library-count"><span id="scenario-count">0</span> plays</p>
+          </div>
+
+          <div id="scenario-grid" class="scenario-grid"></div>
+        </section>
+      </section>
+    </main>
+    <script src="./supabase-config.js"></script>
+    <script type="module" src="./auth.js?v=2"></script>
+    <script>
+      window.va = window.va || function () {
+        (window.vaq = window.vaq || []).push(arguments);
+      };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <script src="./three-man-config.js"></script>
+    <script src="./three-man-menu.js"></script>
+  </body>
+</html>
