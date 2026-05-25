@@ -50,7 +50,9 @@ function renderArchive() {
     return;
   }
 
-  const archivedChallenges = [...lineupChallenges, ...getArchivedChallenges(new Date())];
+  const archivedChallenges = [...lineupChallenges, ...getArchivedChallenges(new Date())].sort(
+    (a, b) => (a.date < b.date ? 1 : -1)
+  );
 
   if (!archivedChallenges.length) {
     archiveGridEl.innerHTML = `
