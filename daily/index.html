@@ -3,35 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UmpIQ Daily Challenge | Go Ahead Run?</title>
+    <title>UmpIQ Daily Challenge | Obstruction, Now What?</title>
     <meta
       name="description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
     />
     <link rel="canonical" href="https://umpiq.com/daily/" />
-    <meta property="og:title" content="UmpIQ Daily Challenge | Go Ahead Run?" />
+    <meta property="og:title" content="UmpIQ Daily Challenge | Obstruction, Now What?" />
     <meta
       property="og:description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
     />
     <meta property="og:url" content="https://umpiq.com/daily/" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://umpiq.com/social-preview.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="UmpIQ Daily Challenge | Go Ahead Run?" />
+    <meta name="twitter:title" content="UmpIQ Daily Challenge | Obstruction, Now What?" />
     <meta
       name="twitter:description"
-      content="Play UmpIQ's April 19, 2026 daily challenge: Go Ahead Run? Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion."
+      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <link rel="stylesheet" href="./styles.css?v=3" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
     <link rel="stylesheet" href="../auth.css?v=3" />
+  
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-63RJH3RJXH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-63RJH3RJXH');
+    </script>
   </head>
   <body>
     <main class="app-shell">
       <section class="hero">
-        <p id="daily-kicker" class="daily-kicker">April 19, 2026</p>
-        <h1 id="daily-hero-title">Go Ahead Run?</h1>
+        <p id="daily-kicker" class="daily-kicker">May 24, 2026</p>
+        <h1 id="daily-hero-title">Obstruction, Now What?</h1>
         <nav class="scenario-nav" aria-label="Scenario navigation">
           <a class="scenario-nav-link scenario-brand-link" href="../">UmpIQ</a>
           <a class="scenario-nav-link" href="./archive.html">Archive</a>
@@ -42,43 +51,90 @@
         <aside class="panel scenario-panel">
           <div class="panel-header">
             <p class="panel-label">Situation</p>
+            <p id="scenario-intro" class="scenario-intro">
+              No runners, no outs. Trouble ball to right. F3 obstructs the batter-runner, who is later tagged out at third.
+            </p>
           </div>
 
           <div class="details">
             <div>
               <p class="detail-label">Runners</p>
-              <p id="scenario-runners"></p>
+              <p id="scenario-runners">No Runners</p>
             </div>
             <div>
               <p class="detail-label">Outs</p>
-              <p id="scenario-outs"></p>
+              <p id="scenario-outs">No Outs</p>
             </div>
             <div>
               <p class="detail-label">Situation</p>
-              <p id="scenario-ball"></p>
+              <p id="scenario-ball">Trouble ball to right field</p>
             </div>
           </div>
 
-          <section class="daily-panel" aria-labelledby="daily-panel-heading">
-            <h3 id="daily-panel-heading" class="daily-panel-title">Go Ahead Run?</h3>
-            <p class="daily-panel-copy">
-              Bottom of 7, 2 outs, R2 base hit to right field.
+          <p id="cursor-readout" class="cursor-readout hidden">Cursor: x -, y -</p>
+
+          <details class="animation-manager hidden">
+            <summary class="animation-manager-summary">Animation Tools</summary>
+            <div class="animation-manager-body">
+              <label class="animation-manager-label" for="animation-object-select">Object</label>
+              <select id="animation-object-select" class="animation-manager-select"></select>
+
+              <label class="animation-manager-label" for="animation-duration-input">Duration seconds</label>
+              <input
+                id="animation-duration-input"
+                class="animation-manager-select"
+                type="number"
+                min="0.5"
+                step="0.1"
+                value="3"
+              />
+
+              <div class="animation-manager-actions">
+                <button id="animation-edit-btn" class="animation-manager-btn" type="button">Edit Path</button>
+                <button id="animation-show-btn" class="animation-manager-btn" type="button">Show</button>
+                <button id="animation-hide-btn" class="animation-manager-btn" type="button">Hide</button>
+                <button id="animation-undo-btn" class="animation-manager-btn" type="button">Undo Point</button>
+                <button id="animation-clear-path-btn" class="animation-manager-btn" type="button">Clear Path</button>
+                <button id="animation-reset-btn" class="animation-manager-btn" type="button">Reset</button>
+                <button id="toggle-grid-btn" class="animation-manager-btn" type="button">Grid</button>
+                <button id="animation-copy-btn" class="animation-manager-btn" type="button">Copy Path</button>
+              </div>
+
+              <p id="animation-manager-status" class="animation-manager-status">
+                Select an object and click Edit Path to draw player paths.
+              </p>
+              <p id="animation-manager-timing" class="animation-manager-timing"></p>
+              <textarea
+                id="animation-path-output"
+                class="animation-path-output"
+                aria-label="Animation path coordinates"
+                readonly
+              ></textarea>
+              <div id="animation-chip-list" class="animation-chip-list"></div>
+            </div>
+          </details>
+
+          <section id="daily-panel" class="daily-panel hidden" aria-labelledby="daily-panel-heading">
+            <h3 id="daily-panel-heading" class="daily-panel-title">No runners, no outs. Trouble ball to right.</h3>
+            <p id="daily-panel-copy" class="daily-panel-copy">
+              No runners, no outs. Trouble ball to right. F3 obstructs the batter-runner, who is later tagged out at third.
             </p>
             <div class="auth-home-slot daily-auth-slot" aria-label="Login and streaks"></div>
           </section>
           <section id="daily-results-panel" class="daily-results-panel hidden" aria-live="polite">
             <p class="detail-label">Results</p>
-            <h3 id="daily-results-score" class="daily-results-score">0/4</h3>
+            <h3 id="daily-results-score" class="daily-results-score">0/5</h3>
             <p id="daily-results-summary" class="daily-results-copy">
               Finish the challenge to see your score.
             </p>
             <p id="daily-results-count" class="daily-results-count">Out of 0 users:</p>
             <div id="daily-results-breakdown" class="daily-results-meta">
-              <p class="daily-results-pill"><span>4/4</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>3/4</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>2/4</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>1/4</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>0/4</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>5/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>4/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>3/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>2/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>1/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>0/5</span><span>0%</span></p>
             </div>
           </section>
         </aside>
@@ -103,7 +159,14 @@
                 <button id="toggle-playback-btn" class="field-ghost-btn field-play-btn" type="button">▶ Play</button>
               </div>
               <div class="draw-controls-center">
-                <button id="check-btn" class="field-check-btn" type="button" disabled>Check Movements</button>
+                <button
+                  id="check-btn"
+                  class="field-check-btn"
+                  type="button"
+                  disabled
+                >
+                  Check Movements
+                </button>
                 <div id="field-status" class="field-status">
                   <p id="feedback-title" class="feedback-title field-status-text">Draw the umpire movements on the field.</p>
                   <p id="feedback-body" class="feedback-body field-status-detail"></p>
@@ -142,10 +205,11 @@
             <div id="answer-overlay" class="answer-overlay hidden" aria-hidden="true">
               <section id="answer-card-shared" class="answer-card answer-card-top"></section>
               <button id="reveal-observation-btn" class="reveal-observation-btn hidden" type="button">
-                Continue to What Did You See?
+                What do you have?
               </button>
               <section id="observation-card" class="observation-card hidden" aria-live="polite">
                 <p class="observation-eyebrow">What Did You See?</p>
+                <div id="lineup-check-card" class="lineup-check-card hidden"></div>
                 <h3 id="observation-prompt" class="observation-prompt">Choose the best read from the play.</h3>
                 <div id="observation-options" class="observation-options"></div>
               </section>
@@ -161,6 +225,6 @@
     </main>
     <script src="../supabase-config.js"></script>
     <script type="module" src="../auth.js?v=2"></script>
-    <script type="module" src="./script.js?v=23"></script>
+    <script type="module" src="./script.js?v=61"></script>
   </body>
 </html>

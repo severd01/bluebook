@@ -3,6 +3,7 @@ import {
   getChallengeByDate,
   getFeaturedChallenge,
 } from "./challenge-data.js";
+import { dailyChallengeTemplate } from "./challenge-template.js";
 
 function getRequestedChallengeDate() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -11,13 +12,21 @@ function getRequestedChallengeDate() {
 }
 
 const requestedChallengeDate = getRequestedChallengeDate();
+const useTemplateChallenge = Boolean(window.__UMPIQ_USE_TEMPLATE__);
+const templateChallengeDate =
+  typeof window.__UMPIQ_TEMPLATE_DATE__ === "string"
+    ? window.__UMPIQ_TEMPLATE_DATE__
+    : "";
 const selectedChallenge =
-  getChallengeByDate(requestedChallengeDate) || getFeaturedChallenge(new Date());
+  (useTemplateChallenge
+    ? getChallengeByDate(templateChallengeDate) || dailyChallengeTemplate
+    : getChallengeByDate(requestedChallengeDate) || getFeaturedChallenge(new Date()));
 const scenarios = selectedChallenge ? [selectedChallenge] : [];
 
 const titleEl = document.getElementById("scenario-title");
 const systemEl = document.getElementById("scenario-system");
 const descriptionEl = document.getElementById("scenario-description");
+const scenarioIntroEl = document.getElementById("scenario-intro");
 const runnersEl = document.getElementById("scenario-runners");
 const outsEl = document.getElementById("scenario-outs");
 const ballEl = document.getElementById("scenario-ball");
@@ -52,7 +61,9 @@ const ballFlight = document.getElementById("ball-flight");
 const animationObjectsLayer = document.getElementById("animation-objects-layer");
 const dailyKickerEl = document.getElementById("daily-kicker");
 const dailyHeroTitleEl = document.getElementById("daily-hero-title");
+const dailyPanelEl = document.getElementById("daily-panel");
 const dailyPanelHeadingEl = document.getElementById("daily-panel-heading");
+const dailyPanelCopyEl = document.getElementById("daily-panel-copy");
 const dailyResultsPanelEl = document.getElementById("daily-results-panel");
 const dailyResultsScoreEl = document.getElementById("daily-results-score");
 const dailyResultsSummaryEl = document.getElementById("daily-results-summary");
@@ -62,6 +73,7 @@ const answerOverlayEl = document.getElementById("answer-overlay");
 const answerCardSharedEl = document.getElementById("answer-card-shared");
 const revealObservationBtn = document.getElementById("reveal-observation-btn");
 const observationCardEl = document.getElementById("observation-card");
+const lineupCheckCardEl = document.getElementById("lineup-check-card");
 const observationPromptEl = document.getElementById("observation-prompt");
 const observationOptionsEl = document.getElementById("observation-options");
 const ruleSummaryCardEl = document.getElementById("rule-summary-card");
@@ -193,8 +205,41 @@ function applyChallengeLabels(scenario) {
   }
 
   if (dailyPanelHeadingEl) {
-    dailyPanelHeadingEl.textContent = scenario.title;
+    dailyPanelHeadingEl.textContent = scenario.panelTitle || scenario.title;
   }
+  if (dailyPanelCopyEl) {
+    dailyPanelCopyEl.textContent = scenario.description;
+  }
+  dailyPanelEl?.classList.toggle("hidden", Boolean(scenario.hideDailyPanel));
+}
+
+function updateMetaTag(selector, content) {
+  if (!content) {
+    return;
+  }
+
+  const element = document.querySelector(selector);
+  if (element) {
+    element.setAttribute("content", content);
+  }
+}
+
+function applyChallengeMetadata(scenario) {
+  if (!scenario) {
+    return;
+  }
+
+  const formattedDate = formatChallengeDate(scenario.date);
+  const cleanTitle = scenario.title.replace(/\.$/, "");
+  const pageTitle = `UmpIQ Daily Challenge | ${cleanTitle}`;
+  const pageDescription = `Play UmpIQ's ${formattedDate} daily challenge: ${scenario.description} with movement scoring and rules review.`;
+
+  document.title = pageTitle;
+  updateMetaTag('meta[name="description"]', pageDescription);
+  updateMetaTag('meta[property="og:title"]', pageTitle);
+  updateMetaTag('meta[property="og:description"]', pageDescription);
+  updateMetaTag('meta[name="twitter:title"]', pageTitle);
+  updateMetaTag('meta[name="twitter:description"]', pageDescription);
 }
 
 let scenarioIndex = 0;
@@ -664,6 +709,7 @@ function resetPresetAnimations() {
   clearAnimationPlaybackFrame();
   field.pauseAnimations();
   field.setCurrentTime(0);
+  initializeAnimationObjects();
   animationPlaying = false;
   animationPausedAtMs = 0;
   animationStarted = false;
@@ -673,8 +719,30 @@ function resetPresetAnimations() {
   updatePlaybackButton();
 }
 
+function resetRoundVisuals() {
+  resetSelectedPaths();
+
+  roleArtifacts.forEach((artifacts) => {
+    hideElement(artifacts.userPath);
+    hideElement(artifacts.userStart);
+    hideElement(artifacts.userEnd);
+    hideElement(artifacts.answerPath);
+    hideElement(artifacts.answerStart);
+    hideElement(artifacts.answerEnd);
+  });
+
+  hideAnswerOverlay();
+  resetRoundFeedbackState();
+  clearFieldResult();
+  hideDailyResultsPanel();
+}
+
 function startPresetAnimations() {
   const totalMs = Math.max(getLongestPresetDurationMs(), 1);
+
+  if (animationCompleted) {
+    resetPresetAnimations();
+  }
 
   if (reducedMotionQuery?.matches) {
     startAnimationCycle(0);
@@ -686,10 +754,6 @@ function startPresetAnimations() {
     updateAnimationManagerTiming(totalMs);
     updatePlaybackButton();
     return;
-  }
-
-  if (animationCompleted) {
-    animationPausedAtMs = 0;
   }
 
   if (!animationStarted || animationPausedAtMs <= 0) {
@@ -927,6 +991,15 @@ function toggleAnimationEditorMode(forceValue) {
   animationEditorMode =
     typeof forceValue === "boolean" ? forceValue : !animationEditorMode;
   animationEditBtn?.classList.toggle("is-active", animationEditorMode);
+  if (animationEditorMode) {
+    prePitchUnlocked = true;
+    renderPrePitchSignalOverlay();
+    if (feedbackTitleEl) {
+      feedbackTitleEl.textContent =
+        "Animation editor on. Click the field to capture path points.";
+    }
+    updateCheckButtonState();
+  }
   updateAnimationManagerStatus();
 }
 
@@ -1247,6 +1320,84 @@ function describeGrade(pointsEarned, maxPoints, averageDistance) {
   };
 }
 
+function getObservationOptionText(option) {
+  return typeof option === "string" ? option : option?.text || "";
+}
+
+function getObservationOptionNote(option) {
+  return typeof option === "string" ? "" : option?.note || "";
+}
+
+function getPrePitchScoreDetail(scenario) {
+  const max = getPrePitchMaxPoints(scenario);
+
+  if (!max) {
+    return null;
+  }
+
+  if (prePitchScore === max) {
+    return "Matched every required pre-pitch signal.";
+  }
+
+  if (prePitchScore > 0) {
+    return "Found part of the signal package, but missed one required signal.";
+  }
+
+  return "Needed the full pre-pitch signal package before the play.";
+}
+
+function describeMovementResult(role, checks) {
+  const roleName = roleDisplayName(role);
+  const misses = [];
+
+  if (!checks.startHit) misses.push("starting position");
+  if (!checks.routeOrWaypointHit) misses.push("route");
+  if (!checks.endHit) misses.push("ending position");
+
+  if (!misses.length) {
+    return `${roleName} movement matched the expected responsibility.`;
+  }
+
+  return `${roleName} was close, but review the ${misses.join(", ")}.`;
+}
+
+function renderScoreBreakdown(items = [], observationNote = "") {
+  if (!ruleSummaryCardEl) {
+    return;
+  }
+
+  ruleSummaryCardEl.querySelector(".score-breakdown")?.remove();
+
+  if (!items.length && !observationNote) {
+    return;
+  }
+
+  const breakdownEl = document.createElement("div");
+  breakdownEl.className = "score-breakdown";
+  breakdownEl.innerHTML = `
+    <p class="score-breakdown-title">Score Detail</p>
+    <div class="score-breakdown-list">
+      ${items
+        .map(
+          (item) => `
+            <p class="score-breakdown-row">
+              <span>${item.label}</span>
+              <strong>${item.earned}/${item.max}</strong>
+              <em>${item.detail}</em>
+            </p>
+          `
+        )
+        .join("")}
+    </div>
+    ${
+      observationNote
+        ? `<p class="score-breakdown-note"><strong>Ruling review:</strong> ${observationNote}</p>`
+        : ""
+    }
+  `;
+  ruleSummaryCardEl.appendChild(breakdownEl);
+}
+
 function resetRoundFeedbackState() {
   feedbackEl?.classList.remove("is-perfect", "is-partial");
   nextBtn.classList.remove("perfect-next");
@@ -1498,11 +1649,20 @@ function updateRoleDrawButtons() {
   });
 }
 
+function isPathReadyForCheck(path, index) {
+  if (!path?.start || !path.end || path.points.length < 2) {
+    return false;
+  }
+
+  return path.completed || index === activeRoleIndex;
+}
+
 function updateCheckButtonState() {
   if (checkBtn) {
-    checkBtn.disabled = roundFinished || isPrePitchLocked() || !selectedPaths.every(
-      (path) => path.completed && path.start && path.end
+    const allPathsReady = selectedPaths.every(
+      (path) => path.start && path.end && path.points.length >= 2
     );
+    checkBtn.disabled = roundFinished || isPrePitchLocked() || !allPathsReady;
     checkBtn.classList.toggle("hidden", roundFinished);
   }
 
@@ -1561,6 +1721,7 @@ function renderAnswerCard(element, section) {
 }
 
 function renderAnswerOverlay(scenario) {
+  answerCardSharedEl?.classList.remove("hidden");
   renderAnswerCard(answerCardSharedEl, scenario.answerNotes || []);
   answerOverlayEl.classList.remove("hidden");
   revealObservationBtn?.classList.remove("hidden");
@@ -1569,6 +1730,7 @@ function renderAnswerOverlay(scenario) {
 
 function hideAnswerOverlay() {
   answerOverlayEl.classList.add("hidden");
+  answerCardSharedEl?.classList.remove("hidden");
   answerCardSharedEl.innerHTML = "";
   revealObservationBtn?.classList.add("hidden");
   hideObservationCard();
@@ -1592,6 +1754,7 @@ function renderObservationCard(scenario) {
   observationPromptEl.textContent =
     scenario.observationPrompt || "What did you see?";
 
+  renderLineupCheckCard(scenario);
   observationOptionsEl.innerHTML = options
     .map(
       (option, index) => `
@@ -1611,7 +1774,7 @@ function renderObservationCard(scenario) {
           data-observation-index="${index}"
           ${observationAnswered ? "disabled" : ""}
         >
-          ${option}
+          ${getObservationOptionText(option)}
           <span class="observation-option-check" aria-hidden="true">✓</span>
         </button>
       `
@@ -1621,6 +1784,48 @@ function renderObservationCard(scenario) {
   observationCardEl.classList.remove("hidden");
 }
 
+function renderLineupCheckCard(scenario) {
+  if (!lineupCheckCardEl) {
+    return;
+  }
+
+  const lineupCheck = scenario?.lineupCheck;
+  const rows = Array.isArray(lineupCheck?.rows) ? lineupCheck.rows : [];
+  if (!lineupCheck || !rows.length) {
+    lineupCheckCardEl.classList.add("hidden");
+    lineupCheckCardEl.innerHTML = "";
+    return;
+  }
+
+  lineupCheckCardEl.innerHTML = `
+    <div class="lineup-check-header">
+      <p class="lineup-check-title">${lineupCheck.title || "Lineup card"}</p>
+      ${lineupCheck.note ? `<p class="lineup-check-note">${lineupCheck.note}</p>` : ""}
+    </div>
+    <div class="lineup-check-table" role="table" aria-label="${lineupCheck.title || "Lineup card"}">
+      <div class="lineup-check-row lineup-check-head" role="row">
+        <span role="columnheader">Slot</span>
+        <span role="columnheader">Player</span>
+        <span role="columnheader">No.</span>
+        <span role="columnheader">Pos</span>
+      </div>
+      ${rows
+        .map(
+          (row) => `
+            <div class="lineup-check-row${row.note ? " is-marked" : ""}" role="row">
+              <span role="cell">${row.slot}</span>
+              <span role="cell">${row.name}</span>
+              <span role="cell">#${row.number}</span>
+              <span role="cell">${row.position}</span>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+  lineupCheckCardEl.classList.remove("hidden");
+}
+
 function hideObservationCard() {
   if (!observationCardEl || !observationOptionsEl) {
     return;
@@ -1628,6 +1833,8 @@ function hideObservationCard() {
 
   observationCardEl.classList.add("hidden");
   observationOptionsEl.innerHTML = "";
+  lineupCheckCardEl?.classList.add("hidden");
+  if (lineupCheckCardEl) lineupCheckCardEl.innerHTML = "";
 }
 
 function renderRuleSummaryCard(scenario) {
@@ -1649,6 +1856,7 @@ function renderRuleSummaryCard(scenario) {
 
 function hideRuleSummaryCard() {
   ruleSummaryCardEl?.classList.add("hidden");
+  ruleSummaryCardEl?.querySelector(".score-breakdown")?.remove();
   if (ruleSummaryLabelEl) ruleSummaryLabelEl.textContent = "";
   if (ruleSummaryTitleEl) ruleSummaryTitleEl.textContent = "";
   if (ruleSummaryBodyEl) ruleSummaryBodyEl.textContent = "";
@@ -1698,16 +1906,23 @@ function setActiveRole(index) {
   updateCheckButtonState();
 }
 
-function finishActiveRolePath() {
-  if (roundFinished || activeRoleIndex === null) {
+function finishRolePath(index = activeRoleIndex) {
+  if (roundFinished || index === null || index === undefined || index < 0) {
     return;
   }
 
-  const selectedPath = selectedPaths[activeRoleIndex];
-  if (!selectedPath || selectedPath.completed || selectedPath.points.length < 2) {
+  const selectedPath = selectedPaths[index];
+  if (
+    !selectedPath ||
+    selectedPath.completed ||
+    !selectedPath.start ||
+    !selectedPath.end ||
+    selectedPath.points.length < 2
+  ) {
     return;
   }
 
+  activeRoleIndex = index;
   selectedPath.completed = true;
 
   const nextIncompleteIndex = getFirstIncompleteRoleIndex();
@@ -1721,6 +1936,10 @@ function finishActiveRolePath() {
   }
 
   updateCheckButtonState();
+}
+
+function finishActiveRolePath() {
+  finishRolePath(activeRoleIndex);
 }
 
 function loadScenario() {
@@ -1750,12 +1969,18 @@ function loadScenario() {
     : "default";
 
   applyChallengeLabels(scenario);
+  applyChallengeMetadata(scenario);
   if (titleEl) titleEl.textContent = scenario.title;
   if (systemEl) {
     systemEl.textContent = scenario.system;
     systemEl.style.display = scenario.system ? "inline-flex" : "none";
   }
   if (descriptionEl) descriptionEl.textContent = scenario.description;
+  if (scenarioIntroEl) {
+    const scenarioIntro = scenario.intro || scenario.description || "";
+    scenarioIntroEl.textContent = scenarioIntro;
+    scenarioIntroEl.classList.toggle("hidden", !scenarioIntro);
+  }
   if (runnersEl) runnersEl.textContent = scenario.runners;
   if (outsEl) outsEl.textContent = scenario.outs;
   if (ballEl) ballEl.textContent = scenario.ball;
@@ -1773,13 +1998,7 @@ function loadScenario() {
     window.clearTimeout(observationResolutionTimer);
     observationResolutionTimer = null;
   }
-  resetSelectedPaths();
-
-  roleArtifacts.forEach((artifacts) => {
-    hideElement(artifacts.answerPath);
-    hideElement(artifacts.answerStart);
-    hideElement(artifacts.answerEnd);
-  });
+  resetRoundVisuals();
 
   ballFlight.classList.add("hidden");
   checkBtn.disabled = true;
@@ -1792,9 +2011,6 @@ function loadScenario() {
     ballFlight.classList.remove("hidden");
   }
 
-  hideAnswerOverlay();
-  resetRoundFeedbackState();
-  clearFieldResult();
   renderPrePitchSignalOverlay();
   initializeAnimationObjects();
   resetPresetAnimations();
@@ -1802,7 +2018,6 @@ function loadScenario() {
   updatePrompt();
   if (feedbackBodyEl) feedbackBodyEl.textContent = "";
   updateRoleDrawButtons();
-  hideDailyResultsPanel();
 
   renderScoreLine();
 }
@@ -1848,6 +2063,18 @@ function renderPrePitchSignalOverlay() {
   prePitchOverlayEl.setAttribute("aria-hidden", "false");
 }
 
+function getRequiredPrePitchSignals(config) {
+  if (Array.isArray(config?.correctOptions) && config.correctOptions.length) {
+    return config.correctOptions;
+  }
+
+  return config?.correctOption ? [config.correctOption] : [];
+}
+
+function getPrePitchMaxPoints(scenario) {
+  return getRequiredPrePitchSignals(scenario?.prePitchSignal).length;
+}
+
 function handlePrePitchSelection(label, button) {
   const config = getCurrentScenario()?.prePitchSignal;
   if (!config || !prePitchFeedbackEl) {
@@ -1855,18 +2082,22 @@ function handlePrePitchSelection(label, button) {
   }
 
   prePitchAttempts += 1;
+  const requiredSignals = getRequiredPrePitchSignals(config);
+  const requiresMultipleSignals = requiredSignals.length > 1;
 
   const optionButtons = Array.from(
     prePitchOptionsEl?.querySelectorAll(".pre-pitch-option") || []
   );
 
-  optionButtons.forEach((optionButton) => {
-    optionButton.classList.remove("is-correct", "is-incorrect");
-    optionButton.disabled = false;
-    optionButton.setAttribute("aria-pressed", "false");
-  });
+  if (!requiresMultipleSignals) {
+    optionButtons.forEach((optionButton) => {
+      optionButton.classList.remove("is-correct", "is-incorrect");
+      optionButton.disabled = false;
+      optionButton.setAttribute("aria-pressed", "false");
+    });
+  }
 
-  if (label !== config.correctOption) {
+  if (!requiredSignals.includes(label)) {
     button?.classList.add("is-incorrect");
     button?.setAttribute("aria-pressed", "true");
     prePitchFeedbackEl.textContent = "Not quite. Try again.";
@@ -1875,11 +2106,35 @@ function handlePrePitchSelection(label, button) {
   }
 
   button?.classList.add("is-correct");
+  button?.setAttribute("aria-pressed", "true");
+
+  if (requiresMultipleSignals) {
+    const selectedSignals = optionButtons
+      .filter((optionButton) => optionButton.classList.contains("is-correct"))
+      .map((optionButton) => optionButton.dataset.signalLabel);
+    const hasAllSignals = requiredSignals.every((requiredSignal) =>
+      selectedSignals.includes(requiredSignal)
+    );
+
+    if (!hasAllSignals) {
+      prePitchFeedbackEl.textContent = "Good. Select the other required signal.";
+      button?.focus();
+      return;
+    }
+  }
+
   optionButtons.forEach((optionButton) => {
     optionButton.disabled = true;
   });
-  button?.setAttribute("aria-pressed", "true");
-  prePitchScore = prePitchAttempts === 1 ? 1 : 0;
+  const hasIncorrectSelection = optionButtons.some((optionButton) =>
+    optionButton.classList.contains("is-incorrect")
+  );
+  prePitchScore =
+    requiresMultipleSignals && !hasIncorrectSelection
+      ? requiredSignals.length
+      : prePitchAttempts === 1
+        ? 1
+        : 0;
   prePitchFeedbackEl.textContent = "Correct! Pre-pitch signal matched. Loading the scenario.";
 
   window.setTimeout(() => {
@@ -1892,11 +2147,11 @@ function handlePrePitchSelection(label, button) {
 }
 
 field.addEventListener("click", (event) => {
-  if (isPrePitchLocked()) return;
   if (animationEditorMode) {
     addAnimationEditorPoint(getSvgPoint(event));
     return;
   }
+  if (isPrePitchLocked()) return;
 
   if (roundFinished || activeRoleIndex === null) return;
 
@@ -2016,33 +2271,33 @@ animationCopyBtn?.addEventListener("click", async () => {
 });
 
 drawPBtn?.addEventListener("click", () => {
-  const selectedPath = selectedPaths[0];
+  const roleIndex = getCurrentScenario().paths.findIndex((path) => path.role === "P");
+  const selectedPath = selectedPaths[roleIndex];
   if (!selectedPath || roundFinished || isPrePitchLocked()) {
     return;
   }
 
   if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
-    activeRoleIndex = 0;
-    finishActiveRolePath();
+    finishRolePath(roleIndex);
     return;
   }
 
-  setActiveRole(0);
+  setActiveRole(roleIndex);
 });
 
 drawU1Btn?.addEventListener("click", () => {
-  const selectedPath = selectedPaths[1];
+  const roleIndex = getCurrentScenario().paths.findIndex((path) => path.role === "U1");
+  const selectedPath = selectedPaths[roleIndex];
   if (!selectedPath || roundFinished || isPrePitchLocked()) {
     return;
   }
 
   if (selectedPath.start && selectedPath.points.length >= 2 && !selectedPath.completed) {
-    activeRoleIndex = 1;
-    finishActiveRolePath();
+    finishRolePath(roleIndex);
     return;
   }
 
-  setActiveRole(1);
+  setActiveRole(roleIndex);
 });
 
 clearBtn.addEventListener("click", () => {
@@ -2081,11 +2336,20 @@ toggleGridBtn?.addEventListener("click", () => {
   updateGridVisibility();
 });
 
-checkBtn.addEventListener("click", () => {
+function handleCheckMovements(event) {
+  event?.preventDefault();
+  selectedPaths.forEach((path) => {
+    if (path.start && path.end && path.points.length >= 2) {
+      path.completed = true;
+    }
+  });
+  activeRoleIndex = getFirstIncompleteRoleIndex();
+  updateCheckButtonState();
+
   if (
     roundFinished ||
     isPrePitchLocked() ||
-    !selectedPaths.every((path) => path.start && path.end)
+    !selectedPaths.every((path) => path.completed && path.start && path.end)
   ) {
     return;
   }
@@ -2093,6 +2357,17 @@ checkBtn.addEventListener("click", () => {
   const scenario = scenarios[scenarioIndex];
   let totalDistance = 0;
   let movementPointsEarned = scenario.prePitchSignal ? prePitchScore : 0;
+  const scoreBreakdown = [];
+
+  const prePitchMaxPoints = getPrePitchMaxPoints(scenario);
+  if (prePitchMaxPoints) {
+    scoreBreakdown.push({
+      label: "Pre-pitch signals",
+      earned: prePitchScore,
+      max: prePitchMaxPoints,
+      detail: getPrePitchScoreDetail(scenario),
+    });
+  }
 
   scenario.paths.forEach((path, index) => {
     const selected = selectedPaths[index];
@@ -2132,6 +2407,17 @@ checkBtn.addEventListener("click", () => {
       movementPointsEarned += 1;
     }
 
+    scoreBreakdown.push({
+      label: `${roleDisplayName(path.role)} movement`,
+      earned: roleHit ? 1 : 0,
+      max: 1,
+      detail: describeMovementResult(path.role, {
+        startHit,
+        routeOrWaypointHit,
+        endHit,
+      }),
+    });
+
     totalDistance += distance(selected.start, path.startAnswer);
     totalDistance += distance(selected.end, path.endAnswer);
     (path.waypoints || []).forEach((waypoint) => {
@@ -2152,7 +2438,7 @@ checkBtn.addEventListener("click", () => {
 
   const maxPoints =
     scenario.paths.length +
-    (scenario.prePitchSignal ? 1 : 0) +
+    getPrePitchMaxPoints(scenario) +
     (Number.isInteger(scenario.correctObservationIndex) ? 1 : 0);
   const averageDistance =
     totalDistance /
@@ -2174,12 +2460,14 @@ checkBtn.addEventListener("click", () => {
     movementPointsEarned,
     maxPoints,
     averageDistance,
+    scoreBreakdown,
   };
-});
+}
+
+checkBtn.addEventListener("click", handleCheckMovements);
 
 nextBtn.addEventListener("click", () => {
-  resetPresetAnimations();
-  loadScenario();
+  window.location.reload();
 });
 
 revealObservationBtn?.addEventListener("click", () => {
@@ -2188,6 +2476,7 @@ revealObservationBtn?.addEventListener("click", () => {
   }
 
   revealObservationBtn.classList.add("hidden");
+  answerCardSharedEl?.classList.add("hidden");
   renderObservationCard(getCurrentScenario());
   hideRuleSummaryCard();
   feedbackTitleEl.textContent = "What did you see on the play?";
@@ -2208,9 +2497,12 @@ observationOptionsEl?.addEventListener("click", (event) => {
   renderObservationCard(getCurrentScenario());
 
   const scenario = getCurrentScenario();
+  const selectedOption = scenario.observationOptions?.[selectedObservationOption];
+  const observationEarned =
+    selectedObservationOption === scenario.correctObservationIndex ? 1 : 0;
   const totalPoints =
     pendingRoundResult.movementPointsEarned +
-    (selectedObservationOption === scenario.correctObservationIndex ? 1 : 0);
+    observationEarned;
   const result = describeGrade(
     totalPoints,
     pendingRoundResult.maxPoints,
@@ -2225,6 +2517,20 @@ observationOptionsEl?.addEventListener("click", (event) => {
   observationResolutionTimer = window.setTimeout(() => {
     hideObservationCard();
     renderRuleSummaryCard(scenario);
+    renderScoreBreakdown(
+      [
+        ...(pendingRoundResult.scoreBreakdown || []),
+        {
+          label: "Game/rules ruling",
+          earned: observationEarned,
+          max: 1,
+          detail: observationEarned
+            ? scenario.observationScoreDetail?.correct || "Correctly ruled the play."
+            : scenario.observationScoreDetail?.review || "Review the rule summary for this play.",
+        },
+      ],
+      getObservationOptionNote(selectedOption)
+    );
     renderScoreLine();
     nextBtn.disabled = false;
     updateNextButtonLabel();

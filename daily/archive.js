@@ -1,8 +1,33 @@
 import { formatChallengeDate, getArchivedChallenges } from "./challenge-data.js";
 
 const archiveGridEl = document.getElementById("archive-grid");
+const lineupChallenges = [
+  {
+    date: "2026-05-13",
+    title: "Player/DH Home Run",
+    summary:
+      "Jones pinch-ran for Miller and terminated the DH. Later that inning Miller returned unreported and hit a tying 2-run home run. Rule on the appeal.",
+    sport: "Baseball",
+    mechanics: "Player/DH",
+    href: "../managing-scorecard/?date=2026-05-13",
+    type: "Rules Challenge",
+  },
+  {
+    date: "2026-05-10",
+    title: "Lineup Card Request",
+    summary:
+      "A coach asks for Jones to hit for Young. Read the A/B/C lineup-card markings and decide whether the reported substitute is eligible.",
+    sport: "Baseball",
+    mechanics: "Lineup Card",
+    href: "../managing-scorecard/?date=2026-05-10",
+    type: "Rules Challenge",
+  },
+];
 
 function renderArchiveCard(challenge) {
+  const href = challenge.href || `./?date=${encodeURIComponent(challenge.date)}`;
+  const type = challenge.type || "Animated";
+
   return `
     <article class="archive-card">
       <p class="archive-date">${formatChallengeDate(challenge.date)}</p>
@@ -11,10 +36,10 @@ function renderArchiveCard(challenge) {
       <div class="archive-meta">
         <span class="archive-pill">${challenge.sport}</span>
         <span class="archive-pill">${challenge.mechanics}</span>
-        <span class="archive-pill">Animated</span>
+        <span class="archive-pill">${type}</span>
       </div>
       <div class="archive-actions">
-        <a class="rail-link rail-link-active" href="./?date=${encodeURIComponent(challenge.date)}">Open Challenge</a>
+        <a class="rail-link rail-link-active" href="${href}">Open Challenge</a>
       </div>
     </article>
   `;
@@ -25,7 +50,7 @@ function renderArchive() {
     return;
   }
 
-  const archivedChallenges = getArchivedChallenges(new Date());
+  const archivedChallenges = [...lineupChallenges, ...getArchivedChallenges(new Date())];
 
   if (!archivedChallenges.length) {
     archiveGridEl.innerHTML = `

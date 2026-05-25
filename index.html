@@ -24,8 +24,17 @@
       content="Interactive baseball and softball umpire training for mechanics, positioning, and scenario-based reps."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <link rel="stylesheet" href="./menu.css?v=16" />
+    <link rel="stylesheet" href="./menu.css?v=18" />
     <link rel="stylesheet" href="./auth.css?v=3" />
+  
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-63RJH3RJXH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-63RJH3RJXH');
+    </script>
   </head>
   <body class="home-page">
     <main class="home-shell">
@@ -38,10 +47,11 @@
         <nav class="rail-nav" aria-label="Primary">
           <div class="rail-section">
             <p class="rail-label">Daily Challenge</p>
-            <a class="rail-link rail-link-active rail-link-stack" href="./daily/?date=2026-04-19">
-              <span>April 19 Challenge</span>
-              <span class="rail-link-subline">Go Ahead Run?</span>
+            <a class="rail-link rail-link-active rail-link-stack" href="./daily/?date=2026-05-24">
+              <span>May 24 Challenge</span>
+              <span class="rail-link-subline">Obstruction, Now What?</span>
             </a>
+            <a class="rail-archive-link" href="./daily/archive.html">Archived Challenges</a>
           </div>
 
           <div class="rail-section">
@@ -61,13 +71,6 @@
             <p class="rail-label">Softball</p>
             <a class="rail-link rail-link-active rail-link-stack" href="./softball-situations.html"><span>2 Umpire Mechanics</span><span class="rail-link-subline">Standard Mode</span></a>
             <a class="rail-link rail-link-active rail-link-secondary rail-link-stack" href="./easy-softball-situations.html"><span>2 Umpire Mechanics</span><span class="rail-link-subline">Easy Mode</span><span class="rail-link-subline rail-link-subline-detail">Starting Positions Revealed</span></a>
-          </div>
-
-          <div class="rail-section">
-            <p class="rail-label">Coming Soon</p>
-            <p class="rail-soon-item">2 Umpire Mechanics With Animation</p>
-            <p class="rail-soon-item">Baseball 3 Umpire Mechanics</p>
-            <p class="rail-soon-item">Lineup Card Management</p>
           </div>
 
           <a class="rail-link rail-link-active" href="./feedback.html">Share Feedback</a>
@@ -99,8 +102,8 @@
           </div>
 
           <div class="hero-visual" aria-label="Baseball and softball umpire training preview">
-            <p class="eyebrow hero-visual-kicker">Daily Challenge • April 19, 2026</p>
-            <div class="visual-frame visual-frame-video">
+            <p class="eyebrow hero-visual-kicker">Daily Challenge • May 24, 2026</p>
+            <a class="visual-frame" href="./daily/?date=2026-05-24" aria-label="Play the May 24 daily challenge">
               <video
                 class="field-image hero-video"
                 src="./assets/home/hero-preview.mp4"
@@ -109,21 +112,20 @@
                 loop
                 playsinline
                 preload="auto"
-                aria-label="April 19, 2026 daily challenge preview video"
               ></video>
-            </div>
+            </a>
             <div class="hero-visual-actions">
-              <a class="primary-link" href="./daily/?date=2026-04-19">Play Today</a>
+              <a class="primary-link" href="./daily/?date=2026-05-24">Play Today</a>
             </div>
           </div>
         </section>
 
         <section class="module-strip">
-          <article class="module-card module-card-featured">
+          <a class="module-card module-card-featured module-card-link" href="./daily/?date=2026-05-24">
             <p class="module-kicker">Today’s Challenge</p>
-            <h2>Go Ahead Run?</h2>
-            <p class="module-copy">Bottom of the 7th, 2 outs, R2 on the move, and a base hit to right puts the winning run in motion, followed by a fake-tag obstruction read at the plate.</p>
-          </article>
+            <h2>Obstruction, Now What?</h2>
+            <p class="module-copy">Work the trouble ball to right with no runners and no outs, then rule on F3’s obstruction after the batter-runner is tagged out at third.</p>
+          </a>
 
           <article class="module-card">
             <p class="module-kicker">Coming Soon</p>
