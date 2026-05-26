@@ -24,7 +24,7 @@
       content="Interactive baseball and softball umpire training for mechanics, positioning, and scenario-based reps."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <link rel="stylesheet" href="./menu.css?v=18" />
+    <link rel="stylesheet" href="./menu.css?v=19" />
     <link rel="stylesheet" href="./auth.css?v=3" />
   
     <!-- Google tag (gtag.js) -->
@@ -46,35 +46,35 @@
 
         <nav class="rail-nav" aria-label="Primary">
           <div class="rail-section">
-            <p class="rail-label">Daily Challenge</p>
-            <a class="rail-link rail-link-active rail-link-stack" href="./daily/?date=2026-05-24">
-              <span>May 24 Challenge</span>
+            <p class="rail-label">Start Here</p>
+            <a class="rail-link rail-link-daily rail-link-stack" href="./daily/index.html?date=2026-05-24">
+              <span>Play Today’s Challenge</span>
               <span class="rail-link-subline">Obstruction, Now What?</span>
             </a>
-            <a class="rail-archive-link" href="./daily/archive.html">Archived Challenges</a>
+            <a class="rail-archive-link" href="./daily/archive.html">View past daily challenges</a>
           </div>
 
           <div class="rail-section">
-            <p class="rail-label">Baseball</p>
+            <p class="rail-label">Baseball Mechanics</p>
             <a class="rail-link rail-link-active rail-link-stack" href="./situations.html">
-              <span>2 Umpire Mechanics</span>
+              <span>2-Umpire Mechanics</span>
               <span class="rail-link-subline">Standard Mode</span>
             </a>
             <a class="rail-link rail-link-active rail-link-secondary rail-link-stack" href="./easy-situations.html">
-              <span>2 Umpire Mechanics</span>
+              <span>2-Umpire Mechanics</span>
               <span class="rail-link-subline">Easy Mode</span>
               <span class="rail-link-subline rail-link-subline-detail">Starting Positions Revealed</span>
             </a>
             <a class="rail-link rail-link-active rail-link-stack" href="./3man-situations.html">
-              <span>3 Umpire Mechanics NEW!!</span>
+              <span>3-Umpire Mechanics</span>
               <span class="rail-link-subline">Scenario Library</span>
             </a>
           </div>
 
           <div class="rail-section">
-            <p class="rail-label">Softball</p>
-            <a class="rail-link rail-link-active rail-link-stack" href="./softball-situations.html"><span>2 Umpire Mechanics</span><span class="rail-link-subline">Standard Mode</span></a>
-            <a class="rail-link rail-link-active rail-link-secondary rail-link-stack" href="./easy-softball-situations.html"><span>2 Umpire Mechanics</span><span class="rail-link-subline">Easy Mode</span><span class="rail-link-subline rail-link-subline-detail">Starting Positions Revealed</span></a>
+            <p class="rail-label">Softball Mechanics</p>
+            <a class="rail-link rail-link-active rail-link-stack" href="./softball-situations.html"><span>2-Umpire Mechanics</span><span class="rail-link-subline">Standard Mode</span></a>
+            <a class="rail-link rail-link-active rail-link-secondary rail-link-stack" href="./easy-softball-situations.html"><span>2-Umpire Mechanics</span><span class="rail-link-subline">Easy Mode</span><span class="rail-link-subline rail-link-subline-detail">Starting Positions Revealed</span></a>
           </div>
 
           <a class="rail-link rail-link-active" href="./feedback.html">Share Feedback</a>
@@ -113,19 +113,26 @@
           </a>
         </header>
 
-        <section class="hero-panel">
-          <div class="hero-copy">
-            <h1>Sharper positioning. Better reads. More confident crews.</h1>
-            <p class="hero-text">
-              UmpIQ is an interactive baseball and softball umpire training tool with daily reps,
-              scenario libraries, and scored practice that helps crews build cleaner mechanics one play at a time.
-            </p>
+        <section class="home-hero">
+          <div class="home-hero-copy">
+            <div class="hero-challenge-summary">
+              <p class="module-kicker">Daily Challenge • May 24</p>
+              <h2>Obstruction, Now What?</h2>
+              <p>
+                No runners, no outs. Trouble ball to right. F3 obstructs the
+                batter-runner, who is later tagged out at third. Can you get the
+                movement and base award right?
+              </p>
+            </div>
+            <div class="home-hero-actions">
+              <a class="primary-link" href="./daily/index.html?date=2026-05-24">Play Today’s Challenge</a>
+              <a class="ghost-link" href="./daily/archive.html">Browse Archive</a>
+            </div>
             <div class="auth-home-slot" aria-label="Login and saved progress"></div>
           </div>
 
-          <div class="hero-visual" aria-label="Baseball and softball umpire training preview">
-            <p class="eyebrow hero-visual-kicker">Daily Challenge • May 24, 2026</p>
-            <a class="visual-frame" href="./daily/?date=2026-05-24" aria-label="Play the May 24 daily challenge">
+          <a class="daily-spotlight" href="./daily/index.html?date=2026-05-24" aria-label="Play the May 24 daily challenge">
+            <div class="daily-spotlight-media">
               <video
                 class="field-image hero-video"
                 src="./assets/home/hero-preview.mp4"
@@ -135,10 +142,46 @@
                 playsinline
                 preload="auto"
               ></video>
-            </a>
-            <div class="hero-visual-actions">
-              <a class="primary-link" href="./daily/?date=2026-05-24">Play Today</a>
             </div>
+            <div class="daily-spotlight-copy">
+              <p class="eyebrow">Interactive Umpire Training</p>
+              <h1>Build cleaner mechanics one rep at a time.</h1>
+              <p>
+                Practice positioning, rotations, rules, and game-management decisions
+                with scored baseball and softball reps built for working umpires.
+              </p>
+              <span class="daily-spotlight-link">Open Challenge</span>
+            </div>
+          </a>
+        </section>
+
+        <section class="training-paths" aria-labelledby="training-paths-title">
+          <div class="section-heading">
+            <p class="eyebrow">Training Paths</p>
+            <h2 id="training-paths-title">Choose the rep you need today.</h2>
+          </div>
+
+          <div class="path-grid">
+            <a class="path-card path-card-primary" href="./daily/index.html?date=2026-05-24">
+              <p class="module-kicker">Daily Rep</p>
+              <h3>Situation Challenge</h3>
+              <p>One focused play with umpire movement, a rules question, scoring, and community results.</p>
+            </a>
+            <a class="path-card" href="./situations.html">
+              <p class="module-kicker">Baseball</p>
+              <h3>2-Umpire Mechanics</h3>
+              <p>Work standard two-umpire positioning and rotations across the core runner states.</p>
+            </a>
+            <a class="path-card" href="./3man-situations.html">
+              <p class="module-kicker">Baseball</p>
+              <h3>3-Umpire Mechanics</h3>
+              <p>Run the expanded three-umpire scenario library with P, U1, and U3 responsibilities.</p>
+            </a>
+            <a class="path-card" href="./softball-situations.html">
+              <p class="module-kicker">Softball</p>
+              <h3>2-Umpire Mechanics</h3>
+              <p>Practice softball positioning and movement in standard mode.</p>
+            </a>
           </div>
         </section>
 
@@ -165,11 +208,11 @@
           </div>
         </section>
 
-        <section class="module-strip">
-          <a class="module-card module-card-featured module-card-link" href="./daily/?date=2026-05-24">
-            <p class="module-kicker">Today’s Challenge</p>
-            <h2>Obstruction, Now What?</h2>
-            <p class="module-copy">Work the trouble ball to right with no runners and no outs, then rule on F3’s obstruction after the batter-runner is tagged out at third.</p>
+        <section class="module-strip home-secondary-strip">
+          <a class="module-card module-card-link" href="./easy-situations.html">
+            <p class="module-kicker">Easy Mode</p>
+            <h2>Starting Positions Revealed</h2>
+            <p class="module-copy">Use easy mode when you want a cleaner first look before testing the full mechanic.</p>
           </a>
 
           <article class="module-card">
@@ -177,12 +220,6 @@
             <h2>Lineup Card Management</h2>
             <p class="module-copy">Cleaner pregame administration tools for building, checking, and managing lineup cards.</p>
           </article>
-
-          <a class="module-card module-card-link" href="./3man-situations.html">
-            <p class="module-kicker">Now Available</p>
-            <h2>3 Umpire Mechanics</h2>
-            <p class="module-copy">Expanded crew training for rotations, responsibilities, and stronger reads with three umpires.</p>
-          </a>
         </section>
       </section>
     </main>
