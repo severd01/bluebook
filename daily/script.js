@@ -64,6 +64,7 @@ const dailyHeroTitleEl = document.getElementById("daily-hero-title");
 const dailyPanelEl = document.getElementById("daily-panel");
 const dailyPanelHeadingEl = document.getElementById("daily-panel-heading");
 const dailyPanelCopyEl = document.getElementById("daily-panel-copy");
+const challengeStructuredDataEl = document.getElementById("challenge-structured-data");
 const dailyResultsPanelEl = document.getElementById("daily-results-panel");
 const dailyResultsScoreEl = document.getElementById("daily-results-score");
 const dailyResultsSummaryEl = document.getElementById("daily-results-summary");
@@ -224,6 +225,87 @@ function updateMetaTag(selector, content) {
   }
 }
 
+function updateLinkTag(selector, href) {
+  if (!href) {
+    return;
+  }
+
+  const element = document.querySelector(selector);
+  if (element) {
+    element.setAttribute("href", href);
+  }
+}
+
+function getChallengeUrl(scenario) {
+  if (!scenario?.date) {
+    return "https://umpiq.com/daily/";
+  }
+
+  return `https://umpiq.com/daily/?date=${encodeURIComponent(scenario.date)}`;
+}
+
+function getStructuredDataOptions(scenario) {
+  if (!Array.isArray(scenario?.observationOptions)) {
+    return [];
+  }
+
+  return scenario.observationOptions
+    .map((option, index) => {
+      const text = getObservationOptionText(option);
+      if (!text) {
+        return null;
+      }
+
+      return {
+        "@type": "Answer",
+        text,
+        position: index + 1,
+        ...(index === scenario.correctObservationIndex ? { isCorrect: true } : {}),
+      };
+    })
+    .filter(Boolean);
+}
+
+function applyChallengeStructuredData(scenario, pageUrl, pageTitle, pageDescription) {
+  if (!challengeStructuredDataEl || !scenario) {
+    return;
+  }
+
+  const ruleSummary = scenario.ruleSummary;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Quiz",
+    name: pageTitle,
+    url: pageUrl,
+    description: pageDescription,
+    educationalLevel: "Umpire training",
+    learningResourceType: "Daily challenge",
+    about: [
+      "NFHS obstruction",
+      "Delayed dead ball",
+      "Base awards",
+      "Batter-runner obstruction",
+      scenario.mechanics,
+    ].filter(Boolean),
+    mainEntity: {
+      "@type": "Question",
+      name: scenario.observationPrompt || scenario.title,
+      text: scenario.observationPrompt || scenario.description,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          getObservationOptionText(
+            scenario.observationOptions?.[scenario.correctObservationIndex]
+          ) || "",
+        explanation: ruleSummary?.body || scenario.explanation || "",
+      },
+      suggestedAnswer: getStructuredDataOptions(scenario),
+    },
+  };
+
+  challengeStructuredDataEl.textContent = JSON.stringify(structuredData);
+}
+
 function applyChallengeMetadata(scenario) {
   if (!scenario) {
     return;
@@ -233,13 +315,17 @@ function applyChallengeMetadata(scenario) {
   const cleanTitle = scenario.title.replace(/\.$/, "");
   const pageTitle = `UmpIQ Daily Challenge | ${cleanTitle}`;
   const pageDescription = `Play UmpIQ's ${formattedDate} daily challenge: ${scenario.description} with movement scoring and rules review.`;
+  const pageUrl = getChallengeUrl(scenario);
 
   document.title = pageTitle;
+  updateLinkTag('link[rel="canonical"]', pageUrl);
   updateMetaTag('meta[name="description"]', pageDescription);
   updateMetaTag('meta[property="og:title"]', pageTitle);
   updateMetaTag('meta[property="og:description"]', pageDescription);
+  updateMetaTag('meta[property="og:url"]', pageUrl);
   updateMetaTag('meta[name="twitter:title"]', pageTitle);
   updateMetaTag('meta[name="twitter:description"]', pageDescription);
+  applyChallengeStructuredData(scenario, pageUrl, pageTitle, pageDescription);
 }
 
 let scenarioIndex = 0;
