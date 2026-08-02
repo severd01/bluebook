@@ -24,7 +24,7 @@
       content="Browse archived UmpIQ situation challenges by date."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <link rel="stylesheet" href="../menu.css?v=16" />
+    <link rel="stylesheet" href="../menu.css?v=20" />
     <link rel="stylesheet" href="../auth.css?v=3" />
     <style>
       .archive-page {
@@ -60,6 +60,11 @@
         color: var(--ink);
         text-decoration: none;
         font-weight: 800;
+      }
+
+      .archive-button-link {
+        font: inherit;
+        cursor: pointer;
       }
 
       .archive-grid {
@@ -145,10 +150,52 @@
         </p>
 
         <nav class="archive-nav" aria-label="Situation challenge navigation">
-          <a class="archive-link" href="./?date=2026-05-24">Today's Challenge</a>
+          <a class="archive-link" href="./?date=2026-07-25">Today's Challenge</a>
           <a class="archive-link" href="../">UmpIQ Home</a>
+          <button class="archive-link archive-button-link" type="button" data-subscribe-open>Stay Updated</button>
         </nav>
       </section>
+
+      <div class="subscribe-modal hidden" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+        <div class="subscribe-modal-card">
+          <div class="subscribe-modal-top">
+            <div>
+              <p class="module-kicker">UmpIQ Updates</p>
+              <h2 id="subscribe-modal-title">Get new challenges and features.</h2>
+            </div>
+            <button class="subscribe-close" type="button" data-subscribe-close aria-label="Close subscribe form">×</button>
+          </div>
+          <p class="subscribe-modal-copy">
+            Subscribe for new UmpIQ challenges, training reps, and feature updates.
+          </p>
+          <section aria-label="Subscribe by email">
+            <form
+              class="subscribe-form"
+              action="https://buttondown.com/api/emails/embed-subscribe/severson"
+              method="post"
+              target="buttondown-subscribe-frame"
+            >
+              <label class="visually-hidden" for="subscribe-email">Email address</label>
+              <input
+                id="subscribe-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+              />
+              <input type="hidden" name="embed" value="1" />
+              <button type="submit">Subscribe</button>
+            </form>
+            <p class="subscribe-note" id="subscribe-note">No spam. Unsubscribe anytime.</p>
+          </section>
+          <iframe
+            class="subscribe-frame"
+            name="buttondown-subscribe-frame"
+            title="Buttondown subscribe confirmation"
+          ></iframe>
+        </div>
+      </div>
 
       <section
         id="archive-grid"
@@ -158,6 +205,44 @@
     </main>
     <script src="../supabase-config.js"></script>
     <script type="module" src="../auth.js?v=2"></script>
-    <script type="module" src="./archive.js?v=2"></script>
+    <script>
+      const subscribeModal = document.getElementById("subscribe-modal");
+      const subscribeEmail = document.getElementById("subscribe-email");
+      const openSubscribeModal = () => {
+        subscribeModal?.classList.remove("hidden");
+        window.setTimeout(() => subscribeEmail?.focus(), 0);
+      };
+      const closeSubscribeModal = () => {
+        subscribeModal?.classList.add("hidden");
+      };
+
+      document.querySelectorAll("[data-subscribe-open]").forEach((button) => {
+        button.addEventListener("click", openSubscribeModal);
+      });
+
+      document.querySelectorAll("[data-subscribe-close]").forEach((button) => {
+        button.addEventListener("click", closeSubscribeModal);
+      });
+
+      subscribeModal?.addEventListener("click", (event) => {
+        if (event.target === subscribeModal) {
+          closeSubscribeModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeSubscribeModal();
+        }
+      });
+
+      document.querySelector(".subscribe-form")?.addEventListener("submit", () => {
+        const note = document.getElementById("subscribe-note");
+        if (note) {
+          note.textContent = "Thanks. Check your inbox to finish subscribing.";
+        }
+      });
+    </script>
+    <script type="module" src="./archive.js?v=20260725-fpsr-publish"></script>
   </body>
 </html>

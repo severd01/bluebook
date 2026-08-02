@@ -24,7 +24,7 @@
       content="Interactive baseball and softball umpire training for mechanics, positioning, and scenario-based reps."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <link rel="stylesheet" href="./menu.css?v=19" />
+    <link rel="stylesheet" href="./menu.css?v=21" />
     <link rel="stylesheet" href="./auth.css?v=3" />
   
     <!-- Google tag (gtag.js) -->
@@ -47,11 +47,12 @@
         <nav class="rail-nav" aria-label="Primary">
           <div class="rail-section">
             <p class="rail-label">Start Here</p>
-            <a class="rail-link rail-link-daily rail-link-stack" href="./daily/index.html?date=2026-05-24">
+            <a class="rail-link rail-link-daily rail-link-stack" href="./daily/index.html?date=2026-07-25">
               <span>Play Today’s Challenge</span>
-              <span class="rail-link-subline">Obstruction, Now What?</span>
+              <span class="rail-link-subline">Does the Run Score?</span>
             </a>
             <a class="rail-archive-link" href="./daily/archive.html">View past daily challenges</a>
+            <button class="rail-archive-link rail-subscribe-button" type="button" data-subscribe-open>Get UmpIQ updates</button>
           </div>
 
           <div class="rail-section">
@@ -116,27 +117,23 @@
         <section class="home-hero">
           <div class="home-hero-copy">
             <div class="hero-challenge-summary">
-              <p class="module-kicker">Daily Challenge • May 24</p>
-              <h2>Obstruction, Now What?</h2>
-              <p>
-                No runners, no outs. Trouble ball to right. F3 obstructs the
-                batter-runner, who is later tagged out at third. Can you get the
-                movement and base award right?
-              </p>
+              <p class="module-kicker">Daily Challenge • July 25</p>
+              <h2>Does the Run Score?</h2>
             </div>
             <div class="home-hero-actions">
-              <a class="primary-link" href="./daily/index.html?date=2026-05-24">Play Today’s Challenge</a>
+              <a class="primary-link" href="./daily/index.html?date=2026-07-25">Play Today’s Challenge</a>
               <a class="ghost-link" href="./daily/archive.html">Browse Archive</a>
             </div>
-            <section class="home-poll-card" aria-labelledby="home-poll-title">
-              <p class="module-kicker">Positioning Poll</p>
-              <h3 id="home-poll-title">What is the best position for throws to first?</h3>
-              <a class="poll-link" href="./watch-first-quiz.html">Open Positioning Poll</a>
+            <section class="home-newsletter-card" aria-labelledby="home-newsletter-title">
+              <p class="module-kicker">Stay Updated!</p>
+              <h3 id="home-newsletter-title">Join our newsletter!</h3>
+              <p>Get new daily challenges, rule reps, and UmpIQ updates in your inbox.</p>
+              <button class="ghost-link subscribe-action-button" type="button" data-subscribe-open>Stay Updated</button>
             </section>
             <div class="auth-home-slot" aria-label="Login and saved progress"></div>
           </div>
 
-          <a class="daily-spotlight" href="./daily/index.html?date=2026-05-24" aria-label="Play the May 24 daily challenge">
+          <a class="daily-spotlight" href="./daily/index.html?date=2026-07-25" aria-label="Play the July 25 daily challenge">
             <div class="daily-spotlight-media">
               <video
                 class="field-image hero-video"
@@ -160,6 +157,47 @@
           </a>
         </section>
 
+        <div class="subscribe-modal hidden" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+          <div class="subscribe-modal-card">
+            <div class="subscribe-modal-top">
+              <div>
+                <p class="module-kicker">UmpIQ Updates</p>
+                <h2 id="subscribe-modal-title">Get new challenges and features.</h2>
+              </div>
+              <button class="subscribe-close" type="button" data-subscribe-close aria-label="Close subscribe form">×</button>
+            </div>
+            <p class="subscribe-modal-copy">
+              Subscribe for new UmpIQ challenges, training reps, and feature updates.
+            </p>
+            <section aria-label="Subscribe by email">
+              <form
+                class="subscribe-form"
+                action="https://buttondown.com/api/emails/embed-subscribe/severson"
+                method="post"
+                target="buttondown-subscribe-frame"
+              >
+                <label class="visually-hidden" for="subscribe-email">Email address</label>
+                <input
+                  id="subscribe-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  required
+                />
+                <input type="hidden" name="embed" value="1" />
+                <button type="submit">Subscribe</button>
+              </form>
+              <p class="subscribe-note" id="subscribe-note">No spam. Unsubscribe anytime.</p>
+            </section>
+            <iframe
+              class="subscribe-frame"
+              name="buttondown-subscribe-frame"
+              title="Buttondown subscribe confirmation"
+            ></iframe>
+          </div>
+        </div>
+
         <section class="training-paths" aria-labelledby="training-paths-title">
           <div class="section-heading">
             <p class="eyebrow">Training Paths</p>
@@ -167,7 +205,7 @@
           </div>
 
           <div class="path-grid">
-            <a class="path-card path-card-primary" href="./daily/index.html?date=2026-05-24">
+            <a class="path-card path-card-primary" href="./daily/index.html?date=2026-07-25">
               <p class="module-kicker">Daily Rep</p>
               <h3>Situation Challenge</h3>
               <p>One focused play with umpire movement, a rules question, scoring, and community results.</p>
@@ -230,6 +268,44 @@
     </main>
     <script src="./supabase-config.js"></script>
     <script type="module" src="./auth.js?v=2"></script>
+    <script>
+      const subscribeModal = document.getElementById("subscribe-modal");
+      const subscribeEmail = document.getElementById("subscribe-email");
+      const openSubscribeModal = () => {
+        subscribeModal?.classList.remove("hidden");
+        window.setTimeout(() => subscribeEmail?.focus(), 0);
+      };
+      const closeSubscribeModal = () => {
+        subscribeModal?.classList.add("hidden");
+      };
+
+      document.querySelectorAll("[data-subscribe-open]").forEach((button) => {
+        button.addEventListener("click", openSubscribeModal);
+      });
+
+      document.querySelectorAll("[data-subscribe-close]").forEach((button) => {
+        button.addEventListener("click", closeSubscribeModal);
+      });
+
+      subscribeModal?.addEventListener("click", (event) => {
+        if (event.target === subscribeModal) {
+          closeSubscribeModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeSubscribeModal();
+        }
+      });
+
+      document.querySelector(".subscribe-form")?.addEventListener("submit", () => {
+        const note = document.getElementById("subscribe-note");
+        if (note) {
+          note.textContent = "Thanks. Check your inbox to finish subscribing.";
+        }
+      });
+    </script>
     <script>
       window.va = window.va || function () {
         (window.vaq = window.vaq || []).push(arguments);

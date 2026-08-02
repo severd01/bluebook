@@ -3,29 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UmpIQ Daily Challenge | Obstruction, Now What?</title>
+    <title>UmpIQ Daily Challenge | Does the Run Score?</title>
     <meta
       name="description"
-      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
+      content="Play UmpIQ's July 25, 2026 daily challenge: bases loaded, no outs, a potential double play, an illegal slide at second, and a force-play-slide-rule ruling."
     />
-    <link rel="canonical" href="https://umpiq.com/daily/?date=2026-05-24" />
-    <meta property="og:title" content="UmpIQ Daily Challenge | Obstruction, Now What?" />
+    <link rel="canonical" href="https://umpiq.com/daily/?date=2026-07-25" />
+    <meta property="og:title" content="UmpIQ Daily Challenge | Does the Run Score?" />
     <meta
       property="og:description"
-      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
+      content="Bases loaded, no outs. A double-play ball goes to second, R1 slides through the base, and R3 crosses home. Rule on the play."
     />
-    <meta property="og:url" content="https://umpiq.com/daily/?date=2026-05-24" />
+    <meta property="og:url" content="https://umpiq.com/daily/?date=2026-07-25" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://umpiq.com/social-preview.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="UmpIQ Daily Challenge | Obstruction, Now What?" />
+    <meta name="twitter:title" content="UmpIQ Daily Challenge | Does the Run Score?" />
     <meta
       name="twitter:description"
-      content="Play UmpIQ's May 24, 2026 daily challenge: no runners, no outs, trouble ball to right, F3 obstructs the batter-runner, who is later tagged out at third."
+      content="Bases loaded, no outs. A double-play ball goes to second, R1 slides through the base, and R3 crosses home. Rule on the play."
     />
     <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
-    <script id="challenge-structured-data" type="application/ld+json"></script>
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <script id="challenge-structured-data" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Quiz",
+        "name": "UmpIQ Daily Challenge | Does the Run Score?",
+        "url": "https://umpiq.com/daily/?date=2026-07-25",
+        "description": "Bases loaded, no outs. B4 grounds to F6, who throws to second as R1 slides through the base and R3 crosses home.",
+        "educationalLevel": "Umpire training",
+        "learningResourceType": "Daily challenge",
+        "about": [
+          "Force-play slide rule",
+          "Interference",
+          "Runner placement",
+          "Two-umpire mechanics",
+          "Does the run score"
+        ],
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the ruling?",
+            "text": "What do you have on this play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "R1 and the batter-runner are out. R2 returns to second, R3 returns to third, and no run scores.",
+              "explanation": "The force-play-slide-rule violation creates an immediate dead ball. R1 and the batter-runner are out, and the other runners return to their time-of-pitch bases."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the resulting game situation?",
+            "text": "After enforcing the penalty, what is the game situation?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "R2 at second, R3 at third, two outs, and no run scored."
+            }
+          }
+        ]
+      }
+    </script>
+    <link rel="stylesheet" href="./styles.css?v=20260725-fpsr-publish" />
     <link rel="stylesheet" href="../auth.css?v=3" />
   
     <!-- Google tag (gtag.js) -->
@@ -40,11 +78,12 @@
   <body>
     <main class="app-shell">
       <section class="hero">
-        <p id="daily-kicker" class="daily-kicker">May 24, 2026</p>
-        <h1 id="daily-hero-title">Obstruction, Now What?</h1>
+        <p id="daily-kicker" class="daily-kicker">July 25, 2026</p>
+        <h1 id="daily-hero-title">Does the Run Score?</h1>
         <nav class="scenario-nav" aria-label="Scenario navigation">
           <a class="scenario-nav-link scenario-brand-link" href="../">UmpIQ</a>
           <a class="scenario-nav-link" href="./archive.html">Archive</a>
+          <button class="scenario-nav-link scenario-nav-button" type="button" data-subscribe-open>Stay Updated</button>
         </nav>
       </section>
 
@@ -53,14 +92,14 @@
           <div class="panel-header">
             <p class="panel-label">Situation</p>
             <p id="scenario-intro" class="scenario-intro">
-              No runners, no outs. Trouble ball to right. F3 obstructs the batter-runner, who is later tagged out at third.
+              Bases loaded, no outs. B4 grounds to F6, who throws to second as R3 races home.
             </p>
           </div>
 
           <div class="details">
             <div>
               <p class="detail-label">Runners</p>
-              <p id="scenario-runners">No Runners</p>
+              <p id="scenario-runners">Bases Loaded</p>
             </div>
             <div>
               <p class="detail-label">Outs</p>
@@ -68,13 +107,13 @@
             </div>
             <div>
               <p class="detail-label">Situation</p>
-              <p id="scenario-ball">Trouble ball to right field</p>
+              <p id="scenario-ball">Ground ball to shortstop</p>
             </div>
           </div>
 
           <p id="cursor-readout" class="cursor-readout hidden">Cursor: x -, y -</p>
 
-          <details class="animation-manager hidden">
+          <details class="animation-manager hidden" open>
             <summary class="animation-manager-summary">Animation Tools</summary>
             <div class="animation-manager-body">
               <label class="animation-manager-label" for="animation-object-select">Object</label>
@@ -116,26 +155,38 @@
           </details>
 
           <section id="daily-panel" class="daily-panel hidden" aria-labelledby="daily-panel-heading">
-            <h3 id="daily-panel-heading" class="daily-panel-title">No runners, no outs. Trouble ball to right.</h3>
+            <h3 id="daily-panel-heading" class="daily-panel-title">R2 and R3, 1 out. Deep fly ball to right.</h3>
             <p id="daily-panel-copy" class="daily-panel-copy">
-              No runners, no outs. Trouble ball to right. F3 obstructs the batter-runner, who is later tagged out at third.
+              R3 tags and scores, while F9 throws to F4 as the cutoff and F4 relays to F6 covering second for the appeal on R2.
             </p>
             <div class="auth-home-slot daily-auth-slot" aria-label="Login and streaks"></div>
           </section>
           <section id="daily-results-panel" class="daily-results-panel hidden" aria-live="polite">
             <p class="detail-label">Results</p>
-            <h3 id="daily-results-score" class="daily-results-score">0/5</h3>
+            <h3 id="daily-results-score" class="daily-results-score">0/7</h3>
             <p id="daily-results-summary" class="daily-results-copy">
               Finish the challenge to see your score.
             </p>
+            <button id="daily-share-btn" class="daily-share-btn" type="button" hidden>
+              <span>Share</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <path d="M8.6 10.6 15.4 6.4"></path>
+                <path d="M8.6 13.4 15.4 17.6"></path>
+              </svg>
+            </button>
             <p id="daily-results-count" class="daily-results-count">Out of 0 users:</p>
             <div id="daily-results-breakdown" class="daily-results-meta">
-              <p class="daily-results-pill"><span>5/5</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>4/5</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>3/5</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>2/5</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>1/5</span><span>0%</span></p>
-              <p class="daily-results-pill"><span>0/5</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>7/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>6/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>5/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>4/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>3/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>2/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>1/7</span><span>0%</span></p>
+              <p class="daily-results-pill"><span>0/7</span><span>0%</span></p>
             </div>
           </section>
         </aside>
@@ -223,9 +274,137 @@
           </div>
         </section>
       </section>
+
+      <section
+        class="challenge-seo-content visually-hidden"
+        aria-labelledby="challenge-seo-title"
+        aria-hidden="true"
+      >
+        <p class="daily-kicker">NFHS Force-Play Slide Rule Challenge</p>
+        <h2 id="challenge-seo-title">Does the Run Score?</h2>
+        <p>
+          Bases loaded, no outs. B4 grounds to F6, who throws to F4 for the force
+          at second. R1 slides through the base into F4 while R3 crosses home.
+        </p>
+
+        <h3>Pre-Pitch Signals</h3>
+        <ul>
+          <li>No outs</li>
+          <li>Infield fly situation</li>
+          <li>Plate staying home</li>
+        </ul>
+
+        <h3>Ruling Question</h3>
+        <p>
+          R1 slides through second and interferes with F4's opportunity to
+          complete the double play. Does R3's run score?
+        </p>
+        <ol>
+          <li>Delayed dead ball. R1 and BR are out, and R3 scores.</li>
+          <li>R1 is out at second, the ball remains live, BR stays at first, R2 advances to third, and R3 scores.</li>
+          <li>Immediate dead ball. R1 is out for the FPSR violation, BR is also declared out, R2 returns to second, R3 returns to third, and no run scores.</li>
+          <li>Delayed dead ball. R1 and BR are out, R2 advances to third, and R3 scores.</li>
+        </ol>
+
+        <h3>Correct Ruling</h3>
+        <p>
+          The force-play-slide-rule violation creates an immediate dead ball.
+          R1 and BR are out, the other runners return to their time-of-pitch
+          bases, and R3's apparent run is canceled.
+        </p>
+
+        <h3>Follow-Up Question</h3>
+        <p>
+          After enforcing the penalty, what is the game situation?
+        </p>
+        <ol>
+          <li>R2 at third, BR at first, one out.</li>
+          <li>R2 at second, R3 at third, two outs.</li>
+          <li>R2 at third, two outs, one run scored.</li>
+          <li>Bases empty, two outs.</li>
+        </ol>
+      </section>
+      <div class="subscribe-modal hidden" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+        <div class="subscribe-modal-card">
+          <div class="subscribe-modal-top">
+            <div>
+              <p class="daily-kicker">UmpIQ Updates</p>
+              <h2 id="subscribe-modal-title">Get new challenges and features.</h2>
+            </div>
+            <button class="subscribe-close" type="button" data-subscribe-close aria-label="Close subscribe form">×</button>
+          </div>
+          <p class="subscribe-modal-copy">
+            Subscribe for new UmpIQ challenges, training reps, and feature updates.
+          </p>
+          <section aria-label="Subscribe by email">
+            <form
+              class="subscribe-form"
+              action="https://buttondown.com/api/emails/embed-subscribe/severson"
+              method="post"
+              target="buttondown-subscribe-frame"
+            >
+              <label class="visually-hidden" for="subscribe-email">Email address</label>
+              <input
+                id="subscribe-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+              />
+              <input type="hidden" name="embed" value="1" />
+              <button type="submit">Subscribe</button>
+            </form>
+            <p class="subscribe-note" id="subscribe-note">No spam. Unsubscribe anytime.</p>
+          </section>
+          <iframe
+            class="subscribe-frame"
+            name="buttondown-subscribe-frame"
+            title="Buttondown subscribe confirmation"
+          ></iframe>
+        </div>
+      </div>
     </main>
     <script src="../supabase-config.js"></script>
     <script type="module" src="../auth.js?v=2"></script>
-    <script type="module" src="./script.js?v=62"></script>
+    <script>
+      const subscribeModal = document.getElementById("subscribe-modal");
+      const subscribeEmail = document.getElementById("subscribe-email");
+      const openSubscribeModal = () => {
+        subscribeModal?.classList.remove("hidden");
+        window.setTimeout(() => subscribeEmail?.focus(), 0);
+      };
+      const closeSubscribeModal = () => {
+        subscribeModal?.classList.add("hidden");
+      };
+
+      document.querySelectorAll("[data-subscribe-open]").forEach((button) => {
+        button.addEventListener("click", openSubscribeModal);
+      });
+
+      document.querySelectorAll("[data-subscribe-close]").forEach((button) => {
+        button.addEventListener("click", closeSubscribeModal);
+      });
+
+      subscribeModal?.addEventListener("click", (event) => {
+        if (event.target === subscribeModal) {
+          closeSubscribeModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeSubscribeModal();
+        }
+      });
+
+      document.querySelector(".subscribe-form")?.addEventListener("submit", () => {
+        const note = document.getElementById("subscribe-note");
+        if (note) {
+          note.textContent = "Thanks. Check your inbox to finish subscribing.";
+        }
+      });
+    </script>
+    <script type="module" src="./script.js?v=20260725-fpsr-publish"></script>
   </body>
 </html>
