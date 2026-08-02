@@ -1377,46 +1377,6 @@ button:hover {
   margin-top: 18px;
 }
 
-.home-poll-card {
-  display: grid;
-  gap: 10px;
-  max-width: 360px;
-  margin-top: 14px;
-  padding: 16px 18px 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(67, 55, 33, 0.08);
-}
-
-.home-poll-card h3 {
-  margin: 0;
-  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-}
-
-.poll-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  min-width: 210px;
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #234b64, #0f7a7a);
-  color: #fff;
-  font-weight: 800;
-  text-decoration: none;
-  box-shadow: 0 14px 24px rgba(16, 72, 86, 0.16);
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    opacity 160ms ease;
-}
-
-.poll-link:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 28px rgba(16, 72, 86, 0.22);
-}
-
 .subscribe-modal {
   position: fixed;
   inset: 0;
@@ -1742,15 +1702,6 @@ button:hover {
 
   .home-newsletter-card {
     text-align: center;
-  }
-
-  .home-poll-card {
-    max-width: none;
-    text-align: center;
-  }
-
-  .poll-link {
-    width: 100%;
   }
 
   .daily-spotlight-media {
