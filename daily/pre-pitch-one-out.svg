@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title desc">
+  <title id="title">One Out pre-pitch signal</title>
+  <desc id="desc">Graphic card showing one out.</desc>
+  <rect width="320" height="240" rx="24" fill="#f7f3ea"/>
+  <rect x="16" y="16" width="288" height="208" rx="20" fill="#fffdf8" stroke="#d8dbe2" stroke-width="2"/>
+  <text x="160" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#7d2f1c">1 OUT</text>
+  <circle cx="160" cy="128" r="46" fill="#efe7d9" stroke="#7d2f1c" stroke-width="6"/>
+  <text x="160" y="144" text-anchor="middle" font-family="Arial, sans-serif" font-size="70" font-weight="700" fill="#1f2b24">1</text>
+  <text x="160" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#1f2b24">Pre-pitch count signal</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title desc">
+  <title id="title">Timing Play pre-pitch signal</title>
+  <desc id="desc">Graphic card indicating a timing play alert.</desc>
+  <rect width="320" height="240" rx="24" fill="#f7f3ea"/>
+  <rect x="16" y="16" width="288" height="208" rx="20" fill="#fffdf8" stroke="#d8dbe2" stroke-width="2"/>
+  <text x="160" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#7d2f1c">TIMING PLAY</text>
+  <circle cx="160" cy="124" r="50" fill="#efe7d9" stroke="#7d2f1c" stroke-width="6"/>
+  <circle cx="160" cy="124" r="34" fill="none" stroke="#1f2b24" stroke-width="5"/>
+  <line x1="160" y1="124" x2="160" y2="96" stroke="#1f2b24" stroke-width="5" stroke-linecap="round"/>
+  <line x1="160" y1="124" x2="181" y2="136" stroke="#1f2b24" stroke-width="5" stroke-linecap="round"/>
+  <text x="160" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#1f2b24">Stay aware of score timing</text>
+</svg>
