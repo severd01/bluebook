@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UmpIQ | Best Look At First</title>
+    <meta
+      name="description"
+      content="Three looping first-base throws. Pick the best plate-umpire position for each play and send your selections."
+    />
+    <link rel="canonical" href="https://umpiq.com/watch-first-quiz.html" />
+    <meta property="og:title" content="UmpIQ | Best Look At First" />
+    <meta
+      property="og:description"
+      content="Watch three looping first-base throws and choose the best look for Plate on each play."
+    />
+    <meta property="og:url" content="https://umpiq.com/watch-first-quiz.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://umpiq.com/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UmpIQ | Best Look At First" />
+    <meta
+      name="twitter:description"
+      content="Watch three looping first-base throws and choose the best look for Plate on each play."
+    />
+    <meta name="twitter:image" content="https://umpiq.com/social-preview.png" />
+    <link rel="stylesheet" href="./watch-first-quiz.css?v=2" />
+    <link rel="stylesheet" href="./auth.css?v=3" />
+    <script src="./supabase-config.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-63RJH3RJXH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-63RJH3RJXH');
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="daily-kicker">Positioning Poll</p>
+        <h1>Pick the best look at first.</h1>
+        <p class="intro">
+          Three different throws. Choose ideal position for u1 for each throw.
+        </p>
+        <nav class="scenario-nav" aria-label="Scenario navigation">
+          <a class="scenario-nav-link scenario-brand-link" href="./">UmpIQ</a>
+          <a class="scenario-nav-link" href="./situations.html">Baseball Mechanics</a>
+          <a class="scenario-nav-link" href="./feedback.html">Feedback</a>
+        </nav>
+      </section>
+
+      <section class="game-layout">
+        <aside class="panel scenario-panel">
+          <div class="panel-header">
+            <p class="panel-label">Play</p>
+            <p id="scenario-intro" class="scenario-intro">
+              No runners, no outs. Routine ground ball to 1st base.
+            </p>
+          </div>
+
+          <div class="details">
+            <div>
+              <p class="detail-label">Progress</p>
+              <p id="play-progress">Play 1 of 3</p>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <p class="detail-label">Instruction</p>
+            <p class="status-copy">
+              The animation is running. Spots will appear after the first loop.
+            </p>
+          </div>
+
+        </aside>
+
+        <section class="panel field-panel">
+          <div class="field-wrap">
+            <div class="draw-controls" aria-label="Playback controls">
+              <div class="field-status">
+                <button id="next-btn" class="field-check-btn field-status-next hidden" type="button">Next Play</button>
+                <p id="field-status-text" class="feedback-title field-status-text">Slide U1 to best position</p>
+              </div>
+            </div>
+
+            <svg
+              id="field"
+              viewBox="0 0 886 886"
+              role="img"
+              aria-label="Baseball field diagram with selectable umpire spots"
+            >
+              <image
+                href="./scenarios/03-fly-ball-to-right-u1-goes-out/field2.jpeg"
+                x="0"
+                y="0"
+                width="886"
+                height="886"
+                preserveAspectRatio="xMidYMid meet"
+              />
+              <g id="runner-group">
+                <circle id="runner-marker" class="runner-marker" r="15" />
+                <text id="runner-label" class="runner-label" x="0" y="0">BR</text>
+              </g>
+              <g id="fielder-group">
+                <circle id="fielder-marker" class="fielder-marker" r="14" />
+                <text id="fielder-label" class="fielder-label" x="0" y="0">F6</text>
+              </g>
+              <g id="first-base-group">
+                <circle id="first-base-marker" class="fielder-marker" r="14" />
+                <text id="first-base-label" class="fielder-label" x="0" y="0">F3</text>
+              </g>
+              <circle id="ball-marker" class="ball-marker" r="10" />
+              <g id="selector-layer" class="selector-layer hidden" aria-label="Selectable umpire curve">
+                <path id="selector-track-underlay" class="selector-track-underlay" />
+                <path id="selector-track" class="selector-track" />
+                <g id="selector-handle" class="selector-handle" tabindex="0" role="slider" aria-label="Plate position selector" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1">
+                  <circle id="selector-handle-circle" r="19"></circle>
+                  <circle id="selector-handle-inner" r="14"></circle>
+                  <text id="selector-handle-text" class="selector-handle-text" x="0" y="1">U1</text>
+                </g>
+              </g>
+            </svg>
+
+            <button id="restart-all-btn" class="field-ghost-btn field-below-restart" type="button">Start Over</button>
+
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="thanks-modal" class="thanks-modal hidden" role="dialog" aria-modal="true" aria-labelledby="thanks-modal-title">
+      <div class="thanks-modal-card">
+        <p class="panel-label">Thank You</p>
+        <h2 id="thanks-modal-title" class="daily-panel-title">Your picks are in.</h2>
+        <p class="thanks-modal-copy">
+          We will be posting the results on the home page, emailing them to subscribers, and sharing them on Facebook soon. Give us a follow or subscribe and we will share the results soon!
+        </p>
+        <div class="thanks-modal-actions">
+          <a class="field-ghost-btn thanks-link-btn" href="./">Home Page</a>
+          <a
+            class="thanks-facebook-link"
+            href="https://www.facebook.com/profile.php?id=61576640968782"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Follow UmpIQ on Facebook"
+          >
+            <span class="thanks-facebook-icon" aria-hidden="true">f</span>
+            <span class="thanks-facebook-copy">Follow on Facebook</span>
+          </a>
+        </div>
+        <form
+          id="thanks-subscribe-form"
+          class="thanks-subscribe-form"
+          action="https://buttondown.com/api/emails/embed-subscribe/severson"
+          method="post"
+          target="thanks-subscribe-frame"
+        >
+          <label class="visually-hidden" for="thanks-subscribe-email">Email address</label>
+          <input
+            id="thanks-subscribe-email"
+            class="thanks-subscribe-input"
+            type="email"
+            name="email"
+            placeholder="Email address"
+            autocomplete="email"
+            required
+          />
+          <button id="thanks-subscribe-btn" class="field-check-btn thanks-subscribe-btn" type="submit">Subscribe</button>
+        </form>
+        <p id="thanks-subscribe-note" class="thanks-subscribe-note">No spam. Unsubscribe anytime.</p>
+        <p id="thanks-submit-note" class="thanks-submit-note hidden"></p>
+      </div>
+    </div>
+
+    <iframe id="thanks-subscribe-frame" name="thanks-subscribe-frame" class="hidden-submit-frame" title="Subscribe target"></iframe>
+
+    <script defer src="./watch-first-quiz.js?v=15"></script>
+  </body>
+</html>
