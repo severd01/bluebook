@@ -1,4 +1,4 @@
-import { formatChallengeDate, getArchivedChallenges } from "./challenge-data.js?v=20260725-fpsr-publish";
+import { formatChallengeDate, getArchivedChallenges } from "./challenge-data.js";
 
 const archiveGridEl = document.getElementById("archive-grid");
 const lineupChallenges = [

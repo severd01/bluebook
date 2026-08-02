@@ -47,9 +47,9 @@
         <nav class="rail-nav" aria-label="Primary">
           <div class="rail-section">
             <p class="rail-label">Start Here</p>
-            <a class="rail-link rail-link-daily rail-link-stack" href="./daily/index.html?date=2026-07-25">
+            <a class="rail-link rail-link-daily rail-link-stack" href="./daily/index.html?date=2026-07-30">
               <span>Play Today’s Challenge</span>
-              <span class="rail-link-subline">Does the Run Score?</span>
+              <span class="rail-link-subline">Trouble ball, ball out of play</span>
             </a>
             <a class="rail-archive-link" href="./daily/archive.html">View past daily challenges</a>
             <button class="rail-archive-link rail-subscribe-button" type="button" data-subscribe-open>Get UmpIQ updates</button>
@@ -117,11 +117,11 @@
         <section class="home-hero">
           <div class="home-hero-copy">
             <div class="hero-challenge-summary">
-              <p class="module-kicker">Daily Challenge • July 25</p>
-              <h2>Does the Run Score?</h2>
+              <p class="module-kicker">Daily Challenge • July 30</p>
+              <h2>Trouble ball, ball out of play</h2>
             </div>
             <div class="home-hero-actions">
-              <a class="primary-link" href="./daily/index.html?date=2026-07-25">Play Today’s Challenge</a>
+              <a class="primary-link" href="./daily/index.html?date=2026-07-30">Play Today’s Challenge</a>
               <a class="ghost-link" href="./daily/archive.html">Browse Archive</a>
             </div>
             <section class="home-newsletter-card" aria-labelledby="home-newsletter-title">
@@ -133,7 +133,7 @@
             <div class="auth-home-slot" aria-label="Login and saved progress"></div>
           </div>
 
-          <a class="daily-spotlight" href="./daily/index.html?date=2026-07-25" aria-label="Play the July 25 daily challenge">
+          <a class="daily-spotlight" href="./daily/index.html?date=2026-07-30" aria-label="Play the July 30 daily challenge">
             <div class="daily-spotlight-media">
               <video
                 class="field-image hero-video"
@@ -174,7 +174,7 @@
                 class="subscribe-form"
                 action="https://buttondown.com/api/emails/embed-subscribe/severson"
                 method="post"
-                target="buttondown-subscribe-frame"
+                target="_blank"
               >
                 <label class="visually-hidden" for="subscribe-email">Email address</label>
                 <input
@@ -190,11 +190,6 @@
               </form>
               <p class="subscribe-note" id="subscribe-note">No spam. Unsubscribe anytime.</p>
             </section>
-            <iframe
-              class="subscribe-frame"
-              name="buttondown-subscribe-frame"
-              title="Buttondown subscribe confirmation"
-            ></iframe>
           </div>
         </div>
 
@@ -205,7 +200,7 @@
           </div>
 
           <div class="path-grid">
-            <a class="path-card path-card-primary" href="./daily/index.html?date=2026-07-25">
+            <a class="path-card path-card-primary" href="./daily/index.html?date=2026-07-30">
               <p class="module-kicker">Daily Rep</p>
               <h3>Situation Challenge</h3>
               <p>One focused play with umpire movement, a rules question, scoring, and community results.</p>
@@ -302,7 +297,7 @@
       document.querySelector(".subscribe-form")?.addEventListener("submit", () => {
         const note = document.getElementById("subscribe-note");
         if (note) {
-          note.textContent = "Thanks. Check your inbox to finish subscribing.";
+          note.textContent = "A new tab will open so you can finish subscribing.";
         }
       });
     </script>

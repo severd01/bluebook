@@ -150,7 +150,7 @@
         </p>
 
         <nav class="archive-nav" aria-label="Situation challenge navigation">
-          <a class="archive-link" href="./?date=2026-07-25">Today's Challenge</a>
+          <a class="archive-link" href="./?date=2026-07-30">Today's Challenge</a>
           <a class="archive-link" href="../">UmpIQ Home</a>
           <button class="archive-link archive-button-link" type="button" data-subscribe-open>Stay Updated</button>
         </nav>
@@ -173,7 +173,7 @@
               class="subscribe-form"
               action="https://buttondown.com/api/emails/embed-subscribe/severson"
               method="post"
-              target="buttondown-subscribe-frame"
+              target="_blank"
             >
               <label class="visually-hidden" for="subscribe-email">Email address</label>
               <input
@@ -189,11 +189,6 @@
             </form>
             <p class="subscribe-note" id="subscribe-note">No spam. Unsubscribe anytime.</p>
           </section>
-          <iframe
-            class="subscribe-frame"
-            name="buttondown-subscribe-frame"
-            title="Buttondown subscribe confirmation"
-          ></iframe>
         </div>
       </div>
 
@@ -239,7 +234,7 @@
       document.querySelector(".subscribe-form")?.addEventListener("submit", () => {
         const note = document.getElementById("subscribe-note");
         if (note) {
-          note.textContent = "Thanks. Check your inbox to finish subscribing.";
+          note.textContent = "A new tab will open so you can finish subscribing.";
         }
       });
     </script>

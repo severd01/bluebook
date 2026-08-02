@@ -867,7 +867,178 @@ const JULY_2_ANIMATION_PRESETS = {
   },
 };
 
+const JULY_30_ANIMATION_PRESETS = {
+  BALL: {
+    start: { x: 442, y: 665 },
+    segments: [
+      {
+        dur: "7s",
+        path:
+          "M 442 665 L 455 624 L 469 596 L 483 566 L 504 537 L 520 508 L 541 479 L 560 460 L 587 430 L 614 405 L 636 383 L 662 363 L 674 355 L 693 346 L 711 335 L 728 326 L 739 326 L 784 300",
+      },
+      {
+        pause: "0.5s",
+      },
+      {
+        dur: "2.6s",
+        path: "M 784 300 L 594 385",
+      },
+      {
+        pause: "0.3s",
+      },
+      {
+        dur: "2.2s",
+        path: "M 594 385 L 169 553",
+      },
+    ],
+  },
+  BR: {
+    start: { x: 447, y: 669 },
+    dur: "13.1s",
+    path:
+      "M 447 669 L 475 657 L 495 641 L 513 625 L 526 608 L 539 592 L 543 575 L 546 556 L 546 535 L 541 516 L 528 496 L 509 478 L 494 464 L 475 453 L 454 447 L 443 443",
+  },
+  F9: {
+    start: { x: 642, y: 340 },
+    dur: "8s",
+    path:
+      "M 642 340 L 659 332 L 676 324 L 693 313 L 717 303 L 729 299 L 747 296 L 773 302",
+  },
+  F4: {
+    start: { x: 521, y: 462 },
+    dur: "8s",
+    path: "M 521 462 L 594 385",
+  },
+  F6: {
+    start: { x: 366, y: 457 },
+    dur: "8.4s",
+    path: "M 366 457 L 443 443",
+  },
+};
+
 export const dailyChallenges = [
+  {
+    id: "2026-07-30-trouble-ball-relay-oop",
+    date: "2026-07-30",
+    mobileCompactReveal: true,
+    title: "Trouble ball, ball out of play",
+    panelTitle: "No runners, no outs. Trouble ball to right.",
+    hideDailyPanel: true,
+    system: "",
+    description:
+      "No runners, no outs. The batter hits a trouble ball to right field.",
+    runners: "No Runners",
+    outs: "No Outs",
+    ball: "Trouble ball to right field",
+    sport: "Baseball",
+    mechanics: "2 Umpire Mechanics",
+    summary:
+      "Animated two-umpire challenge focused on U1 going out on trouble to right, Plate taking the batter-runner all the way around, and enforcing a two-base award when the relay throw to third enters dead-ball territory.",
+    animationPresets: JULY_30_ANIMATION_PRESETS,
+    type: "dual-movement",
+    ballFlightPath:
+      "M 442 665 L 455 624 L 469 596 L 483 566 L 504 537 L 520 508 L 541 479 L 560 460 L 587 430 L 614 405 L 636 383 L 662 363 L 674 355 L 693 346 L 711 335 L 728 326 L 739 326 L 784 300",
+    explanation:
+      "With no runners and a slicing trouble ball to right, U1 goes out for catch/no-catch and possible boundary trouble. Once U1 leaves, Plate owns the batter-runner into first, second, third, and any overthrow responsibilities on the infield side.",
+    observationPrompt: "What's the ruling?",
+    observationOptions: [
+      {
+        text:
+          "The ball is dead immediately when it leaves the field, and it is a time-of-pitch award, so BR is awarded second base.",
+        note:
+          "This treats the play as a time-of-pitch award, which is not the best fit for the relay throw shown in the animation.",
+      },
+      {
+        text:
+          "The ball is dead immediately when it leaves the field, and BR is awarded second base because the relay throw went out of play.",
+        note:
+          "This still ends with the wrong award. The relay throw matters, but second base is too little for the play shown.",
+      },
+      {
+        text:
+          "The ball is dead immediately when F4's throw leaves the field, and BR is awarded third base as a time-of-throw award.",
+        note:
+          "Correct. The out-of-play relay is enforced from time of throw, and BR is awarded third.",
+      },
+      {
+        text:
+          "The ball is dead immediately when it leaves the field, and this is a time-of-throw award and BR had already achieved 2nd base at the time of F6's throw, award home.",
+        note:
+          "This uses the right award framework, but it depends on BR already having second at the time of the throw. In the current play build, that is not the read we are using.",
+      },
+    ],
+    correctObservationIndex: 2,
+    observationScoreDetail: {
+      correct: "Correctly applied the time-of-throw award and placed BR at third.",
+      review:
+        "Review why the relay throw is judged from time of throw rather than as a time-of-pitch award.",
+    },
+    ruleSummary: {
+      label: "NFHS 8-3-3c",
+      title: "Relay throw award is from time of throw",
+      body:
+        "The first-play-by-an-infielder exception does not apply to a relay throw. Once F4 relays the ball and that throw enters dead-ball territory, awards are made from time of throw. BR had not yet achieved second at the time of the throw, so the two-base award places BR at third.",
+    },
+    answerNotes: [
+      {
+        heading: "Plate",
+        bullets: [
+          "Clear the catcher and move into fair territory immediately.",
+          "Take the batter-runner's touches at first, second, and possibly third if U1 goes out.",
+          "Stay ahead of the batter-runner into the second-base area and own the overthrow into dead-ball territory.",
+        ],
+      },
+      {
+        heading: "U1",
+        bullets: [
+          "Go out on the slicing trouble ball to right.",
+          "Get stopped for catch/no-catch and possible boundary responsibility.",
+          "Once you go out, stay out. Plate has the batter-runner around the bases and the award after the relay throw goes out of play. Hustle towards home for a potential play at the plate.",
+        ],
+      },
+    ],
+    paths: [
+      {
+        role: "P",
+        startAnswer: { x: 446, y: 701 },
+        routePoints: [
+          { x: 446, y: 701 },
+          { x: 446, y: 668 },
+          { x: 454, y: 632 },
+          { x: 479, y: 599 },
+          { x: 493, y: 564 },
+          { x: 491, y: 540 },
+          { x: 479, y: 516 },
+          { x: 461, y: 500 },
+          { x: 443, y: 491 },
+          { x: 422, y: 501 },
+          { x: 406, y: 515 },
+          { x: 396, y: 530 },
+          { x: 385, y: 542 },
+          { x: 373, y: 549 },
+        ],
+        waypoints: [{ x: 493, y: 564 }, { x: 422, y: 501 }],
+        endAnswer: { x: 373, y: 549 },
+      },
+      {
+        role: "U1",
+        startAnswer: { x: 608, y: 531 },
+        routePoints: [
+          { x: 608, y: 531 },
+          { x: 637, y: 498 },
+          { x: 653, y: 472 },
+          { x: 681, y: 488 },
+          { x: 559, y: 592 },
+        ],
+        waypoints: [
+          { x: 637, y: 498 },
+          { x: 653, y: 472 },
+          { x: 681, y: 488 },
+        ],
+        endAnswer: { x: 559, y: 592 },
+      },
+    ],
+  },
   {
     id: "2026-07-25-bases-loaded-fpsr",
     date: "2026-07-25",
@@ -2498,91 +2669,6 @@ export const dailyChallenges = [
     ],
   },
   {
-    id: "2026-04-05-base-hit-right-field",
-    date: "2026-04-05",
-    title: "Hit to Left Center",
-    system: "",
-    description: "R1, R2",
-    runners: "R1, R2",
-    outs: "1 Out",
-    ball: "Base hit",
-    sport: "Baseball",
-    mechanics: "2 Umpire Mechanics",
-    summary:
-      "Animated two-umpire situation challenge focused on plate clearance, fair-territory movement, and U1 staying ahead of the batter-runner.",
-    animationPresets: APRIL_5_ANIMATION_PRESETS,
-    type: "dual-movement",
-    ballFlightPath: "M 442 664 Q 447 348 319 234",
-    prePitchSignal: {
-      prompt: "Choose the correct pre-pitch signal for this situation.",
-      correctOption: "Plate Covers 3rd on Fly",
-      options: [
-        {
-          label: "Standard Rotation",
-          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-standard-rotation.png",
-        },
-        {
-          label: "Plate Covers 3rd on Fly",
-          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-plate-covers-third.png",
-        },
-        {
-          label: "Staying Home",
-          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-staying-home.png",
-        },
-      ],
-    },
-    explanation:
-      "Use the animation to read the developing play, then draw where both umpires should move to stay ahead of the next likely play.",
-    observationPrompt: "What did you see on this play?",
-    observationOptions: [
-      "R1 is out for passing R2. The ball stays live. No time.",
-      "Nothing here, play on.",
-      "R2 is out because he was passed by R1. No time.",
-      "Defensive coach must appeal R1 passing R2.",
-    ],
-    correctObservationIndex: 0,
-    answerNotes: [
-      {
-        heading: "Plate",
-        bullets: [
-          "Observe R2 and R1's touch of 3rd.",
-          "Move into position to rule on play at home.",
-        ],
-      },
-      {
-        heading: "U1",
-        bullets: [
-          "Move into the working area.",
-          "Let the throw take you to the play.",
-          "Responsible for all touches of 1st and 2nd and BR into third.",
-          "Be in position to take all plays in the infield.",
-        ],
-      },
-    ],
-    paths: [
-      {
-        role: "P",
-        startAnswer: { x: 439, y: 699 },
-        routePoints: [
-          { x: 441, y: 683 },
-          { x: 441, y: 668 },
-        ],
-        waypoints: [],
-        endAnswer: { x: 441, y: 668 },
-      },
-      {
-        role: "U1",
-        startAnswer: { x: 405, y: 514 },
-        routePoints: [
-          { x: 405, y: 514 },
-          { x: 437, y: 514 },
-        ],
-        waypoints: [],
-        endAnswer: { x: 437, y: 514 },
-      },
-    ],
-  },
-  {
     id: "2026-04-16-base-hit-r1",
     date: "2026-04-16",
     mobileCompactReveal: true,
@@ -2779,6 +2865,91 @@ export const dailyChallenges = [
         ],
         waypoints: [],
         endAnswer: { x: 505, y: 524 },
+      },
+    ],
+  },
+  {
+    id: "2026-04-05-base-hit-right-field",
+    date: "2026-04-05",
+    title: "Hit to Left Center",
+    system: "",
+    description: "R1, R2",
+    runners: "R1, R2",
+    outs: "1 Out",
+    ball: "Base hit",
+    sport: "Baseball",
+    mechanics: "2 Umpire Mechanics",
+    summary:
+      "Animated two-umpire situation challenge focused on plate clearance, fair-territory movement, and U1 staying ahead of the batter-runner.",
+    animationPresets: APRIL_5_ANIMATION_PRESETS,
+    type: "dual-movement",
+    ballFlightPath: "M 442 664 Q 447 348 319 234",
+    prePitchSignal: {
+      prompt: "Choose the correct pre-pitch signal for this situation.",
+      correctOption: "Plate Covers 3rd on Fly",
+      options: [
+        {
+          label: "Standard Rotation",
+          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-standard-rotation.png",
+        },
+        {
+          label: "Plate Covers 3rd on Fly",
+          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-plate-covers-third.png",
+        },
+        {
+          label: "Staying Home",
+          image: "../scenarios/19-base-hit-r1-r2/pre-pitch-staying-home.png",
+        },
+      ],
+    },
+    explanation:
+      "Use the animation to read the developing play, then draw where both umpires should move to stay ahead of the next likely play.",
+    observationPrompt: "What did you see on this play?",
+    observationOptions: [
+      "R1 is out for passing R2. The ball stays live. No time.",
+      "Nothing here, play on.",
+      "R2 is out because he was passed by R1. No time.",
+      "Defensive coach must appeal R1 passing R2.",
+    ],
+    correctObservationIndex: 0,
+    answerNotes: [
+      {
+        heading: "Plate",
+        bullets: [
+          "Observe R2 and R1's touch of 3rd.",
+          "Move into position to rule on play at home.",
+        ],
+      },
+      {
+        heading: "U1",
+        bullets: [
+          "Move into the working area.",
+          "Let the throw take you to the play.",
+          "Responsible for all touches of 1st and 2nd and BR into third.",
+          "Be in position to take all plays in the infield.",
+        ],
+      },
+    ],
+    paths: [
+      {
+        role: "P",
+        startAnswer: { x: 439, y: 699 },
+        routePoints: [
+          { x: 441, y: 683 },
+          { x: 441, y: 668 },
+        ],
+        waypoints: [],
+        endAnswer: { x: 441, y: 668 },
+      },
+      {
+        role: "U1",
+        startAnswer: { x: 405, y: 514 },
+        routePoints: [
+          { x: 405, y: 514 },
+          { x: 437, y: 514 },
+        ],
+        waypoints: [],
+        endAnswer: { x: 437, y: 514 },
       },
     ],
   },
